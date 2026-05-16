@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syllabus Dashboard | CrashStudy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="syllabus.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DR9VL0YMC1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    
+    gtag('config', 'G-DR9VL0YMC1');
+    </script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+              <a href="index.html" class="logo" style="text-decoration: none; color: white;">
+              <span class="gradient-text">Crash</span>Study
+              </a>
+              
+                <div class="close-sidebar" id="closeSidebar">✕</div>
+            </div>
+
+            <div class="user-profile-snippet">
+                <div class="avatar">
+                    <img src="https://ui-avatars.com/api/?name=Student&background=FF007A&color=fff" alt="User">
+                </div>
+                <div class="user-info">
+                    <h4>Aspirant 01</h4>
+                    <p>Free Tier</p>
+                </div>
+                <div class="streak-badge">🔥 42</div>
+            </div>
+
+            <div class="sidebar-nav">
+                <p class="nav-label">Main Menu</p>
+                <ul>
+                    <li><a href="#" class="nav-item"><span class="icon">🏠</span> Dashboard</a></li>
+                    <li><a href="#" class="nav-item active"><span class="icon">📚</span> Syllabus</a></li>
+                    <li><a href="#" class="nav-item"><span class="icon">📝</span> Mock Tests</a></li>
+                    <li><a href="#" class="nav-item"><span class="icon">❌</span> Mistake Book</a></li>
+                    <li><a href="#" class="nav-item"><span class="icon">⏱️</span> Study Planner</a></li>
+                </ul>
+
+                <p class="nav-label">Quick Jump (Subjects)</p>
+                <ul>
+                    <li><a href="#maths" class="nav-item"><span class="dot math-dot"></span> Mathematics</a></li>
+                    <li><a href="#english" class="nav-item"><span class="dot eng-dot"></span> English</a></li>
+                    <li><a href="#gk" class="nav-item"><span class="dot gk-dot"></span> GK & GS</a></li>
+                    <li><a href="#reasoning" class="nav-item"><span class="dot reas-dot"></span> Reasoning</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="btn-premium-upsell">
+                    <span>👑 Upgrade to PRO</span>
+                    <small>Unlock Topper Notes & AI</small>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <h2>Master Syllabus</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Search topics (e.g. Trigonometry)...">
+                    </div>
+                    <div class="filter-box">
+                        <select id="examFilter">
+                            <option value="all">All Exams</option>
+                            <option value="cgl">SSC CGL</option>
+                            <option value="chsl">SSC CHSL</option>
+                            <option value="afcat">AFCAT</option>
+                            <option value="capf">CAPF AC</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+                
+                <div class="progress-widgets">
+                    <div class="widget-card glass-panel">
+                        <div class="widget-info">
+                            <h3>Overall Completion</h3>
+                            <p>You are on track for SSC CGL 2026.</p>
+                            <button class="btn-secondary small">View Analytics</button>
+                        </div>
+                        <div class="progress-ring-container">
+                            <div class="progress-ring" style="--percentage: 45%; --ring-color: var(--primary-blue);">
+                                <span class="ring-text">45%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget-card glass-panel countdown-widget">
+                        <h3>SSC CGL Tier 1 Countdown</h3>
+                        <div class="timer">
+                            <div class="time-box"><strong>84</strong><span>Days</span></div>
+                            <div class="time-box"><strong>12</strong><span>Hours</span></div>
+                            <div class="time-box"><strong>45</strong><span>Mins</span></div>
+                        </div>
+                        <div class="progress-bar-linear">
+                            <div class="fill" style="width: 60%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="syllabus-section" id="maths">
+                    <div class="section-heading">
+                        <span class="dot math-dot"></span>
+                        <h3>Quantitative Aptitude (Mathematics)</h3>
+                        <span class="subject-progress">60% Completed</span>
+                    </div>
+
+                    <div class="accordion-item glass-panel">
+                        <div class="accordion-header">
+                            <div class="acc-title">
+                                <h4>1. Percentage & Its Applications</h4>
+                                <p>Fractions, Successive Percentage, Election based questions.</p>
+                            </div>
+                            <div class="acc-controls">
+                                <span class="status completed">Completed</span>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <ul class="subtopic-list">
+                                <li>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                        Fraction to Percentage Conversions
+                                    </label>
+                                    <div class="resource-links">
+                                        <button class="btn-micro ai-notes">🤖 AI Summary</button>
+                                        <button class="btn-micro pyq">📄 PYQs (20)</button>
+                                    </div>
+                                </li>
+                                <li>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                        Successive Changes & Population
+                                    </label>
+                                    <div class="resource-links">
+                                        <button class="btn-micro ai-notes">🤖 AI Summary</button>
+                                        <button class="btn-micro pyq">📄 PYQs (15)</button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="premium-resource">
+                                <span class="pro-badge">PRO</span>
+                                <span><strong>Topper's Note:</strong> Secret calculation tricks for Percentage by AIR 14.</span>
+                                <button class="btn-gradient-small">Unlock Note</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item glass-panel">
+                        <div class="accordion-header">
+                            <div class="acc-title">
+                                <h4>2. Trigonometry & Heights/Distances</h4>
+                                <p>Identities, Max/Min Values, Angle of Elevation.</p>
+                            </div>
+                            <div class="acc-controls">
+                                <span class="status in-progress">In Progress</span>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <ul class="subtopic-list">
+                                <li>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                        Basic Trigonometric Ratios
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox">
+                                        <span class="checkmark"></span>
+                                        Advanced Identities (Sec/Tan)
+                                    </label>
+                                    <div class="resource-links">
+                                        <button class="btn-micro pyq">📄 Practice Set</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="syllabus-section" id="english">
+                    <div class="section-heading">
+                        <span class="dot eng-dot"></span>
+                        <h3>English Comprehension & Grammar</h3>
+                        <span class="subject-progress">20% Completed</span>
+                    </div>
+
+                    <div class="accordion-item glass-panel">
+                        <div class="accordion-header">
+                            <div class="acc-title">
+                                <h4>1. Subject-Verb Agreement</h4>
+                                <p>Core grammar rules, Error spotting mechanics.</p>
+                            </div>
+                            <div class="acc-controls">
+                                <span class="status pending">Pending</span>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <ul class="subtopic-list">
+                                <li>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox">
+                                        <span class="checkmark"></span>
+                                        Rule of Proximity
+                                    </label>
+                                    <div class="resource-links">
+                                        <button class="btn-micro ai-notes">🤖 AI Summary</button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="premium-resource">
+                                <span class="pro-badge">PRO</span>
+                                <span><strong>Cheat Sheet:</strong> 100 Most Repeated Grammar Rules in SSC.</span>
+                                <button class="btn-gradient-small">Unlock PDF</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="ai-floating-widget">
+        <button class="ai-trigger" id="aiTrigger">
+            <span class="ai-icon">🤖</span>
+            <span class="ai-tooltip">Ask a Doubt!</span>
+        </button>
+        <div class="ai-chat-panel glass-panel" id="aiChatPanel">
+            <div class="chat-header">
+                <h3>Crash AI Tutor</h3>
+                <button class="close-chat" id="closeChat">✕</button>
+            </div>
+            <div class="chat-body">
+                <div class="message ai-msg">Hello! Having trouble with Trigonometry or Grammar? Ask me anything!</div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" placeholder="Type your doubt here...">
+                <button class="btn-send">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script src="syllabus.js"></script>
+</body>
+</html>

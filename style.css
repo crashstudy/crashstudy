@@ -109,7 +109,48 @@ nav {
     padding: 20px 5%; max-width: 1400px; margin: 0 auto;
 }
 .logo { font-size: 1.8rem; font-weight: 800; font-family: 'Poppins', sans-serif; }
-.nav-links { display: flex; list-style: none; gap: 30px; }
+@media (max-width: 768px) {
+    /* Replace the old .nav-links with this */
+    .nav-links { 
+        position: absolute;
+        top: 75px;
+        left: 0;
+        width: 100%;
+        background: rgba(7, 9, 19, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 0;
+        gap: 25px;
+        border-bottom: 1px solid var(--glass-border);
+        /* Hidden state */
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-20px);
+        transition: all 0.3s ease;
+    }
+
+    /* Active state added by JavaScript */
+    .nav-links.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    .nav-cta { display: none; }
+    .mobile-menu-btn { display: flex; cursor: pointer; }
+    .hero-title { font-size: 2.8rem; }
+    .hero-visual { width: 100%; max-width: 400px; }
+    .stats-section { flex-direction: column; gap: 40px; }
+    .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* BONUS FIX: Hide custom cursor on mobile touch screens for better UX */
+@media (pointer: coarse) {
+    .cursor-dot, .cursor-outline { display: none !important; }
+    * { cursor: auto !important; }
+}
+
 .nav-links a {
     color: var(--text-main); text-decoration: none; font-weight: 500;
     position: relative; transition: color 0.3s;
@@ -273,15 +314,44 @@ footer {
     .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 768px) {
-    .nav-links { display: none; }
+    /* The hidden mobile menu */
+    .nav-links { 
+        position: absolute;
+        top: 100%; /* Sits exactly below the navbar */
+        left: 0;
+        width: 100%;
+        background: rgba(7, 9, 19, 0.98);
+        backdrop-filter: blur(20px);
+        display: flex; /* Required to show the items */
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 0;
+        gap: 25px;
+        border-bottom: 1px solid var(--glass-border);
+        /* Hidden state settings */
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-20px);
+        transition: all 0.3s ease;
+    }
+
+    /* The visible mobile menu triggered by JS */
+    .nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
     .nav-cta { display: none; }
-    .mobile-menu-btn { display: flex; }
+    .mobile-menu-btn { display: flex; cursor: pointer; }
     .hero-title { font-size: 2.8rem; }
     .hero-visual { width: 100%; max-width: 400px; }
     .stats-section { flex-direction: column; gap: 40px; }
     .footer-grid { grid-template-columns: 1fr; }
 }
 
-/* ANIMATIONS (Scroll Reveal) */
-.reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; }
-.reveal.active { opacity: 1; transform: translateY(0); }
+/* Hide custom cursor on mobile to prevent touching bugs */
+@media (pointer: coarse) {
+    .cursor-dot, .cursor-outline { display: none !important; }
+    * { cursor: auto !important; }
+}
