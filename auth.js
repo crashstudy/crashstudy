@@ -432,4 +432,4 @@ function mapError(code) {
 // ═══════════════════════════════════════════════════════════════
 
 export { showSignupView, showLoginView, showMessage, clearMessages, mapE
-, getPasswordStrength }; };};rror, getPasswordStrength };
+, getPasswordStrength };
