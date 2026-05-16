@@ -1,13 +1,14 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *  CrashStudy — auth.js
- *  Authentication Portal — FULLY FIREBASE INTEGRATED
+ *  CrashStudy — auth.js  (FIXED)
+ *  • Firestore removed (Auth only — add Firestore later)
+ *  • Redirects fixed (no missing pages)
  * ═══════════════════════════════════════════════════════════════
  */
 
 'use strict';
 
-// ── Firebase SDKs (CDN ES Modules) ──
+// ── Firebase Auth SDK (CDN) ──
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -18,15 +19,7 @@ import {
   onAuthStateChanged,
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
-import {
-  doc,
-  setDoc,
-  getDoc,
-  serverTimestamp,
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-// ── Your initialized Firebase instances ──
-import { auth, db } from './firebase.js';
+import { auth } from './firebase.js';
 
 
 // ═══════════════════════════════════════════════════════════════
@@ -40,14 +33,12 @@ const DOM = {
   loginBox:        document.getElementById('loginBox'),
   signupBox:       document.getElementById('signupBox'),
 
-  // Login
   loginEmail:      document.getElementById('loginEmail'),
   loginPassword:   document.getElementById('loginPassword'),
   loginBtn:        document.getElementById('loginBtn'),
   loginMessage:    document.getElementById('loginMessage'),
   forgotPassword:  document.getElementById('forgotPassword'),
 
-  // Signup
   signupFirstName: document.getElementById('signupFirstName'),
   signupLastName:  document.getElementById('signupLastName'),
   signupEmail:     document.getElementById('signupEmail'),
@@ -56,56 +47,52 @@ const DOM = {
   signupMessage:   document.getElementById('signupMessage'),
   termsCheckbox:   document.getElementById('termsCheckbox'),
 
-  // Strength meter
   strengthBar:     document.getElementById('strengthBar'),
   strengthLabel:   document.getElementById('strengthLabel'),
 
-  // Google
   googleSignIn:    document.getElementById('googleSignIn'),
   googleSignUp:    document.getElementById('googleSignUp'),
-
-  // All eye-toggle buttons
   toggleBtns:      document.querySelectorAll('.toggle-pass'),
 };
 
 
 // ═══════════════════════════════════════════════════════════════
 // § 2. AUTH STATE LISTENER
-// If already logged in → redirect straight to dashboard
+// ─ Redirect only if a dashboard page actually exists
+// ─ Change 'dashboard.html' to whatever your next page is
 // ═══════════════════════════════════════════════════════════════
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    window.location.href = '/dashboard.html';
+    // ✏️  Apna actual next page ka naam yahan likho
+    // e.g. 'dashboard.html', 'home.html', 'index.html'
+    // Abhi ke liye console mein show karte hain
+    console.log('✅ Logged in as:', user.email, '| UID:', user.uid);
+
+    // Uncomment when your dashboard page is ready:
+    // window.location.href = 'dashboard.html';
   }
 });
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 3. SLIDE ANIMATION — LOGIN ↔ SIGNUP
+// § 3. SLIDE ANIMATION
 // ═══════════════════════════════════════════════════════════════
 
 function syncWrapperHeight() {
   const isSignup  = DOM.formWrapper.classList.contains('show-signup');
   const activeBox = isSignup ? DOM.signupBox : DOM.loginBox;
-
   if (isSignup) DOM.signupBox.style.position = 'relative';
-  const h = activeBox.getBoundingClientRect().height;
-  DOM.formWrapper.style.height = `${h}px`;
+  DOM.formWrapper.style.height = `${activeBox.getBoundingClientRect().height}px`;
   if (isSignup) DOM.signupBox.style.position = '';
 }
 
 function showSignupView() {
-  DOM.signupBox.style.position      = 'relative';
-  DOM.signupBox.style.opacity       = '0';
-  DOM.signupBox.style.pointerEvents = 'none';
+  DOM.signupBox.style.cssText = 'position:relative;opacity:0;pointer-events:none';
   const signupH = DOM.signupBox.getBoundingClientRect().height;
-  DOM.signupBox.style.position      = '';
-  DOM.signupBox.style.opacity       = '';
-  DOM.signupBox.style.pointerEvents = '';
+  DOM.signupBox.style.cssText = '';
 
   DOM.formWrapper.style.height = `${DOM.loginBox.getBoundingClientRect().height}px`;
-
   requestAnimationFrame(() => {
     DOM.formWrapper.classList.add('show-signup');
     DOM.formWrapper.style.height = `${signupH}px`;
@@ -113,7 +100,6 @@ function showSignupView() {
     DOM.signupBox.setAttribute('aria-hidden', 'false');
     setTimeout(() => { DOM.signupFirstName?.focus(); syncWrapperHeight(); }, 560);
   });
-
   clearMessages();
 }
 
@@ -123,7 +109,6 @@ function showLoginView() {
   DOM.signupBox.style.position = '';
 
   DOM.formWrapper.style.height = `${signupH}px`;
-
   requestAnimationFrame(() => {
     DOM.formWrapper.classList.remove('show-signup');
     DOM.formWrapper.style.height = `${DOM.loginBox.getBoundingClientRect().height}px`;
@@ -131,19 +116,16 @@ function showLoginView() {
     DOM.signupBox.setAttribute('aria-hidden', 'true');
     setTimeout(() => { DOM.loginEmail?.focus(); syncWrapperHeight(); }, 560);
   });
-
   clearMessages();
 }
 
 DOM.showSignup?.addEventListener('click', showSignupView);
 DOM.showLogin?.addEventListener('click',  showLoginView);
-
 [DOM.showSignup, DOM.showLogin].forEach(el => {
   el?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
   });
 });
-
 window.addEventListener('load',   syncWrapperHeight);
 window.addEventListener('resize', syncWrapperHeight);
 
@@ -152,13 +134,13 @@ window.addEventListener('resize', syncWrapperHeight);
 // § 4. PASSWORD STRENGTH METER
 // ═══════════════════════════════════════════════════════════════
 
-function getPasswordStrength(password) {
-  if (!password) return 0;
-  let score = 0;
-  if (password.length >= 8)                                          score++;
-  if (/[a-zA-Z]/.test(password) && /\d/.test(password))             score++;
-  if (/[^a-zA-Z0-9]/.test(password) && password.length >= 10)       score++;
-  return score;
+function getPasswordStrength(pw) {
+  if (!pw) return 0;
+  let s = 0;
+  if (pw.length >= 8)                                      s++;
+  if (/[a-zA-Z]/.test(pw) && /\d/.test(pw))               s++;
+  if (/[^a-zA-Z0-9]/.test(pw) && pw.length >= 10)         s++;
+  return s;
 }
 
 const STRENGTH_MAP = {
@@ -167,50 +149,43 @@ const STRENGTH_MAP = {
   3: { cls: 'strong', label: 'Strong' },
 };
 
-function updateStrengthMeter(password) {
-  const { strengthBar, strengthLabel } = DOM;
-  if (!strengthBar || !strengthLabel) return;
-
-  strengthBar.classList.remove('weak', 'medium', 'strong');
-  strengthLabel.classList.remove('weak', 'medium', 'strong');
-
-  if (!password) { strengthLabel.textContent = ''; return; }
-
-  const info = STRENGTH_MAP[getPasswordStrength(password)];
-  if (info) {
-    strengthBar.classList.add(info.cls);
-    strengthLabel.classList.add(info.cls);
-    strengthLabel.textContent = info.label;
-  }
+function updateStrengthMeter(pw) {
+  const { strengthBar: bar, strengthLabel: lbl } = DOM;
+  if (!bar || !lbl) return;
+  bar.classList.remove('weak','medium','strong');
+  lbl.classList.remove('weak','medium','strong');
+  if (!pw) { lbl.textContent = ''; return; }
+  const info = STRENGTH_MAP[getPasswordStrength(pw)];
+  if (info) { bar.classList.add(info.cls); lbl.classList.add(info.cls); lbl.textContent = info.label; }
 }
 
 DOM.signupPassword?.addEventListener('input', (e) => updateStrengthMeter(e.target.value));
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 5. PASSWORD VISIBILITY TOGGLE
+// § 5. PASSWORD TOGGLE
 // ═══════════════════════════════════════════════════════════════
 
-const EYE_OPEN  = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg>`;
-const EYE_CLOSE = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+const EYE_OPEN  = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg>`;
+const EYE_CLOSE = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
 
 DOM.toggleBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     const input = document.getElementById(btn.dataset.target);
     if (!input) return;
-    const isPass = input.type === 'password';
-    input.type   = isPass ? 'text' : 'password';
-    btn.innerHTML = isPass ? EYE_CLOSE : EYE_OPEN;
+    const isPass   = input.type === 'password';
+    input.type     = isPass ? 'text' : 'password';
+    btn.innerHTML  = isPass ? EYE_CLOSE : EYE_OPEN;
     btn.setAttribute('aria-label', isPass ? 'Hide password' : 'Show password');
   });
 });
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 6. VALIDATION HELPERS
+// § 6. VALIDATORS
 // ═══════════════════════════════════════════════════════════════
 
-const Validators = {
+const V = {
   email:    (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
   password: (v) => v.length >= 8,
   name:     (v) => v.trim().length >= 2,
@@ -222,28 +197,28 @@ function setFieldState(field, isValid) {
   field.classList.toggle('field-ok',    isValid);
 }
 
-function addBlurValidation(field, validatorFn) {
+function addBlurValidation(field, fn) {
   if (!field) return;
-  field.addEventListener('blur',  () => { if (field.value !== '') setFieldState(field, validatorFn(field.value)); });
-  field.addEventListener('input', () => { if (field.classList.contains('field-error')) setFieldState(field, validatorFn(field.value)); });
+  field.addEventListener('blur',  () => { if (field.value) setFieldState(field, fn(field.value)); });
+  field.addEventListener('input', () => { if (field.classList.contains('field-error')) setFieldState(field, fn(field.value)); });
 }
 
-addBlurValidation(DOM.loginEmail,      Validators.email);
-addBlurValidation(DOM.loginPassword,   Validators.password);
-addBlurValidation(DOM.signupEmail,     Validators.email);
-addBlurValidation(DOM.signupPassword,  Validators.password);
-addBlurValidation(DOM.signupFirstName, Validators.name);
-addBlurValidation(DOM.signupLastName,  Validators.name);
+addBlurValidation(DOM.loginEmail,      V.email);
+addBlurValidation(DOM.loginPassword,   V.password);
+addBlurValidation(DOM.signupEmail,     V.email);
+addBlurValidation(DOM.signupPassword,  V.password);
+addBlurValidation(DOM.signupFirstName, V.name);
+addBlurValidation(DOM.signupLastName,  V.name);
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 7. MESSAGE DISPLAY
+// § 7. MESSAGES & LOADING
 // ═══════════════════════════════════════════════════════════════
 
-function showMessage(msgEl, text, type = 'error') {
-  if (!msgEl) return;
-  msgEl.textContent = text;
-  msgEl.className   = `form-message ${type}`;
+function showMessage(el, text, type = 'error') {
+  if (!el) return;
+  el.textContent = text;
+  el.className   = `form-message ${type}`;
 }
 
 function clearMessages() {
@@ -252,51 +227,42 @@ function clearMessages() {
   });
 }
 
-
-// ═══════════════════════════════════════════════════════════════
-// § 8. LOADING STATE
-// ═══════════════════════════════════════════════════════════════
-
-function setLoading(btn, isLoading, originalText) {
+function setLoading(btn, on, label) {
   if (!btn) return;
-  btn.classList.toggle('loading', isLoading);
-  btn.disabled = isLoading;
-  if (!isLoading) btn.querySelector('.btn-text').textContent = originalText;
+  btn.classList.toggle('loading', on);
+  btn.disabled = on;
+  if (!on) btn.querySelector('.btn-text').textContent = label;
 }
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 9. LOGIN — Firebase Email/Password
+// § 8. LOGIN
 // ═══════════════════════════════════════════════════════════════
-
-function validateLoginForm() {
-  const email    = DOM.loginEmail?.value    ?? '';
-  const password = DOM.loginPassword?.value ?? '';
-  let valid = true;
-
-  if (!Validators.email(email))       { setFieldState(DOM.loginEmail,    false); valid = false; }
-  if (!Validators.password(password)) { setFieldState(DOM.loginPassword, false); valid = false; }
-  if (!valid) showMessage(DOM.loginMessage, 'Please enter a valid email and password (min. 8 chars).', 'error');
-
-  return valid;
-}
 
 async function handleLogin() {
-  if (!validateLoginForm()) return;
+  const email    = DOM.loginEmail?.value.trim()   ?? '';
+  const password = DOM.loginPassword?.value       ?? '';
+  let ok = true;
 
-  const email    = DOM.loginEmail.value.trim();
-  const password = DOM.loginPassword.value;
+  if (!V.email(email))    { setFieldState(DOM.loginEmail,    false); ok = false; }
+  if (!V.password(password)) { setFieldState(DOM.loginPassword, false); ok = false; }
+  if (!ok) { showMessage(DOM.loginMessage, 'Valid email aur min. 8-char password daalo.'); return; }
 
   setLoading(DOM.loginBtn, true, 'Sign In');
   clearMessages();
 
   try {
-    await signInWithEmailAndPassword(auth, email, password);
-    showMessage(DOM.loginMessage, '✓ Signed in! Redirecting…', 'success');
-    setTimeout(() => { window.location.href = '/dashboard.html'; }, 900);
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    showMessage(
+      DOM.loginMessage,
+      `✓ Welcome back, ${cred.user.displayName || cred.user.email}!`,
+      'success'
+    );
+    // ✏️ Apna page yahan likho jab ready ho:
+    // setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
 
   } catch (err) {
-    showMessage(DOM.loginMessage, mapFirebaseError(err.code), 'error');
+    showMessage(DOM.loginMessage, mapError(err.code));
   } finally {
     setLoading(DOM.loginBtn, false, 'Sign In');
   }
@@ -307,68 +273,57 @@ DOM.loginBox?.addEventListener('keydown', (e) => { if (e.key === 'Enter') handle
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 10. SIGNUP — Firebase Create Account + Firestore Profile
+// § 9. SIGNUP  (Auth only — no Firestore needed)
 // ═══════════════════════════════════════════════════════════════
 
-function validateSignupForm() {
+async function handleSignup() {
   const firstName = DOM.signupFirstName?.value ?? '';
   const lastName  = DOM.signupLastName?.value  ?? '';
   const email     = DOM.signupEmail?.value     ?? '';
   const password  = DOM.signupPassword?.value  ?? '';
   const terms     = DOM.termsCheckbox?.checked ?? false;
 
-  let valid = true;
-  const errors = [];
+  let ok = true;
+  let firstError = '';
 
-  if (!Validators.name(firstName))    { setFieldState(DOM.signupFirstName, false); errors.push('First name must be at least 2 characters.');    valid = false; }
-  if (!Validators.name(lastName))     { setFieldState(DOM.signupLastName,  false); errors.push('Last name must be at least 2 characters.');     valid = false; }
-  if (!Validators.email(email))       { setFieldState(DOM.signupEmail,     false); errors.push('Please enter a valid email address.');           valid = false; }
-  if (!Validators.password(password)) { setFieldState(DOM.signupPassword,  false); errors.push('Password must be at least 8 characters.');      valid = false; }
-  if (!terms)                         { errors.push('Please accept the Terms of Service to continue.'); valid = false; }
+  if (!V.name(firstName))    { setFieldState(DOM.signupFirstName, false); firstError = firstError || 'First name min. 2 characters.';    ok = false; }
+  if (!V.name(lastName))     { setFieldState(DOM.signupLastName,  false); firstError = firstError || 'Last name min. 2 characters.';     ok = false; }
+  if (!V.email(email))       { setFieldState(DOM.signupEmail,     false); firstError = firstError || 'Valid email address daalo.';        ok = false; }
+  if (!V.password(password)) { setFieldState(DOM.signupPassword,  false); firstError = firstError || 'Password min. 8 characters hona chahiye.'; ok = false; }
+  if (!terms)                { firstError = firstError || 'Terms of Service accept karo.'; ok = false; }
 
-  if (!valid) showMessage(DOM.signupMessage, errors[0], 'error');
-  return valid;
-}
-
-async function handleSignup() {
-  if (!validateSignupForm()) return;
-
-  const firstName = DOM.signupFirstName.value.trim();
-  const lastName  = DOM.signupLastName.value.trim();
-  const email     = DOM.signupEmail.value.trim();
-  const password  = DOM.signupPassword.value;
+  if (!ok) { showMessage(DOM.signupMessage, firstError); return; }
 
   setLoading(DOM.signupBtn, true, 'Create Free Account');
   clearMessages();
 
   try {
-    // 1. Create user in Firebase Auth
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    // Step 1 — Firebase Auth mein account banao
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
 
-    // 2. Set display name in Auth profile
-    await updateProfile(user, {
+    // Step 2 — Display name save karo
+    await updateProfile(cred.user, {
       displayName: `${firstName} ${lastName}`,
     });
 
-    // 3. Save user profile in Firestore
-    await setDoc(doc(db, 'users', user.uid), {
-      uid:         user.uid,
-      firstName,
-      lastName,
-      displayName: `${firstName} ${lastName}`,
-      email,
-      photoURL:    user.photoURL ?? null,
-      createdAt:   serverTimestamp(),
-      plan:        'free',
-      exams:       [],
-    });
+    showMessage(
+      DOM.signupMessage,
+      `🎉 Account ban gaya, ${firstName}! Ab sign in karo.`,
+      'success'
+    );
 
-    showMessage(DOM.signupMessage, `✓ Welcome, ${firstName}! Setting up your account…`, 'success');
-    setTimeout(() => { window.location.href = '/onboarding.html'; }, 1000);
+    // Auto slide to login after 1.5s
+    setTimeout(() => {
+      showLoginView();
+      DOM.loginEmail.value = email;   // email pre-fill
+      showMessage(DOM.loginMessage, '✓ Account ready hai — ab sign in karo!', 'success');
+    }, 1500);
+
+    // ✏️ Apna onboarding page ready ho toh yahan uncomment karo:
+    // setTimeout(() => { window.location.href = 'onboarding.html'; }, 1200);
 
   } catch (err) {
-    showMessage(DOM.signupMessage, mapFirebaseError(err.code), 'error');
+    showMessage(DOM.signupMessage, mapError(err.code));
   } finally {
     setLoading(DOM.signupBtn, false, 'Create Free Account');
   }
@@ -379,53 +334,45 @@ DOM.signupBox?.addEventListener('keydown', (e) => { if (e.key === 'Enter') handl
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 11. GOOGLE SSO — Login & Signup unified
+// § 10. GOOGLE SSO
 // ═══════════════════════════════════════════════════════════════
 
 async function handleGoogleAuth(btn) {
-  const spanEl   = btn.querySelector('span');
-  const origText = spanEl?.textContent ?? 'Continue with Google';
+  const span     = btn.querySelector('span');
+  const origText = span?.textContent ?? 'Continue with Google';
 
   btn.disabled = true;
-  if (spanEl) spanEl.textContent = 'Connecting…';
-
-  const provider = new GoogleAuthProvider();
+  if (span) span.textContent = 'Connecting…';
 
   try {
+    const provider = new GoogleAuthProvider();
     const result   = await signInWithPopup(auth, provider);
     const user     = result.user;
 
-    const userRef  = doc(db, 'users', user.uid);
-    const userSnap = await getDoc(userRef);
+    // Check if this is a brand-new Google user
+    const isNew = result._tokenResponse?.isNewUser ?? false;
 
-    if (!userSnap.exists()) {
-      // New user — save profile, go to onboarding
-      const nameParts = (user.displayName ?? '').split(' ');
-      await setDoc(userRef, {
-        uid:         user.uid,
-        firstName:   nameParts[0] ?? '',
-        lastName:    nameParts.slice(1).join(' ') ?? '',
-        displayName: user.displayName ?? '',
-        email:       user.email,
-        photoURL:    user.photoURL ?? null,
-        createdAt:   serverTimestamp(),
-        plan:        'free',
-        exams:       [],
-      });
-      window.location.href = '/onboarding.html';
-    } else {
-      // Returning user — go to dashboard
-      window.location.href = '/dashboard.html';
-    }
+    showMessage(
+      DOM.loginMessage,
+      `✓ Welcome${isNew ? '' : ' back'}, ${user.displayName || user.email}!`,
+      'success'
+    );
+
+    console.log('Google Auth success:', user.email, '| New user:', isNew);
+
+    // ✏️ Redirect when pages are ready:
+    // setTimeout(() => {
+    //   window.location.href = isNew ? 'onboarding.html' : 'dashboard.html';
+    // }, 900);
 
   } catch (err) {
     const msgEl = DOM.formWrapper.classList.contains('show-signup')
       ? DOM.signupMessage
       : DOM.loginMessage;
-    showMessage(msgEl, mapFirebaseError(err.code), 'error');
+    showMessage(msgEl, mapError(err.code));
   } finally {
     btn.disabled = false;
-    if (spanEl) spanEl.textContent = origText;
+    if (span) span.textContent = origText;
   }
 }
 
@@ -434,63 +381,54 @@ DOM.googleSignUp?.addEventListener('click', () => handleGoogleAuth(DOM.googleSig
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 12. FORGOT PASSWORD
+// § 11. FORGOT PASSWORD
 // ═══════════════════════════════════════════════════════════════
 
 DOM.forgotPassword?.addEventListener('click', async (e) => {
   e.preventDefault();
-
   const email = DOM.loginEmail?.value?.trim();
 
-  if (!email || !Validators.email(email)) {
+  if (!email || !V.email(email)) {
     setFieldState(DOM.loginEmail, false);
-    showMessage(DOM.loginMessage, 'Enter your email above first, then click Forgot Password.', 'error');
+    showMessage(DOM.loginMessage, 'Pehle upar apna email daalo, phir click karo.');
     DOM.loginEmail?.focus();
     return;
   }
 
   try {
     await sendPasswordResetEmail(auth, email);
-    showMessage(DOM.loginMessage, `✓ Reset link sent to ${email}. Check your inbox.`, 'success');
+    showMessage(DOM.loginMessage, `✓ Reset link bhej diya ${email} pe. Inbox check karo.`, 'success');
   } catch (err) {
-    showMessage(DOM.loginMessage, mapFirebaseError(err.code), 'error');
+    showMessage(DOM.loginMessage, mapError(err.code));
   }
 });
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 13. FIREBASE ERROR MAP
+// § 12. FIREBASE ERROR MESSAGES (Hinglish friendly)
 // ═══════════════════════════════════════════════════════════════
 
-function mapFirebaseError(code) {
-  const ERRORS = {
-    'auth/user-not-found':          'No account found with this email. Please sign up.',
-    'auth/wrong-password':          'Incorrect password. Try again or reset it.',
-    'auth/invalid-credential':      'Invalid email or password. Please check and try again.',
-    'auth/email-already-in-use':    'This email is already registered. Try signing in instead.',
-    'auth/weak-password':           'Password is too weak. Please use at least 8 characters.',
-    'auth/invalid-email':           'Please enter a valid email address.',
-    'auth/too-many-requests':       'Too many attempts. Please wait a moment and try again.',
-    'auth/network-request-failed':  'Network error. Check your connection and retry.',
-    'auth/popup-closed-by-user':    'Google sign-in was cancelled. Please try again.',
-    'auth/cancelled-popup-request': 'Only one sign-in window allowed at a time.',
-    'auth/operation-not-allowed':   'This sign-in method is disabled. Contact support.',
-    'auth/user-disabled':           'This account has been disabled. Contact support.',
+function mapError(code) {
+  const MAP = {
+    'auth/user-not-found':          'Is email ka koi account nahi mila. Pehle sign up karo.',
+    'auth/wrong-password':          'Password galat hai. Dobara try karo ya reset karo.',
+    'auth/invalid-credential':      'Email ya password galat hai. Check karke retry karo.',
+    'auth/email-already-in-use':    'Yeh email already registered hai. Sign in karo.',
+    'auth/weak-password':           'Password bahut weak hai. Min. 8 characters use karo.',
+    'auth/invalid-email':           'Valid email address daalo.',
+    'auth/too-many-requests':       'Bahut zyada attempts. Thodi der baad try karo.',
+    'auth/network-request-failed':  'Network error. Internet connection check karo.',
+    'auth/popup-closed-by-user':    'Google sign-in cancel ho gaya. Dobara try karo.',
+    'auth/cancelled-popup-request': 'Ek waqt mein sirf ek sign-in window allowed hai.',
+    'auth/operation-not-allowed':   'Yeh sign-in method enable nahi hai. Support se contact karo.',
+    'auth/user-disabled':           'Yeh account disabled hai. Support se contact karo.',
   };
-  return ERRORS[code] ?? 'Something went wrong. Please try again.';
+  return MAP[code] ?? 'Kuch galat ho gaya. Dobara try karo.';
 }
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 14. PUBLIC EXPORTS
+// § 13. EXPORTS
 // ═══════════════════════════════════════════════════════════════
 
-export {
-  showSignupView,
-  showLoginView,
-  showMessage,
-  clearMessages,
-  mapFirebaseError,
-  getPasswordStrength,
-};wordStrength,
-};
+export { showSignupView, showLoginView, showMessage, clearMessages, mapError, getPasswordStrength };
