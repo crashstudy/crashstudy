@@ -76,7 +76,7 @@ const DOM = {
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    window.location.href = '/dashboard.html';
+    window.location.href = '/index.html';
   }
 });
 
@@ -293,7 +293,7 @@ async function handleLogin() {
   try {
     await signInWithEmailAndPassword(auth, email, password);
     showMessage(DOM.loginMessage, '✓ Signed in! Redirecting…', 'success');
-    setTimeout(() => { window.location.href = '/dashboard.html'; }, 900);
+    setTimeout(() => { window.location.href = '/index.html'; }, 900);
 
   } catch (err) {
     showMessage(DOM.loginMessage, mapFirebaseError(err.code), 'error');
@@ -365,7 +365,7 @@ async function handleSignup() {
     });
 
     showMessage(DOM.signupMessage, `✓ Welcome, ${firstName}! Setting up your account…`, 'success');
-    setTimeout(() => { window.location.href = '/onboarding.html'; }, 1000);
+    setTimeout(() => { window.location.href = '/syllabus.html'; }, 1000);
 
   } catch (err) {
     showMessage(DOM.signupMessage, mapFirebaseError(err.code), 'error');
@@ -412,10 +412,10 @@ async function handleGoogleAuth(btn) {
         plan:        'free',
         exams:       [],
       });
-      window.location.href = '/onboarding.html';
+      window.location.href = '/syllabus.html';
     } else {
       // Returning user — go to dashboard
-      window.location.href = '/dashboard.html';
+      window.location.href = '/index.html';
     }
 
   } catch (err) {
@@ -492,4 +492,5 @@ export {
   clearMessages,
   mapFirebaseError,
   getPasswordStrength,
+};wordStrength,
 };
