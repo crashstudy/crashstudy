@@ -70,7 +70,7 @@ onAuthStateChanged(auth, (user) => {
     console.log('✅ Logged in as:', user.email, '| UID:', user.uid);
 
     // Uncomment when your dashboard page is ready:
-    // window.location.href = 'dashboard.html';
+    window.location.href = 'index.html';
   }
 });
 
@@ -259,7 +259,7 @@ async function handleLogin() {
       'success'
     );
     // ✏️ Apna page yahan likho jab ready ho:
-    // setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
+     setTimeout(() => { window.location.href = 'index.html'; }, 900);
 
   } catch (err) {
     showMessage(DOM.loginMessage, mapError(err.code));
@@ -320,7 +320,7 @@ async function handleSignup() {
     }, 1500);
 
     // ✏️ Apna onboarding page ready ho toh yahan uncomment karo:
-    // setTimeout(() => { window.location.href = 'onboarding.html'; }, 1200);
+    setTimeout(() => { window.location.href = 'syllabus.html'; }, 1200);
 
   } catch (err) {
     showMessage(DOM.signupMessage, mapError(err.code));
@@ -361,8 +361,8 @@ async function handleGoogleAuth(btn) {
     console.log('Google Auth success:', user.email, '| New user:', isNew);
 
     // ✏️ Redirect when pages are ready:
-    // setTimeout(() => {
-    //   window.location.href = isNew ? 'onboarding.html' : 'dashboard.html';
+     setTimeout(() => {
+       window.location.href = isNew ? 'syllabus.html' : 'index.html';
     // }, 900);
 
   } catch (err) {
@@ -431,4 +431,4 @@ function mapError(code) {
 // § 13. EXPORTS
 // ═══════════════════════════════════════════════════════════════
 
-export { showSignupView, showLoginView, showMessage, clearMessages, mapError, getPasswordStrength };
+export { showSignupView, showLoginView, showMessage, clearMessages, mapError, getPasswordStrength };rror, getPasswordStrength };
