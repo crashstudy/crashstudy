@@ -1,121 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Signup | CrashStudy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="auth.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CrashStudy — Login / Sign Up</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="auth.css" />
 </head>
 <body>
 
-    <div class="auth-container">
-        <div class="auth-left">
-            <div class="glow-orb orb-1"></div>
-            <div class="glow-orb orb-2"></div>
-            
-            <a href="index.html" class="brand-logo">
-                <span class="gradient-text">Crash</span>Study
-            </a>
+  <!-- ░░ NOISE TEXTURE OVERLAY ░░ -->
+  <div class="noise-overlay" aria-hidden="true"></div>
 
-            <div class="left-content">
-                <h1 class="auth-hero-title">Your Journey to <br><span class="gradient-text">Selection</span> Starts Here.</h1>
-                <p class="auth-hero-subtitle">Join thousands of serious aspirants preparing for SSC CGL, AFCAT, and CAPF with AI-driven tools.</p>
-                
-                <div class="testimonial-card glass-panel">
-                    <p class="quote">"The Mistake Book and Daily Shorts feed completely changed my revision game. Cleared my exams in the first attempt!"</p>
-                    <div class="student-info">
-                        <img src="https://ui-avatars.com/api/?name=Vikash+S&background=00F0FF&color=000" alt="Student">
-                        <div>
-                            <h4>Vikash S.</h4>
-                            <span>Selected in CAPF (AC)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <main class="auth-shell">
+
+    <!-- ════════════════════════════════════
+         LEFT PANEL — Branding & Trust
+    ════════════════════════════════════ -->
+    <section class="auth-left" aria-label="Branding panel">
+
+      <!-- Background Orbs -->
+      <div class="orb orb-1" aria-hidden="true"></div>
+      <div class="orb orb-2" aria-hidden="true"></div>
+      <div class="orb orb-3" aria-hidden="true"></div>
+
+      <!-- Grid Lines Overlay -->
+      <div class="grid-lines" aria-hidden="true"></div>
+
+      <!-- Logo -->
+      <a href="#" class="brand-logo" aria-label="CrashStudy home">
+        <div class="logo-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 2L26 8V14C26 20.627 20.627 26 14 26C7.373 26 2 20.627 2 14V8L14 2Z" stroke="url(#logoGrad)" stroke-width="1.5" fill="none"/>
+            <path d="M9 14L12.5 17.5L19 11" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#00F0FF"/>
+                <stop offset="1" stop-color="#FF007A"/>
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
+        <span class="logo-text"><span class="gradient-text">Crash</span>Study</span>
+      </a>
 
-        <div class="auth-right">
-            <div class="form-wrapper">
-                
-                <div class="form-box" id="loginBox">
-                    <div class="form-header">
-                        <h2>Welcome Back</h2>
-                        <p>Sign in to continue your daily streak.</p>
-                    </div>
-
-                    <button class="btn-social-auth" id="googleLoginBtn">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google Logo" class="google-icon">
-                        Sign in with Google
-                    </button>
-
-                    <div class="divider">
-                        <span>OR CONTINUE WITH EMAIL</span>
-                    </div>
-
-                    <form id="loginFormNative" class="auth-form">
-                        <div class="input-group">
-                            <label>Email Address</label>
-                            <input type="email" placeholder="aspirant@crashstudy.com" required>
-                        </div>
-                        <div class="input-group">
-                            <label>Password</label>
-                            <input type="password" placeholder="••••••••" required>
-                            <a href="#" class="forgot-link">Forgot Password?</a>
-                        </div>
-                        <button type="button" class="btn-primary-glow btn-full">Sign In</button>
-                    </form>
-
-                    <p class="toggle-text">Don't have an account? <span class="toggle-link" id="showSignup">Create a free account</span></p>
-                </div>
-
-                <div class="form-box signup-box" id="signupBox">
-                    <div class="form-header">
-                        <h2>Create Account</h2>
-                        <p>Join the elite tier of competitive exam aspirants.</p>
-                    </div>
-
-                    <button class="btn-social-auth" id="googleSignupBtn">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google Logo" class="google-icon">
-                        Sign up with Google
-                    </button>
-
-                    <div class="divider">
-                        <span>OR REGISTER WITH EMAIL</span>
-                    </div>
-
-                    <form id="signupFormNative" class="auth-form">
-                        <div class="input-row">
-                            <div class="input-group">
-                                <label>First Name</label>
-                                <input type="text" placeholder="Rahul" required>
-                            </div>
-                            <div class="input-group">
-                                <label>Last Name</label>
-                                <input type="text" placeholder="Kumar" required>
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <label>Email Address</label>
-                            <input type="email" placeholder="rahul@example.com" required>
-                        </div>
-                        <div class="input-group">
-                            <label>Password</label>
-                            <input type="password" placeholder="Create a strong password" required id="regPassword">
-                            <div class="password-strength">
-                                <div class="strength-bar"></div>
-                            </div>
-                        </div>
-                        <button type="button" class="btn-primary-glow btn-full">Create Account</button>
-                    </form>
-
-                    <p class="toggle-text">Already an aspirant? <span class="toggle-link" id="showLogin">Sign in here</span></p>
-                </div>
-
-            </div>
+      <!-- Hero Content -->
+      <div class="left-content">
+        <div class="tag-badge">
+          <span class="badge-dot" aria-hidden="true"></span>
+          AI-Powered Exam Prep
         </div>
-    </div>
+        <h1 class="left-heading">
+          Your Rank.<br/>
+          <span class="gradient-text">Your Future.</span><br/>
+          Our Mission.
+        </h1>
+        <p class="left-sub">
+          Trusted by <strong>1.4 Lakh+</strong> aspirants preparing for SSC CGL,
+          AFCAT, CAPF, and more. Intelligent practice. Real results.
+        </p>
 
-    <script type="module" src="auth.js"></script>
+        <!-- Stat Pills -->
+        <div class="stat-row">
+          <div class="stat-pill">
+            <span class="stat-num">94%</span>
+            <span class="stat-label">Selection Rate</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-num">2.1M+</span>
+            <span class="stat-label">Tests Taken</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-num">500+</span>
+            <span class="stat-label">Expert Topics</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial Card (Glassmorphism) -->
+      <div class="testimonial-card glass-card">
+        <div class="quote-icon" aria-hidden="true">
+          <svg width="20" height="16" viewBox="0 0 20 16" fill="none">
+            <path d="M0 16V9.6C0 4.267 3.2 1.067 9.6 0L10.8 2.133C8.4 2.667 6.8 3.467 6 4.533C5.2 5.6 4.933 7.067 5.2 8.933H8V16H0ZM11.2 16V9.6C11.2 4.267 14.4 1.067 20.8 0L22 2.133C19.6 2.667 18 3.467 17.2 4.533C16.4 5.6 16.133 7.067 16.4 8.933H19.2V16H11.2Z" fill="url(#quoteGrad)"/>
+            <defs>
+              <linearGradient id="quoteGrad" x1="0" y1="0" x2="22" y2="16">
+                <stop stop-color="#00F0FF" stop-opacity="0.8"/>
+                <stop offset="1" stop-color="#FF007A" stop-opacity="0.8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <p class="testimonial-text">
+          CrashStudy's AI mock tests pinpointed my weak spots in Reasoning
+          and GK. I went from 110 to 178 marks in SSC CGL Tier-1 in just
+          3 months. This platform is genuinely different.
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar" aria-label="Student photo placeholder">
+            <span class="avatar-initials">AK</span>
+            <div class="avatar-ring" aria-hidden="true"></div>
+          </div>
+          <div class="author-info">
+            <span class="author-name">Aarav Kumar</span>
+            <span class="author-title">SSC CGL 2024 — Rank 312</span>
+          </div>
+          <div class="selection-badge" aria-label="Selected">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 6L5 9L10 3" stroke="#00F0FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Selected
+          </div>
+        </div>
+      </div>
+
+    </section>
+    <!-- END LEFT PANEL -->
+
+
+    <!-- ════════════════════════════════════
+         RIGHT PANEL — Forms
+    ════════════════════════════════════ -->
+    <section class="auth-right" aria-label="Authentication forms">
+
+      <!-- Mobile Logo (visible only on small screens) -->
+      <a href="#" class="brand-logo mobile-logo" aria-label="CrashStudy home">
+        <div class="logo-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+            <path d="M14 2L26 8V14C26 20.627 20.627 26 14 26C7.373 26 2 20.627 2 14V8L14 2Z" stroke="url(#logoGradM)" stroke-width="1.5" fill="none"/>
+            <path d="M9 14L12.5 17.5L19 11" stroke="url(#logoGradM)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="logoGradM" x1="2" y1="2" x2="26" y2="26">
+                <stop stop-color="#00F0FF"/>
+                <stop offset="1" stop-color="#FF007A"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text"><span class="gradient-text">Crash</span>Study</span>
+      </a>
+
+      <!-- ── FORM WRAPPER (slides between login/signup) ── -->
+      <div class="form-wrapper" id="formWrapper" role="region" aria-live="polite">
+
+        <!-- ─── LOGIN BOX ─── -->
+        <div class="form-box" id="loginBox" aria-label="Sign in form">
+          <div class="form-header">
+            <h2 class="form-title">Welcome back, Aspirant</h2>
+            <p class="form-subtitle">Your rank awaits — let's continue.</p>
+          </div>
+
+          <!-- Google SSO -->
+          <button class="btn-google" id="googleSignIn" type="button" aria-label="Sign in with Google">
+            <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            <span>Continue with Google</span>
+          </button>
+
+          <div class="divider" role="separator">
+            <span>or sign in with email</span>
+          </div>
+
+          <!-- Email -->
+          <div class="input-group">
+            <label class="input-label" for="loginEmail">Email Address</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <input
+                type="email"
+                id="loginEmail"
+                class="input-field"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Password with Forgot link -->
+          <div class="input-group">
+            <div class="label-row">
+              <label class="input-label" for="loginPassword">Password</label>
+              <a href="#" class="forgot-link" id="forgotPassword">Forgot Password?</a>
+            </div>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M7 11V7C7 4.239 9.239 2 12 2C14.761 2 17 4.239 17 7V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <input
+                type="password"
+                id="loginPassword"
+                class="input-field"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+              />
+              <button type="button" class="toggle-pass" aria-label="Toggle password visibility" data-target="loginPassword">
+                <svg class="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="button" class="btn-primary" id="loginBtn">
+            <span class="btn-text">Sign In</span>
+            <div class="btn-glow" aria-hidden="true"></div>
+          </button>
+
+          <!-- Error message slot -->
+          <div class="form-message" id="loginMessage" role="alert" aria-live="assertive"></div>
+
+          <!-- Footer Toggle -->
+          <p class="form-footer">
+            Don't have an account?
+            <span class="form-switch" id="showSignup" role="button" tabindex="0">
+              Create a free account
+            </span>
+          </p>
+        </div>
+        <!-- END LOGIN BOX -->
+
+
+        <!-- ─── SIGNUP BOX ─── -->
+        <div class="form-box form-box--signup" id="signupBox" aria-label="Create account form" aria-hidden="true">
+          <div class="form-header">
+            <h2 class="form-title">Join 1.4L+ Aspirants</h2>
+            <p class="form-subtitle">Free forever. Upgrade when you're ready.</p>
+          </div>
+
+          <!-- Google SSO -->
+          <button class="btn-google" id="googleSignUp" type="button" aria-label="Sign up with Google">
+            <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            <span>Continue with Google</span>
+          </button>
+
+          <div class="divider" role="separator">
+            <span>or sign up with email</span>
+          </div>
+
+          <!-- Name Row -->
+          <div class="input-row">
+            <div class="input-group">
+              <label class="input-label" for="signupFirstName">First Name</label>
+              <div class="input-wrap">
+                <input
+                  type="text"
+                  id="signupFirstName"
+                  class="input-field"
+                  placeholder="Aarav"
+                  autocomplete="given-name"
+                  required
+                />
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="signupLastName">Last Name</label>
+              <div class="input-wrap">
+                <input
+                  type="text"
+                  id="signupLastName"
+                  class="input-field"
+                  placeholder="Kumar"
+                  autocomplete="family-name"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="input-group">
+            <label class="input-label" for="signupEmail">Email Address</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <input
+                type="email"
+                id="signupEmail"
+                class="input-field"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Password with Strength Meter -->
+          <div class="input-group">
+            <label class="input-label" for="signupPassword">Password</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M7 11V7C7 4.239 9.239 2 12 2C14.761 2 17 4.239 17 7V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <input
+                type="password"
+                id="signupPassword"
+                class="input-field"
+                placeholder="Min. 8 characters"
+                autocomplete="new-password"
+                required
+              />
+              <button type="button" class="toggle-pass" aria-label="Toggle password visibility" data-target="signupPassword">
+                <svg class="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="currentColor" stroke-width="1.5"/>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </button>
+            </div>
+            <!-- Password Strength Meter -->
+            <div class="password-strength" role="status" aria-label="Password strength indicator">
+              <div class="strength-track">
+                <div class="strength-bar" id="strengthBar"></div>
+              </div>
+              <span class="strength-label" id="strengthLabel"></span>
+            </div>
+          </div>
+
+          <!-- Terms -->
+          <label class="terms-check">
+            <input type="checkbox" id="termsCheckbox" />
+            <span class="custom-checkbox" aria-hidden="true"></span>
+            <span class="terms-text">
+              I agree to the
+              <a href="#" class="terms-link">Terms of Service</a> &amp;
+              <a href="#" class="terms-link">Privacy Policy</a>
+            </span>
+          </label>
+
+          <!-- Submit -->
+          <button type="button" class="btn-primary" id="signupBtn">
+            <span class="btn-text">Create Free Account</span>
+            <div class="btn-glow" aria-hidden="true"></div>
+          </button>
+
+          <!-- Error / Success message slot -->
+          <div class="form-message" id="signupMessage" role="alert" aria-live="assertive"></div>
+
+          <!-- Footer Toggle -->
+          <p class="form-footer">
+            Already an aspirant?
+            <span class="form-switch" id="showLogin" role="button" tabindex="0">
+              Sign in here
+            </span>
+          </p>
+        </div>
+        <!-- END SIGNUP BOX -->
+
+      </div>
+      <!-- END FORM WRAPPER -->
+
+    </section>
+    <!-- END RIGHT PANEL -->
+
+  </main>
+
+  <!-- ░░ SCRIPTS ░░ -->
+  <script type="module" src="auth.js"></script>
 </body>
 </html>
