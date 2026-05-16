@@ -1,15 +1,294 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>CrashStudy</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrashStudy | Premium Exam Preparation & AI Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h1>CrashStudy</h1>
-  <p>Fast revision platform for SSC aspirants. test </p>
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
-  <button>Start Learning</button>
+    <!-- Preloader -->
+    <div id="loader">
+        <div class="spinner"></div>
+        <h2>CrashStudy</h2>
+    </div>
 
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="gradient-text">Crash</span>Study
+            </div>
+            <ul class="nav-links">
+                <li><a href="#exams">Exams</a></li>
+                <li><a href="#syllabus">Syllabus</a></li>
+                <li><a href="#tools">AI Tools</a></li>
+                <li><a href="#roadmap">Roadmap</a></li>
+                <li><a href="#community">Community</a></li>
+            </ul>
+            <div class="nav-cta">
+                <button class="btn-primary">Join Free</button>
+            </div>
+            <div class="mobile-menu-btn">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="hero-content reveal">
+            <div class="badge">🚀 The Future of Competitive Exams</div>
+            <h1 class="hero-title">Dominate Your Exams with <span class="gradient-text">CrashStudy</span></h1>
+            <p class="hero-subtitle">Premium notes, AI-driven study tools, and master syllabus trackers for SSC CGL, CAPF, AFCAT, and more. Your ultimate arsenal for government exams.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary glow-btn">Start Preparing Now</button>
+                <button class="btn-secondary">Explore Syllabus</button>
+            </div>
+        </div>
+        <div class="hero-visual tilt-card">
+            <div class="glass-panel floating">
+                <div class="panel-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                </div>
+                <div class="panel-body">
+                    <h3>Daily Streak: 🔥 42 Days</h3>
+                    <div class="progress-bar"><div class="fill" style="width: 85%;"></div></div>
+                    <p>SSC CGL Mock Test: <strong>Score 165/200</strong></p>
+                    <p>AI Suggestion: Focus on Advanced Arithmetic.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Animated Stats Section -->
+    <section class="stats-section reveal">
+        <div class="stat-box">
+            <h2 class="counter" data-target="500000">0</h2><span>+</span>
+            <p>Active Aspirants</p>
+        </div>
+        <div class="stat-box">
+            <h2 class="counter" data-target="15000">0</h2><span>+</span>
+            <p>Selections</p>
+        </div>
+        <div class="stat-box">
+            <h2 class="counter" data-target="120">0</h2><span>+</span>
+            <p>Mock Tests</p>
+        </div>
+        <div class="stat-box">
+            <h2 class="counter" data-target="24">0</h2><span>/7</span>
+            <p>AI Support</p>
+        </div>
+    </section>
+
+    <!-- Exam Categories -->
+    <section class="exams-section" id="exams">
+        <div class="section-header reveal">
+            <h2>Target <span class="gradient-text">Exams</span></h2>
+            <p>Select your battlefield. We provide specialized arsenals for every major exam.</p>
+        </div>
+        <div class="card-grid">
+            <div class="card tilt-card reveal">
+                <h3>SSC CGL</h3>
+                <p>Complete notes, previous year papers, and advanced math tricks for Combined Graduate Level.</p>
+                <a href="#" class="card-link">Explore →</a>
+            </div>
+            <div class="card tilt-card reveal">
+                <h3>CAPF (AC)</h3>
+                <p>Paper I & II strategies, current affairs, and descriptive writing guides.</p>
+                <a href="#" class="card-link">Explore →</a>
+            </div>
+            <div class="card tilt-card reveal">
+                <h3>AFCAT</h3>
+                <p>Military aptitude, reasoning, and GK modules tailored for Air Force aspirants.</p>
+                <a href="#" class="card-link">Explore →</a>
+            </div>
+            <div class="card tilt-card reveal">
+                <h3>SSC CHSL & MTS</h3>
+                <p>High-yield quick notes and typing test software recommendations.</p>
+                <a href="#" class="card-link">Explore →</a>
+            </div>
+            <div class="card tilt-card reveal">
+                <h3>SSC GD</h3>
+                <p>Constable specific physical standards guide and foundational written prep.</p>
+                <a href="#" class="card-link">Explore →</a>
+            </div>
+            <div class="card tilt-card reveal">
+                <h3>Banking & Railway</h3>
+                <p>Speed calculation techniques, puzzles, and technical syllabus coverage.</p>
+                <a href="#" class="card-link">Explore →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Master Syllabus Section -->
+    <section class="syllabus-section" id="syllabus">
+        <div class="section-header reveal">
+            <h2>Master <span class="gradient-text">Syllabus</span></h2>
+            <p>Granular notes and tracking for every subject.</p>
+        </div>
+        <div class="card-grid">
+            <div class="glass-card reveal">
+                <div class="icon">🌍</div>
+                <h3>GK & GS</h3>
+                <p>Geography, History, Polity, and General Science notes optimized for retention.</p>
+            </div>
+            <div class="glass-card reveal">
+                <div class="icon">📐</div>
+                <h3>Mathematics</h3>
+                <p>Arithmetic and Advanced Maths with shortcut formulas.</p>
+            </div>
+            <div class="glass-card reveal">
+                <div class="icon">📝</div>
+                <h3>English Grammar</h3>
+                <p>Vocab builders, comprehension tricks, and grammar rules.</p>
+            </div>
+            <div class="glass-card reveal">
+                <div class="icon">🧠</div>
+                <h3>Reasoning</h3>
+                <p>Verbal and non-verbal reasoning masterclasses.</p>
+            </div>
+            <div class="glass-card reveal">
+                <div class="icon">📰</div>
+                <h3>Current Affairs</h3>
+                <p>Daily, weekly, and monthly compiled PDFs.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Retention Tools -->
+    <section class="tools-section" id="tools">
+        <div class="section-header reveal">
+            <h2>Next-Gen <span class="gradient-text">Tools</span></h2>
+            <p>Smart utilities to accelerate your workflow and track your progress.</p>
+        </div>
+        <div class="tools-layout">
+            <div class="tool-card tilt-card reveal">
+                <h3>🤖 AI Study Assistant</h3>
+                <p>Ask doubts, get instant explanations for tough math problems, and generate custom study schedules.</p>
+            </div>
+            <div class="tool-card tilt-card reveal">
+                <h3>📊 Master Syllabus Tracker</h3>
+                <p>Visually track your completion percentage across Geography, English, and more.</p>
+            </div>
+            <div class="tool-card tilt-card reveal">
+                <h3>📄 Smart Resume Builder</h3>
+                <p>Generate ATS-friendly resumes for private sector backups and interviews.</p>
+            </div>
+            <div class="tool-card tilt-card reveal">
+                <h3>⚡ Auto Notes Maker</h3>
+                <p>Paste text or YouTube transcripts and let AI summarize it into bullet points.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap & Timeline -->
+    <section class="roadmap-section" id="roadmap">
+        <div class="section-header reveal">
+            <h2>Topper's <span class="gradient-text">Roadmap</span></h2>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Month 1-2: Foundation</h3>
+                    <p>Clear all basic concepts in Maths and English. Start reading daily Current Affairs.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Month 3-4: Advanced Practice</h3>
+                    <p>Complete GS/Geography tracking. Start section-wise mock tests.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Month 5-6: Mock Test Mastery</h3>
+                    <p>Attempt full-length mocks daily. Analyze weak areas using the AI Assistant.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community & Links -->
+    <section class="community-section" id="community">
+        <div class="glass-banner reveal">
+            <h2>Join the <span class="gradient-text">Elite Community</span></h2>
+            <p>Get instant updates, free PDFs, and live class notifications.</p>
+            <div class="social-buttons">
+                <a href="#" class="btn-social telegram">Join Telegram</a>
+                <a href="#" class="btn-social youtube">Subscribe YouTube</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials-section reveal">
+        <div class="section-header">
+            <h2>Success <span class="gradient-text">Stories</span></h2>
+        </div>
+        <div class="testimonial-grid">
+            <div class="testimonial-card glass-card tilt-card">
+                <p>"The Master Tracker completely changed how I studied for AFCAT. The AI assistant cleared my arithmetic doubts instantly."</p>
+                <h4>- Rahul S., Selected AFCAT 2025</h4>
+            </div>
+            <div class="testimonial-card glass-card tilt-card">
+                <p>"CrashStudy's CAPF Paper II notes are unmatched. The modern UI kept me focused and motivated during late-night sessions."</p>
+                <h4>- Aman K., CAPF AC</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (Massive Directory & Adsense Compliant) -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h2><span class="gradient-text">Crash</span>Study</h2>
+                <p>The premium ecosystem for serious aspirants. Upgrade your preparation today.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#exams">Exams</a></li>
+                    <li><a href="#syllabus">Syllabus</a></li>
+                    <li><a href="#tools">Tools</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3>Legal & Policies</h3>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Disclaimer</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Sitemap</a></li>
+                    <li><a href="#">Advertise</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 CrashStudy. All Rights Reserved. Built for Excellence.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
