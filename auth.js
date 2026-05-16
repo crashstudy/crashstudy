@@ -363,7 +363,7 @@ async function handleGoogleAuth(btn) {
     // ✏️ Redirect when pages are ready:
      setTimeout(() => {
        window.location.href = isNew ? 'syllabus.html' : 'index.html';
-    // }, 900);
+     }, 900);
 
   } catch (err) {
     const msgEl = DOM.formWrapper.classList.contains('show-signup')
@@ -431,4 +431,5 @@ function mapError(code) {
 // § 13. EXPORTS
 // ═══════════════════════════════════════════════════════════════
 
-export { showSignupView, showLoginView, showMessage, clearMessages, mapError, getPasswordStrength };rror, getPasswordStrength };
+export { showSignupView, showLoginView, showMessage, clearMessages, mapE
+, getPasswordStrength }; };};rror, getPasswordStrength };
