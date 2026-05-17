@@ -16,7 +16,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
-    cursor: none; /* Custom cursor */
+    cursor: none; 
 }
 
 html {
@@ -109,53 +109,15 @@ nav {
     padding: 20px 5%; max-width: 1400px; margin: 0 auto;
 }
 .logo { font-size: 1.8rem; font-weight: 800; font-family: 'Poppins', sans-serif; }
-@media (max-width: 768px) {
-    /* Replace the old .nav-links with this */
-    .nav-links { 
-        position: absolute;
-        top: 75px;
-        left: 0;
-        width: 100%;
-        background: rgba(7, 9, 19, 0.98);
-        backdrop-filter: blur(20px);
-        flex-direction: column;
-        align-items: center;
-        padding: 30px 0;
-        gap: 25px;
-        border-bottom: 1px solid var(--glass-border);
-        /* Hidden state */
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(-20px);
-        transition: all 0.3s ease;
-    }
+.right-nav { display: flex; align-items: center; gap: 20px; }
 
-    /* Active state added by JavaScript */
-    .nav-links.active {
-        opacity: 1;
-        pointer-events: auto;
-        transform: translateY(0);
-    }
-
-    .nav-cta { display: none; }
-    .mobile-menu-btn { display: flex; cursor: pointer; }
-    .hero-title { font-size: 2.8rem; }
-    .hero-visual { width: 100%; max-width: 400px; }
-    .stats-section { flex-direction: column; gap: 40px; }
-    .footer-grid { grid-template-columns: 1fr; }
-}
-
-/* BONUS FIX: Hide custom cursor on mobile touch screens for better UX */
-@media (pointer: coarse) {
-    .cursor-dot, .cursor-outline { display: none !important; }
-    * { cursor: auto !important; }
-}
-
+.nav-links { display: flex; gap: 25px; list-style: none; }
 .nav-links a {
     color: var(--text-main); text-decoration: none; font-weight: 500;
     position: relative; transition: color 0.3s;
 }
 .nav-links a:hover { color: var(--primary-blue); }
+
 .btn-primary {
     background: linear-gradient(45deg, var(--primary-blue), var(--primary-pink));
     border: none; padding: 12px 28px; border-radius: 30px;
@@ -187,11 +149,11 @@ nav {
 .btn-secondary {
     background: transparent; border: 1px solid var(--text-muted);
     padding: 12px 28px; border-radius: 30px; color: white; font-weight: 600;
-    transition: all 0.3s;
+    transition: all 0.3s; cursor: pointer;
 }
 .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: white; }
 
-/* HERO VISUAL (DASHBOARD MOCKUP) */
+/* HERO VISUAL */
 .hero-visual { width: 500px; perspective: 1000px; z-index: 2; }
 .glass-panel {
     background: var(--bg-card); backdrop-filter: blur(20px);
@@ -287,12 +249,8 @@ section { padding: 100px 5%; max-width: 1400px; margin: 0 auto; }
 .testimonial-card h4 { color: var(--primary-blue); }
 
 /* FOOTER */
-footer {
-    background: #04050a; padding: 80px 5% 30px; border-top: 1px solid var(--glass-border);
-}
-.footer-grid {
-    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; max-width: 1400px; margin: 0 auto; margin-bottom: 60px;
-}
+footer { background: #04050a; padding: 80px 5% 30px; border-top: 1px solid var(--glass-border); }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; max-width: 1400px; margin: 0 auto; margin-bottom: 60px; }
 .footer-brand p { color: var(--text-muted); margin-top: 15px; max-width: 300px; }
 .footer-links h3 { font-size: 1.2rem; margin-bottom: 20px; color: white; }
 .footer-links ul { list-style: none; }
@@ -301,7 +259,10 @@ footer {
 .footer-links ul li a:hover { color: var(--primary-orange); }
 .footer-bottom { text-align: center; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; }
 
-/* RESPONSIVE DESIGN */
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN (Mobiles & Tablets)
+   ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 992px) {
     .hero { flex-direction: column; text-align: center; padding-top: 150px; }
     .hero-content { margin-bottom: 60px; }
@@ -313,24 +274,53 @@ footer {
     .timeline-item:nth-child(even) .timeline-dot { left: 20px; }
     .footer-grid { grid-template-columns: 1fr 1fr; }
 }
+
 @media (max-width: 768px) {
-    /* The hidden mobile menu */
     .nav-links { 
         position: absolute;
-        top: 100%; /* Sits exactly below the navbar */
+        top: 100%;
         left: 0;
         width: 100%;
         background: rgba(7, 9, 19, 0.98);
         backdrop-filter: blur(20px);
-        display: flex; /* Required to show the items */
+        display: flex;
         flex-direction: column;
         align-items: center;
         padding: 30px 0;
         gap: 25px;
         border-bottom: 1px solid var(--glass-border);
-        /* Hidden state settings */
         opacity: 0;
         visibility: hidden;
+        transform: translateY(-20px);
+        transition: all 0.3s ease;
+    }
+
+    .nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    /* 🔥 YAHAN FIX HAI: Hide nahi kiya, bas chhota karke set kar diya */
+    .nav-cta { 
+        display: flex !important;
+        transform: scale(0.85); /* Thoda chhota karega taaki fit ho jaye */
+    }
+    
+    .mobile-menu-btn { display: flex; cursor: pointer; }
+    
+    .hero-title { font-size: 2.8rem; }
+    .hero-visual { width: 100%; max-width: 400px; }
+    .stats-section { flex-direction: column; gap: 40px; }
+    .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* Hide custom cursor on mobile */
+@media (pointer: coarse) {
+    .cursor-dot, .cursor-outline { display: none !important; }
+    * { cursor: auto !important; }
+}
+       visibility: hidden;
         transform: translateY(-20px);
         transition: all 0.3s ease;
     }

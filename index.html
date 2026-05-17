@@ -6,34 +6,30 @@
     <title>CrashStudy | Premium Exam Preparation & AI Tools</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DR9VL0YMC1"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    
     gtag('config', 'G-DR9VL0YMC1');
     </script>
 </head>
 <body>
 
-    <!-- Custom Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
-    <!-- Preloader -->
     <div id="loader">
         <div class="spinner"></div>
         <h2>CrashStudy</h2>
     </div>
 
-    <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-container">
             <div class="logo">
                 <span class="gradient-text">Crash</span>Study
             </div>
+            
             <ul class="nav-links">
                 <li><a href="#exams">Exams</a></li>
                 <li><a href="syllabus.html">Syllabus</a></li>
@@ -41,16 +37,24 @@
                 <li><a href="#roadmap">Roadmap</a></li>
                 <li><a href="#community">Community</a></li>
             </ul>
-            <div class="nav-cta">
-                <button class="btn-primary">Join Free</button>
-            </div>
-            <div class="mobile-menu-btn">
-                <span></span><span></span><span></span>
+
+            <div class="right-nav">
+                <div class="nav-cta" id="authSection">
+                    <a href="auth.html" class="btn-primary" id="loginCtaBtn" style="text-decoration:none; display:inline-block;">Join Free</a>
+                    
+                    <div id="userProfile" style="display: none; align-items: center; gap: 10px;">
+                        <span id="userGreeting" style="font-weight: 600; color: #00F0FF; font-size: 0.9rem; white-space: nowrap;"></span>
+                        <button id="logoutBtn" class="btn-secondary" style="padding: 6px 15px; font-size: 0.8rem; border-color: #FF007A; color: #FF007A; border-radius: 20px;">Logout</button>
+                    </div>
+                </div>
+                
+                <div class="mobile-menu-btn">
+                    <span></span><span></span><span></span>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <header class="hero" id="home">
         <div class="hero-content reveal">
             <div class="badge">🚀 The Future of Competitive Exams</div>
@@ -58,7 +62,7 @@
             <p class="hero-subtitle">Premium notes, AI-driven study tools, and master syllabus trackers for SSC CGL, CAPF, AFCAT, and more. Your ultimate arsenal for government exams.</p>
             <div class="hero-buttons">
                 <button class="btn-primary glow-btn">Start Preparing Now</button>
-                <button class="btn-secondary" href="syllabus.html">Explore Syllabus</button>
+                <button class="btn-secondary" onclick="window.location.href='syllabus.html'">Explore Syllabus</button>
             </div>
         </div>
         <div class="hero-visual tilt-card">
@@ -78,7 +82,6 @@
         </div>
     </header>
 
-    <!-- Animated Stats Section -->
     <section class="stats-section reveal">
         <div class="stat-box">
             <h2 class="counter" data-target="500000">0</h2><span>+</span>
@@ -98,7 +101,6 @@
         </div>
     </section>
 
-    <!-- Exam Categories -->
     <section class="exams-section" id="exams">
         <div class="section-header reveal">
             <h2>Target <span class="gradient-text">Exams</span></h2>
@@ -138,7 +140,6 @@
         </div>
     </section>
 
-    <!-- Master Syllabus Section -->
     <section class="syllabus-section" id="syllabus">
         <div class="section-header reveal">
             <h2>Master <span class="gradient-text">Syllabus</span></h2>
@@ -173,7 +174,6 @@
         </div>
     </section>
 
-    <!-- Advanced Retention Tools -->
     <section class="tools-section" id="tools">
         <div class="section-header reveal">
             <h2>Next-Gen <span class="gradient-text">Tools</span></h2>
@@ -199,7 +199,6 @@
         </div>
     </section>
 
-    <!-- Roadmap & Timeline -->
     <section class="roadmap-section" id="roadmap">
         <div class="section-header reveal">
             <h2>Topper's <span class="gradient-text">Roadmap</span></h2>
@@ -229,7 +228,6 @@
         </div>
     </section>
 
-    <!-- Community & Links -->
     <section class="community-section" id="community">
         <div class="glass-banner reveal">
             <h2>Join the <span class="gradient-text">Elite Community</span></h2>
@@ -241,7 +239,6 @@
         </div>
     </section>
 
-    <!-- Testimonials -->
     <section class="testimonials-section reveal">
         <div class="section-header">
             <h2>Success <span class="gradient-text">Stories</span></h2>
@@ -258,7 +255,6 @@
         </div>
     </section>
 
-    <!-- Footer (Massive Directory & Adsense Compliant) -->
     <footer>
         <div class="footer-grid">
             <div class="footer-brand">
@@ -299,5 +295,40 @@
     </footer>
 
     <script src="script.js"></script>
+
+    <script type="module">
+        import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { auth } from './firebase.js'; 
+
+        const loginCtaBtn = document.getElementById('loginCtaBtn');
+        const userProfile = document.getElementById('userProfile');
+        const userGreeting = document.getElementById('userGreeting');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Check Login State
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User logged in
+                loginCtaBtn.style.display = 'none';
+                userProfile.style.display = 'flex';
+                const name = user.displayName || user.email.split('@')[0];
+                userGreeting.textContent = `Hi, ${name}`;
+            } else {
+                // User NOT logged in
+                loginCtaBtn.style.display = 'inline-block';
+                userProfile.style.display = 'none';
+            }
+        });
+
+        // Logout Logic
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                console.log('Logged out successfully');
+                window.location.reload();
+            }).catch((error) => {
+                console.error('Logout error:', error);
+            });
+        });
+    </script>
 </body>
 </html>
