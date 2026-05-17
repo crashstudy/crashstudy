@@ -182,11 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 3. CRASH AI TUTOR (GEMINI INTEGRATION - UPDATED)
+    // 3. CRASH AI TUTOR (STABLE GEMINI PRO INTEGRATION)
     // ═══════════════════════════════════════════════════════════════
     const GEMINI_API_KEY = 'AIzaSyD3Q4SPqncLu0fmYsud8vIVeptl_-17YI4'; 
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-    const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers.";
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+    const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers.\n\nUser Question: ";
 
     const aiTrigger = document.getElementById('aiTrigger');
     const aiChatPanel = document.getElementById('aiChatPanel');
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.querySelector('.chat-footer input');
     const sendBtn = document.querySelector('.btn-send');
 
-    // Toggle Chat Panel (Open/Close)
+    // Toggle Chat Panel
     if(aiTrigger) {
         aiTrigger.addEventListener('click', () => {
             aiChatPanel.classList.toggle('active');
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingDiv = document.createElement('div');
         loadingDiv.id = 'ai-loading';
         loadingDiv.classList.add('message', 'ai-msg');
-        loadingDiv.textContent = 'Thinking... 🤔';
+        loadingDiv.innerHTML = 'Thinking... 🤔';
         chatBody.appendChild(loadingDiv);
         chatBody.scrollTop = chatBody.scrollHeight;
     }
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loadingDiv) chatBody.removeChild(loadingDiv);
     }
 
-    // Call Gemini API (1.5 Flash - Modern Payload)
+    // Call Gemini API (Rock Solid Stable Version)
     async function askGemini(question) {
         try {
             showLoading();
@@ -258,10 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    systemInstruction: {
-                        parts: [{ text: SYSTEM_PROMPT }]
-                    },
-                    contents: [{ parts: [{ text: question }] }]
+                    contents: [{ parts: [{ text: SYSTEM_PROMPT + question }] }]
                 })
             });
 
@@ -271,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 🚨 Deep Error Handling
             if (data.error) {
                 console.error("API Error Details:", data.error);
-                appendMessage(`System Error: ${data.error.message}`, 'ai');
+                appendMessage(`API Error: ${data.error.message}`, 'ai');
                 return;
             }
 
@@ -284,9 +281,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 
-                appendMessage(candidate.content.parts[0].text, 'ai');
+                if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
+                    appendMessage(candidate.content.parts[0].text, 'ai');
+                } else {
+                    appendMessage("Received an empty response from AI.", 'ai');
+                }
             } else {
-                appendMessage("Sorry, I couldn't understand that. Please ask a study-related question.", 'ai');
+                appendMessage("Sorry, I couldn't process that properly. Please ask a study-related question.", 'ai');
             }
         } catch (error) {
             console.error("Gemini API Network Error:", error);
@@ -314,4 +315,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
-                                
