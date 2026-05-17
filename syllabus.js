@@ -184,8 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ═══════════════════════════════════════════════════════════════
     // 3. CRASH AI TUTOR (STABLE GEMINI PRO INTEGRATION)
     // ═══════════════════════════════════════════════════════════════
-    const GEMINI_API_KEY = 'AIzaSyB40mQDTTDj404q42PQ_gXLViWDGXVz59I'; 
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const GEMINI_API_KEY = 'AIzaSyA53PJqc9mfmUmneHjUV8zMcPDHDOqvrYE'; 
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
     const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers.\n\nUser Question: ";
 
     const aiTrigger = document.getElementById('aiTrigger');
