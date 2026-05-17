@@ -1,7 +1,7 @@
 // Firebase Imports
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import { doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { auth, db } from './firebase.js'; 
+import { auth, db } from './firebase.js'; // Ensure path is correct
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -24,23 +24,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
+            // User Logged In Hai
             currentUser = user;
-            if (loginOverlay) loginOverlay.style.display = 'none';
-            if (mainApp) mainApp.style.display = 'flex';
+            loginOverlay.style.display = 'none';
+            mainApp.style.display = 'flex';
 
+            // Profile UI update
             const name = user.displayName || user.email.split('@')[0];
-            if (userNameDisplay) userNameDisplay.textContent = name;
-            if (userAvatarDisplay) userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${name}&background=00F0FF&color=000&bold=true`;
+            userNameDisplay.textContent = name;
+            userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${name}&background=00F0FF&color=000`;
 
+            // Load Progress & Streak from Firestore
             await loadUserData(user.uid);
 
         } else {
+            // User Logged Out Hai
             currentUser = null;
-            if (loginOverlay) loginOverlay.style.display = 'flex';
-            if (mainApp) mainApp.style.display = 'none';
+            loginOverlay.style.display = 'flex';
+            mainApp.style.display = 'none';
         }
     });
 
+    // ── Logout Logic ──
     sidebarLogoutBtn?.addEventListener('click', (e) => {
         e.preventDefault();
         signOut(auth).then(() => {
@@ -48,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ── Load User Data from Firestore ──
     async function loadUserData(uid) {
         const userRef = doc(db, 'users', uid);
         const docSnap = await getDoc(userRef);
@@ -67,21 +73,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = docSnap.data();
             userData.progress = data.progress || {};
             
+            // Streak Calculation Logic
             if (data.lastLogin === yesterdayDate) {
+                // Lagatar aaya hai, streak badhao
                 userData.streak = (data.streak || 0) + 1;
                 userData.lastLogin = todayDate;
             } else if (data.lastLogin !== todayDate) {
+                // Gap aa gaya, streak reset
                 userData.streak = 1;
                 userData.lastLogin = todayDate;
             } else {
+                // Aaj hi login kiya hua hai pehle, same rakho
                 userData.streak = data.streak || 1;
             }
         }
 
+        // Save updated streak to database
         await setDoc(userRef, userData, { merge: true });
 
-        if (streakDisplay) streakDisplay.textContent = `🔥 ${userData.streak} Days`;
+        // Update UI
+        streakDisplay.textContent = `🔥 ${userData.streak} Days`;
 
+        // Apply saved checkboxes
         checkboxes.forEach(box => {
             const topicId = box.getAttribute('data-id');
             if (userData.progress[topicId] === true) {
@@ -92,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProgressUI();
     }
 
+    // ── Save Checkbox Progress on Click ──
     checkboxes.forEach(box => {
         box.addEventListener('change', async (e) => {
             if (!currentUser) return;
@@ -101,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateProgressUI();
 
+            // Save to Firestore
             const userRef = doc(db, 'users', currentUser.uid);
             await setDoc(userRef, {
                 progress: {
@@ -110,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ── Calculate Percentage ──
     function updateProgressUI() {
         const total = checkboxes.length;
         if(total === 0) return;
@@ -121,13 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const percentage = Math.round((checkedCount / total) * 100);
 
-        if (progressRingText) progressRingText.textContent = `${percentage}%`;
-        if (progressRingCircle) progressRingCircle.style.setProperty('--percentage', `${percentage}%`);
+        // Update UI Ring and Text
+        progressRingText.textContent = `${percentage}%`;
+        progressRingCircle.style.setProperty('--percentage', `${percentage}%`);
         
+        // Change color based on progress
         if (percentage === 100) {
-            progressRingCircle?.style.setProperty('--ring-color', '#27C93F'); // Green
+            progressRingCircle.style.setProperty('--ring-color', '#27C93F'); // Green
         } else {
-            progressRingCircle?.style.setProperty('--ring-color', '#00F0FF'); // Blue
+            progressRingCircle.style.setProperty('--ring-color', '#00F0FF'); // Blue
         }
     }
 
@@ -164,11 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 3. CRASH AI TUTOR (GEMINI INTEGRATION)
+    // 3. CRASH AI TUTOR (GEMINI INTEGRATION - UPDATED)
     // ═══════════════════════════════════════════════════════════════
     const GEMINI_API_KEY = 'AIzaSyD3Q4SPqncLu0fmYsud8vIVeptl_-17YI4'; 
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
-    const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers. Current question: ";
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers.";
 
     const aiTrigger = document.getElementById('aiTrigger');
     const aiChatPanel = document.getElementById('aiChatPanel');
@@ -177,39 +195,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatInput = document.querySelector('.chat-footer input');
     const sendBtn = document.querySelector('.btn-send');
 
-    aiTrigger?.addEventListener('click', () => {
-        aiChatPanel?.classList.toggle('active');
-        if(aiChatPanel?.classList.contains('active')) chatInput?.focus();
-    });
+    // Toggle Chat Panel (Open/Close)
+    if(aiTrigger) {
+        aiTrigger.addEventListener('click', () => {
+            aiChatPanel.classList.toggle('active');
+            if(aiChatPanel.classList.contains('active')) chatInput?.focus();
+        });
+    }
 
-    closeChatBtn?.addEventListener('click', () => aiChatPanel?.classList.remove('active'));
+    if(closeChatBtn) {
+        closeChatBtn.addEventListener('click', () => {
+            aiChatPanel.classList.remove('active');
+        });
+    }
 
+    // Chat Message UI
     function appendMessage(text, sender) {
         if (!chatBody) return;
         const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', sender);
-
+        messageDiv.classList.add('message');
+        
         if (sender === 'ai') {
-            const avatarDiv = document.createElement('div');
-            avatarDiv.classList.add('ai-avatar');
-            avatarDiv.textContent = '🧠';
-            messageDiv.appendChild(avatarDiv);
+            messageDiv.classList.add('ai-msg');
+        } else {
+            // User Styling
+            messageDiv.style.background = 'var(--primary-blue)';
+            messageDiv.style.color = '#000';
+            messageDiv.style.marginLeft = 'auto';
+            messageDiv.style.borderBottomRightRadius = '0';
+            messageDiv.style.fontWeight = '600';
         }
 
-        const textDiv = document.createElement('div');
-        textDiv.classList.add('text-bubble');
-        textDiv.innerHTML = text.replace(/\n/g, '<br>');
-        messageDiv.appendChild(textDiv);
+        // Handle basic markdown formatting (bold)
+        let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        formattedText = formattedText.replace(/\n/g, '<br>');
+        
+        messageDiv.innerHTML = formattedText;
         chatBody.appendChild(messageDiv);
-        chatBody.scrollTop = chatBody.scrollHeight;
+        chatBody.scrollTop = chatBody.scrollHeight; // Auto-scroll
     }
 
     function showLoading() {
         if(!chatBody) return;
         const loadingDiv = document.createElement('div');
         loadingDiv.id = 'ai-loading';
-        loadingDiv.classList.add('message', 'ai', 'loading');
-        loadingDiv.innerHTML = `<div class="ai-avatar">🧠</div><div class="text-bubble"><div class="dot-typing"></div></div>`;
+        loadingDiv.classList.add('message', 'ai-msg');
+        loadingDiv.textContent = 'Thinking... 🤔';
         chatBody.appendChild(loadingDiv);
         chatBody.scrollTop = chatBody.scrollHeight;
     }
@@ -219,6 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loadingDiv) chatBody.removeChild(loadingDiv);
     }
 
+    // Call Gemini API (1.5 Flash - Modern Payload)
     async function askGemini(question) {
         try {
             showLoading();
@@ -226,25 +258,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: SYSTEM_PROMPT + question }] }]
+                    systemInstruction: {
+                        parts: [{ text: SYSTEM_PROMPT }]
+                    },
+                    contents: [{ parts: [{ text: question }] }]
                 })
             });
 
             const data = await response.json();
             removeLoading();
 
+            // 🚨 Deep Error Handling
+            if (data.error) {
+                console.error("API Error Details:", data.error);
+                appendMessage(`System Error: ${data.error.message}`, 'ai');
+                return;
+            }
+
             if (data.candidates && data.candidates.length > 0) {
-                appendMessage(data.candidates[0].content.parts[0].text, 'ai');
+                const candidate = data.candidates[0];
+                
+                // Blocked by Google Safety filters
+                if (candidate.finishReason === 'SAFETY') {
+                    appendMessage("I cannot answer that due to safety guidelines. Please ask a different study question.", 'ai');
+                    return;
+                }
+                
+                appendMessage(candidate.content.parts[0].text, 'ai');
             } else {
                 appendMessage("Sorry, I couldn't understand that. Please ask a study-related question.", 'ai');
             }
         } catch (error) {
-            console.error("Gemini API Error:", error);
+            console.error("Gemini API Network Error:", error);
             removeLoading();
             appendMessage("Oops! Network issue. Make sure your internet is working.", 'ai');
         }
     }
 
+    // Send Button Logic
     function handleSend() {
         if (!chatInput || !sendBtn) return;
         const question = chatInput.value.trim();
@@ -255,8 +306,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    sendBtn?.addEventListener('click', handleSend);
-    chatInput?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleSend();
-    });
+    if(sendBtn) sendBtn.addEventListener('click', handleSend);
+    if(chatInput) {
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+    }
+
 });
+                                
