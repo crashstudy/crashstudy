@@ -40,7 +40,7 @@
 
             <div class="right-nav">
                 <div class="nav-cta" id="authSection">
-                    <a href="auth.html" class="btn-primary" id="loginCtaBtn" style="text-decoration:none; display:inline-block;">Join Free</a>
+                    <a href="auth.html?redirect=index.html" class="btn-primary" id="loginCtaBtn" style="text-decoration:none; display:inline-block;">Join Free</a>
                     
                     <div id="userProfile" style="display: none; align-items: center; gap: 10px;">
                         <span id="userGreeting" style="font-weight: 600; color: #00F0FF; font-size: 0.9rem; white-space: nowrap;"></span>
@@ -312,7 +312,7 @@
                 loginCtaBtn.style.display = 'none';
                 userProfile.style.display = 'flex';
                 const name = user.displayName || user.email.split('@')[0];
-                userGreeting.textContent = `Hi, ${name}`;
+                userGreeting.textContent = `Hi, ${name} 👋`;
             } else {
                 // User NOT logged in
                 loginCtaBtn.style.display = 'inline-block';

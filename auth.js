@@ -1,14 +1,11 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * CrashStudy — auth.js  (FIXED)
- * • Firestore removed (Auth only — add Firestore later)
- * • Redirects fixed (no missing pages)
+ * CrashStudy — auth.js  (SMART ROUTING ADDED)
  * ═══════════════════════════════════════════════════════════════
  */
 
 'use strict';
 
-// ── Firebase Auth SDK (CDN) ──
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -20,11 +17,6 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
 import { auth } from './firebase.js';
-
-
-// ═══════════════════════════════════════════════════════════════
-// § 1. DOM REFERENCES
-// ═══════════════════════════════════════════════════════════════
 
 const DOM = {
   formWrapper:     document.getElementById('formWrapper'),
@@ -55,22 +47,21 @@ const DOM = {
   toggleBtns:      document.querySelectorAll('.toggle-pass'),
 };
 
+// ✏️ SMART ROUTING FUNCTION
+// Yeh URL check karta hai ki user kis page se aaya tha. Default: index.html
+function getRedirectUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('redirect') || 'index.html';
+}
 
 // ═══════════════════════════════════════════════════════════════
 // § 2. AUTH STATE LISTENER
-// ─ Redirect only if a dashboard page actually exists
-// ─ Change 'dashboard.html' to whatever your next page is
 // ═══════════════════════════════════════════════════════════════
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // ✏️  Apna actual next page ka naam yahan likho
-    // e.g. 'dashboard.html', 'home.html', 'index.html'
-    // Abhi ke liye console mein show karte hain
     console.log('✅ Logged in as:', user.email, '| UID:', user.uid);
-
-    // Uncomment when your dashboard page is ready:
-    window.location.href = 'index.html';
+    window.location.href = getRedirectUrl(); // Smart Redirect
   }
 });
 
@@ -258,8 +249,7 @@ async function handleLogin() {
       `✓ Welcome back, ${cred.user.displayName || cred.user.email}!`,
       'success'
     );
-    // ✏️ Apna page yahan likho jab ready ho:
-     setTimeout(() => { window.location.href = 'index.html'; }, 900);
+     setTimeout(() => { window.location.href = getRedirectUrl(); }, 900); // Smart Redirect
 
   } catch (err) {
     showMessage(DOM.loginMessage, mapError(err.code));
@@ -298,10 +288,8 @@ async function handleSignup() {
   clearMessages();
 
   try {
-    // Step 1 — Firebase Auth mein account banao
     const cred = await createUserWithEmailAndPassword(auth, email, password);
 
-    // Step 2 — Display name save karo
     await updateProfile(cred.user, {
       displayName: `${firstName} ${lastName}`,
     });
@@ -312,15 +300,13 @@ async function handleSignup() {
       'success'
     );
 
-    // Auto slide to login after 1.5s
     setTimeout(() => {
       showLoginView();
-      DOM.loginEmail.value = email;   // email pre-fill
+      DOM.loginEmail.value = email;   
       showMessage(DOM.loginMessage, '✓ Account ready hai — ab sign in karo!', 'success');
     }, 1500);
 
-    // ✏️ Apna onboarding page ready ho toh yahan uncomment karo:
-    setTimeout(() => { window.location.href = 'syllabus.html'; }, 1200);
+    setTimeout(() => { window.location.href = getRedirectUrl(); }, 1200); // Smart Redirect
 
   } catch (err) {
     showMessage(DOM.signupMessage, mapError(err.code));
@@ -349,7 +335,6 @@ async function handleGoogleAuth(btn) {
     const result   = await signInWithPopup(auth, provider);
     const user     = result.user;
 
-    // Check if this is a brand-new Google user
     const isNew = result._tokenResponse?.isNewUser ?? false;
 
     showMessage(
@@ -360,9 +345,8 @@ async function handleGoogleAuth(btn) {
 
     console.log('Google Auth success:', user.email, '| New user:', isNew);
 
-    // ✏️ Redirect when pages are ready:
      setTimeout(() => {
-       window.location.href = isNew ? 'syllabus.html' : 'index.html';
+       window.location.href = getRedirectUrl(); // Smart Redirect
      }, 900);
 
   } catch (err) {
@@ -405,7 +389,7 @@ DOM.forgotPassword?.addEventListener('click', async (e) => {
 
 
 // ═══════════════════════════════════════════════════════════════
-// § 12. FIREBASE ERROR MESSAGES (Hinglish friendly)
+// § 12. FIREBASE ERROR MESSAGES
 // ═══════════════════════════════════════════════════════════════
 
 function mapError(code) {
@@ -425,7 +409,6 @@ function mapError(code) {
   };
   return MAP[code] ?? 'Kuch galat ho gaya. Dobara try karo.';
 }
-
 
 // ═══════════════════════════════════════════════════════════════
 // § 13. EXPORTS

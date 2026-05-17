@@ -13,7 +13,8 @@
         <div style="font-size: 4rem; margin-bottom: 10px;">🔒</div>
         <h2 style="font-family: 'Poppins'; margin-bottom: 15px;">Login to see your syllabus progress</h2>
         <p style="color: var(--text-muted); margin-bottom: 30px;">Track your daily streak and syllabus completion by logging in.</p>
-        <button onclick="window.location.href='auth.html'" style="background: linear-gradient(45deg, var(--primary-blue), var(--primary-pink)); border: none; padding: 12px 30px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer;">Go to Login</button>
+        
+        <button onclick="window.location.href='auth.html?redirect=syllabus.html'" style="background: linear-gradient(45deg, var(--primary-blue), var(--primary-pink)); border: none; padding: 12px 30px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer;">Go to Login</button>
     </div>
 
     <div class="app-layout" id="mainApp" style="display: none;">
@@ -40,7 +41,7 @@
             <div class="sidebar-nav">
                 <p class="nav-label">Main Menu</p>
                 <ul>
-                    <li><a href="#" class="nav-item"><span class="icon">🏠</span> Dashboard</a></li>
+                    <li><a href="index.html" class="nav-item"><span class="icon">🏠</span> Dashboard</a></li>
                     <li><a href="#" class="nav-item active"><span class="icon">📚</span> Syllabus</a></li>
                 </ul>
             </div>
@@ -160,5 +161,117 @@
     </div>
 
     <script type="module" src="syllabus.js"></script>
+</body>
+</html>
+          <div class="premium-resource">
+                                <span class="pro-badge">PRO</span>
+                                <span><strong>Topper's Note:</strong> Secret calculation tricks for Percentage by AIR 14.</span>
+                                <button class="btn-gradient-small">Unlock Note</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item glass-panel">
+                        <div class="accordion-header">
+                            <div class="acc-title">
+                                <h4>2. Trigonometry & Heights/Distances</h4>
+                                <p>Identities, Max/Min Values, Angle of Elevation.</p>
+                            </div>
+                            <div class="acc-controls">
+                                <span class="status in-progress">In Progress</span>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <ul class="subtopic-list">
+                                <li>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                        Basic Trigonometric Ratios
+                                    </label>
+                                </li>
+                                <li>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox">
+                                        <span class="checkmark"></span>
+                                        Advanced Identities (Sec/Tan)
+                                    </label>
+                                    <div class="resource-links">
+                                        <button class="btn-micro pyq">📄 Practice Set</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="syllabus-section" id="english">
+                    <div class="section-heading">
+                        <span class="dot eng-dot"></span>
+                        <h3>English Comprehension & Grammar</h3>
+                        <span class="subject-progress">20% Completed</span>
+                    </div>
+
+                    <div class="accordion-item glass-panel">
+                        <div class="accordion-header">
+                            <div class="acc-title">
+                                <h4>1. Subject-Verb Agreement</h4>
+                                <p>Core grammar rules, Error spotting mechanics.</p>
+                            </div>
+                            <div class="acc-controls">
+                                <span class="status pending">Pending</span>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <ul class="subtopic-list">
+                                <li>
+                                    <label class="checkbox-container">
+                                        <input type="checkbox">
+                                        <span class="checkmark"></span>
+                                        Rule of Proximity
+                                    </label>
+                                    <div class="resource-links">
+                                        <button class="btn-micro ai-notes">🤖 AI Summary</button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="premium-resource">
+                                <span class="pro-badge">PRO</span>
+                                <span><strong>Cheat Sheet:</strong> 100 Most Repeated Grammar Rules in SSC.</span>
+                                <button class="btn-gradient-small">Unlock PDF</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="ai-floating-widget">
+        <button class="ai-trigger" id="aiTrigger">
+            <span class="ai-icon">🤖</span>
+            <span class="ai-tooltip">Ask a Doubt!</span>
+        </button>
+        <div class="ai-chat-panel glass-panel" id="aiChatPanel">
+            <div class="chat-header">
+                <h3>Crash AI Tutor</h3>
+                <button class="close-chat" id="closeChat">✕</button>
+            </div>
+            <div class="chat-body">
+                <div class="message ai-msg">Hello! Having trouble with Trigonometry or Grammar? Ask me anything!</div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" placeholder="Type your doubt here...">
+                <button class="btn-send">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script src="syllabus.js"></script>
 </body>
 </html>
