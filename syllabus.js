@@ -1,8 +1,7 @@
-// syllabus.js - Master File (Firestore Progress + Gemini AI)
-
+// Firebase Imports
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { auth, db } from './firebase.js';
+import { doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { auth, db } from './firebase.js'; // Ensure path is correct
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -20,32 +19,41 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentUser = null;
 
     // ═══════════════════════════════════════════════════════════════
-    // 1. FIREBASE AUTH & FIRESTORE SYLLABUS PROGRESS
+    // 1. FIREBASE AUTHENTICATION & DATABASE LOGIC
     // ═══════════════════════════════════════════════════════════════
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
+            // User Logged In Hai
             currentUser = user;
-            if(loginOverlay) loginOverlay.style.display = 'none';
-            if(mainApp) mainApp.style.display = 'flex';
+            loginOverlay.style.display = 'none';
+            mainApp.style.display = 'flex';
 
+            // Profile UI update
             const name = user.displayName || user.email.split('@')[0];
-            if(userNameDisplay) userNameDisplay.textContent = name;
-            if(userAvatarDisplay) userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${name}&background=00F0FF&color=000&bold=true`;
+            userNameDisplay.textContent = name;
+            userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${name}&background=00F0FF&color=000`;
 
+            // Load Progress & Streak from Firestore
             await loadUserData(user.uid);
+
         } else {
+            // User Logged Out Hai
             currentUser = null;
-            if(loginOverlay) loginOverlay.style.display = 'flex';
-            if(mainApp) mainApp.style.display = 'none';
+            loginOverlay.style.display = 'flex';
+            mainApp.style.display = 'none';
         }
     });
 
+    // ── Logout Logic ──
     sidebarLogoutBtn?.addEventListener('click', (e) => {
         e.preventDefault();
-        signOut(auth).then(() => window.location.reload());
+        signOut(auth).then(() => {
+            window.location.reload();
+        });
     });
 
+    // ── Load User Data from Firestore ──
     async function loadUserData(uid) {
         const userRef = doc(db, 'users', uid);
         const docSnap = await getDoc(userRef);
@@ -55,60 +63,89 @@ document.addEventListener('DOMContentLoaded', () => {
         yesterdayDate.setDate(yesterdayDate.getDate() - 1);
         yesterdayDate = yesterdayDate.toISOString().split('T')[0];
 
-        let userData = { streak: 1, lastLogin: todayDate, progress: {} };
+        let userData = {
+            streak: 1,
+            lastLogin: todayDate,
+            progress: {}
+        };
 
         if (docSnap.exists()) {
             const data = docSnap.data();
             userData.progress = data.progress || {};
             
+            // Streak Calculation Logic
             if (data.lastLogin === yesterdayDate) {
+                // Lagatar aaya hai, streak badhao
                 userData.streak = (data.streak || 0) + 1;
                 userData.lastLogin = todayDate;
             } else if (data.lastLogin !== todayDate) {
+                // Gap aa gaya, streak reset
                 userData.streak = 1;
                 userData.lastLogin = todayDate;
             } else {
+                // Aaj hi login kiya hua hai pehle, same rakho
                 userData.streak = data.streak || 1;
             }
         }
 
+        // Save updated streak to database
         await setDoc(userRef, userData, { merge: true });
-        if(streakDisplay) streakDisplay.textContent = `🔥 ${userData.streak} Days`;
 
+        // Update UI
+        streakDisplay.textContent = `🔥 ${userData.streak} Days`;
+
+        // Apply saved checkboxes
         checkboxes.forEach(box => {
             const topicId = box.getAttribute('data-id');
-            if (userData.progress[topicId] === true) box.checked = true;
+            if (userData.progress[topicId] === true) {
+                box.checked = true;
+            }
         });
+
         updateProgressUI();
     }
 
+    // ── Save Checkbox Progress on Click ──
     checkboxes.forEach(box => {
         box.addEventListener('change', async (e) => {
             if (!currentUser) return;
+
             const topicId = e.target.getAttribute('data-id');
             const isChecked = e.target.checked;
+
             updateProgressUI();
 
+            // Save to Firestore
             const userRef = doc(db, 'users', currentUser.uid);
-            await setDoc(userRef, { progress: { [topicId]: isChecked } }, { merge: true });
+            await setDoc(userRef, {
+                progress: {
+                    [topicId]: isChecked
+                }
+            }, { merge: true });
         });
     });
 
+    // ── Calculate Percentage ──
     function updateProgressUI() {
         const total = checkboxes.length;
         if(total === 0) return;
 
         let checkedCount = 0;
-        checkboxes.forEach(box => { if (box.checked) checkedCount++; });
+        checkboxes.forEach(box => {
+            if (box.checked) checkedCount++;
+        });
+
         const percentage = Math.round((checkedCount / total) * 100);
 
-        if(progressRingText) progressRingText.textContent = `${percentage}%`;
-        if(progressRingCircle) progressRingCircle.style.setProperty('--percentage', `${percentage}%`);
+        // Update UI Ring and Text
+        progressRingText.textContent = `${percentage}%`;
+        progressRingCircle.style.setProperty('--percentage', `${percentage}%`);
         
+        // Change color based on progress
         if (percentage === 100) {
-            progressRingCircle?.style.setProperty('--ring-color', '#27C93F');
+            progressRingCircle.style.setProperty('--ring-color', '#27C93F'); // Green
         } else {
-            progressRingCircle?.style.setProperty('--ring-color', '#00F0FF');
+            progressRingCircle.style.setProperty('--ring-color', '#00F0FF'); // Blue
         }
     }
 
@@ -133,15 +170,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeSidebarBtn = document.getElementById('closeSidebar');
     const sidebar = document.getElementById('sidebar');
 
-    menuToggle?.addEventListener('click', () => sidebar?.classList.add('active'));
-    closeSidebarBtn?.addEventListener('click', () => sidebar?.classList.remove('active'));
-
-    // ═══════════════════════════════════════════════════════════════
-    // 3. CRASH AI TUTOR (GEMINI INTEGRATION)
-    // ═══════════════════════════════════════════════════════════════
-    const GEMINI_API_KEY = 'AIzaSyD3Q4SPqncLu0fmYsud8vIVeptl_-17YI4'; 
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
-    const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers. Current question: ";
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
+        });
+    }
+    if (closeSidebarBtn && sidebar) {
+        closeSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+        });
+    }
+});
+";
 
     const aiTrigger = document.getElementById('aiTrigger');
     const aiChatPanel = document.getElementById('aiChatPanel');
