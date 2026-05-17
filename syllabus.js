@@ -181,3 +181,209 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+";
+
+    const aiTrigger = document.getElementById('aiTrigger');
+    const aiChatPanel = document.getElementById('aiChatPanel');
+    const closeChatBtn = document.getElementById('closeChat');
+    const chatBody = document.querySelector('.chat-body');
+    const chatInput = document.querySelector('.chat-footer input');
+    const sendBtn = document.querySelector('.btn-send');
+
+    aiTrigger?.addEventListener('click', () => {
+        aiChatPanel?.classList.toggle('active');
+        if(aiChatPanel?.classList.contains('active')) chatInput?.focus();
+    });
+
+    closeChatBtn?.addEventListener('click', () => aiChatPanel?.classList.remove('active'));
+
+    function appendMessage(text, sender) {
+        if (!chatBody) return;
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender);
+
+        if (sender === 'ai') {
+            const avatarDiv = document.createElement('div');
+            avatarDiv.classList.add('ai-avatar');
+            avatarDiv.textContent = '🧠';
+            messageDiv.appendChild(avatarDiv);
+        }
+
+        const textDiv = document.createElement('div');
+        textDiv.classList.add('text-bubble');
+        textDiv.innerHTML = text.replace(/\n/g, '<br>');
+        messageDiv.appendChild(textDiv);
+        chatBody.appendChild(messageDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function showLoading() {
+        if(!chatBody) return;
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'ai-loading';
+        loadingDiv.classList.add('message', 'ai', 'loading');
+        loadingDiv.innerHTML = `<div class="ai-avatar">🧠</div><div class="text-bubble"><div class="dot-typing"></div></div>`;
+        chatBody.appendChild(loadingDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function removeLoading() {
+        const loadingDiv = document.getElementById('ai-loading');
+        if (loadingDiv) chatBody.removeChild(loadingDiv);
+    }
+
+    async function askGemini(question) {
+        try {
+            showLoading();
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: SYSTEM_PROMPT + question }] }]
+                })
+            });
+
+            const data = await response.json();
+            removeLoading();
+
+            if (data.candidates && data.candidates.length > 0) {
+                appendMessage(data.candidates[0].content.parts[0].text, 'ai');
+            } else {
+                appendMessage("Sorry, I couldn't understand that. Please ask a study-related question.", 'ai');
+            }
+        } catch (error) {
+            console.error("Gemini API Error:", error);
+            removeLoading();
+            appendMessage("Oops! Network issue. Make sure your internet is working.", 'ai');
+        }
+    }
+
+    function handleSend() {
+        if (!chatInput || !sendBtn) return;
+        const question = chatInput.value.trim();
+        if (question !== "") {
+            appendMessage(question, 'user');
+            chatInput.value = '';
+            askGemini(question);
+        }
+    }
+
+    sendBtn?.addEventListener('click', handleSend);
+    chatInput?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSend();
+    });
+    
+    
+    // ═══════════════════════════════════════════════════════════════
+    // 3. CRASH AI TUTOR (GEMINI INTEGRATION)
+    // ═══════════════════════════════════════════════════════════════
+    const GEMINI_API_KEY = 'AIzaSyD3Q4SPqncLu0fmYsud8vIVeptl_-17YI4'; 
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+    const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers. Current question: ";
+    
+    const aiTrigger = document.getElementById('aiTrigger');
+    const aiChatPanel = document.getElementById('aiChatPanel');
+    const closeChatBtn = document.getElementById('closeChat');
+    const chatBody = document.querySelector('.chat-body');
+    const chatInput = document.querySelector('.chat-footer input');
+    const sendBtn = document.querySelector('.btn-send');
+    
+    // Toggle Chat Panel (Open/Close)
+    if(aiTrigger) {
+        aiTrigger.addEventListener('click', () => {
+            aiChatPanel.classList.toggle('active');
+            if(aiChatPanel.classList.contains('active')) chatInput?.focus();
+        });
+    }
+    
+    if(closeChatBtn) {
+        closeChatBtn.addEventListener('click', () => {
+            aiChatPanel.classList.remove('active');
+        });
+    }
+    
+    // Chat Message UI
+    function appendMessage(text, sender) {
+        if (!chatBody) return;
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        
+        if (sender === 'ai') {
+            messageDiv.classList.add('ai-msg');
+        } else {
+            // User Styling
+            messageDiv.style.background = 'var(--primary-blue)';
+            messageDiv.style.color = '#000';
+            messageDiv.style.marginLeft = 'auto';
+            messageDiv.style.borderBottomRightRadius = '0';
+            messageDiv.style.fontWeight = '600';
+        }
+    
+        messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+        chatBody.appendChild(messageDiv);
+        chatBody.scrollTop = chatBody.scrollHeight; // Auto-scroll
+    }
+    
+    function showLoading() {
+        if(!chatBody) return;
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'ai-loading';
+        loadingDiv.classList.add('message', 'ai-msg');
+        loadingDiv.textContent = 'Thinking... 🤔';
+        chatBody.appendChild(loadingDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+    
+    function removeLoading() {
+        const loadingDiv = document.getElementById('ai-loading');
+        if (loadingDiv) chatBody.removeChild(loadingDiv);
+    }
+    
+    // Call Gemini API
+    async function askGemini(question) {
+        try {
+            showLoading();
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: SYSTEM_PROMPT + question }] }]
+                })
+            });
+    
+            const data = await response.json();
+            removeLoading();
+    
+            if (data.candidates && data.candidates.length > 0) {
+                appendMessage(data.candidates[0].content.parts[0].text, 'ai');
+            } else {
+                appendMessage("Sorry, I couldn't understand that. Please ask a study-related question.", 'ai');
+            }
+        } catch (error) {
+            console.error("Gemini API Error:", error);
+            removeLoading();
+            appendMessage("Oops! Network issue. Make sure your internet is working.", 'ai');
+        }
+    }
+    
+    // Send Button Logic
+    function handleSend() {
+        if (!chatInput || !sendBtn) return;
+        const question = chatInput.value.trim();
+        if (question !== "") {
+            appendMessage(question, 'user');
+            chatInput.value = '';
+            askGemini(question);
+        }
+    }
+    
+    if(sendBtn) sendBtn.addEventListener('click', handleSend);
+    if(chatInput) {
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+    }
+    
+    
+  
+});
