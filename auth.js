@@ -1,8 +1,8 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *  CrashStudy — auth.js  (FIXED)
- *  • Firestore removed (Auth only — add Firestore later)
- *  • Redirects fixed (no missing pages)
+ * CrashStudy — auth.js  (FIXED)
+ * • Firestore removed (Auth only — add Firestore later)
+ * • Redirects fixed (no missing pages)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -431,5 +431,4 @@ function mapError(code) {
 // § 13. EXPORTS
 // ═══════════════════════════════════════════════════════════════
 
-export { showSignupView, showLoginView, showMessage, clearMessages, mapE
-, getPasswordStrength };
+export { showSignupView, showLoginView, showMessage, clearMessages, mapError, getPasswordStrength };
