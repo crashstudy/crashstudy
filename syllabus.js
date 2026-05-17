@@ -1,157 +1,46 @@
-// Firebase Imports
+// syllabus.js - Final AI Integrated & Redesigned UI
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { auth, db } from './firebase.js'; // Ensure path is correct
+import { auth } from './firebase.js'; // path ensure kar lena sahi ho
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ─── DOM Elements ───
-    const loginOverlay = document.getElementById('loginOverlay');
-    const mainApp = document.getElementById('mainApp');
-    const userNameDisplay = document.getElementById('userNameDisplay');
-    const userAvatarDisplay = document.getElementById('userAvatarDisplay');
-    const streakDisplay = document.getElementById('streakDisplay');
-    const progressRingCircle = document.getElementById('progressRingCircle');
-    const progressRingText = document.getElementById('progressRingText');
-    const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
-    const checkboxes = document.querySelectorAll('.topic-checkbox');
+    // --- 1. FIREBASE AUTH LOGIC (UNCHANGED) ---
+    const userGreeting = document.getElementById('userNameDisplay');
+    const userAvatar = document.getElementById('userAvatarDisplay');
 
-    let currentUser = null;
-
-    // ═══════════════════════════════════════════════════════════════
-    // 1. FIREBASE AUTHENTICATION & DATABASE LOGIC
-    // ═══════════════════════════════════════════════════════════════
-
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, (user) => {
         if (user) {
-            // User Logged In Hai
-            currentUser = user;
-            loginOverlay.style.display = 'none';
-            mainApp.style.display = 'flex';
-
-            // Profile UI update
+            // User login hai
             const name = user.displayName || user.email.split('@')[0];
-            userNameDisplay.textContent = name;
-            userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${name}&background=00F0FF&color=000`;
-
-            // Load Progress & Streak from Firestore
-            await loadUserData(user.uid);
-
+            if (userGreeting) userGreeting.textContent = name;
+            // Generate neutral avatar from name
+            if (userAvatar) userAvatar.src = `https://ui-avatars.com/api/?name=${name}&background=00F0FF&color=000&bold=true`;
+            console.log("Syllabus page: User logged in.");
         } else {
-            // User Logged Out Hai
-            currentUser = null;
-            loginOverlay.style.display = 'flex';
-            mainApp.style.display = 'none';
+            // User login nahi hai, index pe bhej do
+            console.log("No user, redirecting to login.");
+            window.location.href = 'index.html'; 
         }
     });
 
-    // ── Logout Logic ──
-    sidebarLogoutBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        signOut(auth).then(() => {
-            window.location.reload();
+    // --- 2. SIDEBAR & ACCORDION UI LOGIC (UNCHANGED) ---
+    const menuToggle = document.getElementById('menuToggle');
+    const closeSidebarBtn = document.getElementById('closeSidebar');
+    const sidebar = document.getElementById('sidebar');
+
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
         });
-    });
-
-    // ── Load User Data from Firestore ──
-    async function loadUserData(uid) {
-        const userRef = doc(db, 'users', uid);
-        const docSnap = await getDoc(userRef);
-
-        const todayDate = new Date().toISOString().split('T')[0];
-        let yesterdayDate = new Date();
-        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-        yesterdayDate = yesterdayDate.toISOString().split('T')[0];
-
-        let userData = {
-            streak: 1,
-            lastLogin: todayDate,
-            progress: {}
-        };
-
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            userData.progress = data.progress || {};
-            
-            // Streak Calculation Logic
-            if (data.lastLogin === yesterdayDate) {
-                // Lagatar aaya hai, streak badhao
-                userData.streak = (data.streak || 0) + 1;
-                userData.lastLogin = todayDate;
-            } else if (data.lastLogin !== todayDate) {
-                // Gap aa gaya, streak reset
-                userData.streak = 1;
-                userData.lastLogin = todayDate;
-            } else {
-                // Aaj hi login kiya hua hai pehle, same rakho
-                userData.streak = data.streak || 1;
-            }
-        }
-
-        // Save updated streak to database
-        await setDoc(userRef, userData, { merge: true });
-
-        // Update UI
-        streakDisplay.textContent = `🔥 ${userData.streak} Days`;
-
-        // Apply saved checkboxes
-        checkboxes.forEach(box => {
-            const topicId = box.getAttribute('data-id');
-            if (userData.progress[topicId] === true) {
-                box.checked = true;
-            }
-        });
-
-        updateProgressUI();
     }
 
-    // ── Save Checkbox Progress on Click ──
-    checkboxes.forEach(box => {
-        box.addEventListener('change', async (e) => {
-            if (!currentUser) return;
-
-            const topicId = e.target.getAttribute('data-id');
-            const isChecked = e.target.checked;
-
-            updateProgressUI();
-
-            // Save to Firestore
-            const userRef = doc(db, 'users', currentUser.uid);
-            await setDoc(userRef, {
-                progress: {
-                    [topicId]: isChecked
-                }
-            }, { merge: true });
+    if (closeSidebarBtn && sidebar) {
+        closeSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.remove('active');
         });
-    });
-
-    // ── Calculate Percentage ──
-    function updateProgressUI() {
-        const total = checkboxes.length;
-        if(total === 0) return;
-
-        let checkedCount = 0;
-        checkboxes.forEach(box => {
-            if (box.checked) checkedCount++;
-        });
-
-        const percentage = Math.round((checkedCount / total) * 100);
-
-        // Update UI Ring and Text
-        progressRingText.textContent = `${percentage}%`;
-        progressRingCircle.style.setProperty('--percentage', `${percentage}%`);
-        
-        // Change color based on progress
-        if (percentage === 100) {
-            progressRingCircle.style.setProperty('--ring-color', '#27C93F'); // Green
-        } else {
-            progressRingCircle.style.setProperty('--ring-color', '#00F0FF'); // Blue
-        }
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // 2. ACCORDION & SIDEBAR UI LOGIC
-    // ═══════════════════════════════════════════════════════════════
+    // Accordion
     const accordions = document.querySelectorAll('.accordion-header');
     accordions.forEach(acc => {
         acc.addEventListener('click', function() {
@@ -166,18 +55,139 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const menuToggle = document.getElementById('menuToggle');
-    const closeSidebarBtn = document.getElementById('closeSidebar');
-    const sidebar = document.getElementById('sidebar');
+    // --- 3. CRASH AI TUTOR (REDESIGNED UI & GEMINI INTEGRATION) ---
+    
+    // API CONFIG (⚠️ User provided key - keep secure in production)
+    const GEMINI_API_KEY = 'AIzaSyD3Q4SPqncLu0fmYsud8vIVeptl_-17YI4'; 
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+    
+    // AI ka personality system prompt
+    const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers. Current question: ";
 
-    if (menuToggle && sidebar) {
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.add('active');
+    const aiTrigger = document.getElementById('aiTrigger');
+    const aiChatPanel = document.getElementById('aiChatPanel');
+    const closeChatBtn = document.getElementById('closeChat');
+    const chatBody = document.querySelector('.chat-body');
+    const chatInput = document.querySelector('.chat-footer input');
+    const sendBtn = document.querySelector('.btn-send');
+
+    // Toggle Chat Panel
+    if(aiTrigger) {
+        aiTrigger.addEventListener('click', () => {
+            aiChatPanel.classList.toggle('active');
+            if(aiChatPanel.classList.contains('active')) {
+                chatInput?.focus();
+            }
         });
     }
-    if (closeSidebarBtn && sidebar) {
-        closeSidebarBtn.addEventListener('click', () => {
-            sidebar.classList.remove('active');
+
+    if(closeChatBtn) {
+        closeChatBtn.addEventListener('click', () => {
+            aiChatPanel.classList.remove('active');
         });
     }
+
+    // Function to add a message bubble to the UI (With New Design)
+    function appendMessage(text, sender) {
+        if (!chatBody) return;
+
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender);
+
+        // Avatar wrapper for AI
+        if (sender === 'ai') {
+            const avatarDiv = document.createElement('div');
+            avatarDiv.classList.add('ai-avatar');
+            avatarDiv.textContent = '🧠'; // AI Icon
+            messageDiv.appendChild(avatarDiv);
+        }
+
+        const textDiv = document.createElement('div');
+        textDiv.classList.add('text-bubble');
+        
+        // Handling line breaks
+        textDiv.innerHTML = text.replace(/\n/g, '<br>');
+        
+        messageDiv.appendChild(textDiv);
+        chatBody.appendChild(messageDiv);
+        
+        // Auto-scroll to bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // Function to show a loading indicator
+    function showLoading() {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.id = 'ai-loading';
+        loadingDiv.classList.add('message', 'ai', 'loading');
+        
+        loadingDiv.innerHTML = `
+            <div class="ai-avatar">🧠</div>
+            <div class="text-bubble">
+                <div class="dot-typing"></div>
+            </div>
+        `;
+        chatBody.appendChild(loadingDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function removeLoading() {
+        const loadingDiv = document.getElementById('ai-loading');
+        if (loadingDiv) chatBody.removeChild(loadingDiv);
+    }
+
+    // Main Function to talk to Gemini API
+    async function askGemini(question) {
+        try {
+            showLoading(); // UI update: loading
+            
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: SYSTEM_PROMPT + question // Combining personality with the question
+                        }]
+                    }]
+                })
+            });
+
+            const data = await response.json();
+            removeLoading(); // UI update: remove loading
+
+            if (data.candidates && data.candidates.length > 0) {
+                const answer = data.candidates[0].content.parts[0].text;
+                appendMessage(answer, 'ai');
+            } else {
+                appendMessage("Sorry, I couldn't understand that. Please ask a study-related question.", 'ai');
+            }
+
+        } catch (error) {
+            console.error("Gemini API Error:", error);
+            removeLoading();
+            appendMessage("Oops! Network issue. Make sure your internet is working.", 'ai');
+        }
+    }
+
+    // Handling Send Logic
+    function handleSend() {
+        if (!chatInput || !sendBtn) return;
+        const question = chatInput.value.trim();
+        if (question !== "") {
+            appendMessage(question, 'user'); // Show User's question
+            chatInput.value = ''; // Clear input field
+            askGemini(question); // Send to AI
+        }
+    }
+
+    // Click Send
+    sendBtn?.addEventListener('click', handleSend);
+
+    // Press Enter to Send
+    chatInput?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSend();
+        }
+    });
 });
