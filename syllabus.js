@@ -1,21 +1,162 @@
+// Firebase Imports
+import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { auth, db } from './firebase.js'; // Ensure path is correct
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. ACCORDION LOGIC ---
-    const accordions = document.querySelectorAll('.accordion-header');
+    // ─── DOM Elements ───
+    const loginOverlay = document.getElementById('loginOverlay');
+    const mainApp = document.getElementById('mainApp');
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    const userAvatarDisplay = document.getElementById('userAvatarDisplay');
+    const streakDisplay = document.getElementById('streakDisplay');
+    const progressRingCircle = document.getElementById('progressRingCircle');
+    const progressRingText = document.getElementById('progressRingText');
+    const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
+    const checkboxes = document.querySelectorAll('.topic-checkbox');
 
+    let currentUser = null;
+
+    // ═══════════════════════════════════════════════════════════════
+    // 1. FIREBASE AUTHENTICATION & DATABASE LOGIC
+    // ═══════════════════════════════════════════════════════════════
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // User Logged In Hai
+            currentUser = user;
+            loginOverlay.style.display = 'none';
+            mainApp.style.display = 'flex';
+
+            // Profile UI update
+            const name = user.displayName || user.email.split('@')[0];
+            userNameDisplay.textContent = name;
+            userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${name}&background=00F0FF&color=000`;
+
+            // Load Progress & Streak from Firestore
+            await loadUserData(user.uid);
+
+        } else {
+            // User Logged Out Hai
+            currentUser = null;
+            loginOverlay.style.display = 'flex';
+            mainApp.style.display = 'none';
+        }
+    });
+
+    // ── Logout Logic ──
+    sidebarLogoutBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        signOut(auth).then(() => {
+            window.location.reload();
+        });
+    });
+
+    // ── Load User Data from Firestore ──
+    async function loadUserData(uid) {
+        const userRef = doc(db, 'users', uid);
+        const docSnap = await getDoc(userRef);
+
+        const todayDate = new Date().toISOString().split('T')[0];
+        let yesterdayDate = new Date();
+        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+        yesterdayDate = yesterdayDate.toISOString().split('T')[0];
+
+        let userData = {
+            streak: 1,
+            lastLogin: todayDate,
+            progress: {}
+        };
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            userData.progress = data.progress || {};
+            
+            // Streak Calculation Logic
+            if (data.lastLogin === yesterdayDate) {
+                // Lagatar aaya hai, streak badhao
+                userData.streak = (data.streak || 0) + 1;
+                userData.lastLogin = todayDate;
+            } else if (data.lastLogin !== todayDate) {
+                // Gap aa gaya, streak reset
+                userData.streak = 1;
+                userData.lastLogin = todayDate;
+            } else {
+                // Aaj hi login kiya hua hai pehle, same rakho
+                userData.streak = data.streak || 1;
+            }
+        }
+
+        // Save updated streak to database
+        await setDoc(userRef, userData, { merge: true });
+
+        // Update UI
+        streakDisplay.textContent = `🔥 ${userData.streak} Days`;
+
+        // Apply saved checkboxes
+        checkboxes.forEach(box => {
+            const topicId = box.getAttribute('data-id');
+            if (userData.progress[topicId] === true) {
+                box.checked = true;
+            }
+        });
+
+        updateProgressUI();
+    }
+
+    // ── Save Checkbox Progress on Click ──
+    checkboxes.forEach(box => {
+        box.addEventListener('change', async (e) => {
+            if (!currentUser) return;
+
+            const topicId = e.target.getAttribute('data-id');
+            const isChecked = e.target.checked;
+
+            updateProgressUI();
+
+            // Save to Firestore
+            const userRef = doc(db, 'users', currentUser.uid);
+            await setDoc(userRef, {
+                progress: {
+                    [topicId]: isChecked
+                }
+            }, { merge: true });
+        });
+    });
+
+    // ── Calculate Percentage ──
+    function updateProgressUI() {
+        const total = checkboxes.length;
+        if(total === 0) return;
+
+        let checkedCount = 0;
+        checkboxes.forEach(box => {
+            if (box.checked) checkedCount++;
+        });
+
+        const percentage = Math.round((checkedCount / total) * 100);
+
+        // Update UI Ring and Text
+        progressRingText.textContent = `${percentage}%`;
+        progressRingCircle.style.setProperty('--percentage', `${percentage}%`);
+        
+        // Change color based on progress
+        if (percentage === 100) {
+            progressRingCircle.style.setProperty('--ring-color', '#27C93F'); // Green
+        } else {
+            progressRingCircle.style.setProperty('--ring-color', '#00F0FF'); // Blue
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // 2. ACCORDION & SIDEBAR UI LOGIC
+    // ═══════════════════════════════════════════════════════════════
+    const accordions = document.querySelectorAll('.accordion-header');
     accordions.forEach(acc => {
         acc.addEventListener('click', function() {
-            // Toggle the 'open' class on the parent item
             const item = this.parentElement;
-            
-            // Optional: Close other accordions when one opens
-            // document.querySelectorAll('.accordion-item').forEach(other => {
-            //     if(other !== item) other.classList.remove('open');
-            // });
-
             item.classList.toggle('open');
-            
-            // Recalculate max-height dynamically for smooth transitions if subtopics change
             const body = item.querySelector('.accordion-body');
             if (item.classList.contains('open')) {
                 body.style.maxHeight = body.scrollHeight + "px";
@@ -25,95 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Handle initial heights for open elements if added dynamically
-    window.addEventListener('resize', () => {
-        document.querySelectorAll('.accordion-item.open .accordion-body').forEach(body => {
-            body.style.maxHeight = body.scrollHeight + "px";
-        });
-    });
-
-
-    // --- 2. MOBILE SIDEBAR TOGGLE ---
     const menuToggle = document.getElementById('menuToggle');
     const closeSidebarBtn = document.getElementById('closeSidebar');
     const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
 
-    function openSidebar() {
-        sidebar.classList.add('active');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent background scroll
-    }
-
-    function closeSidebar() {
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    if(menuToggle) menuToggle.addEventListener('click', openSidebar);
-    if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebar);
-    if(overlay) overlay.addEventListener('click', closeSidebar);
-
-
-    // --- 3. AI FLOATING WIDGET TOGGLE ---
-    const aiTrigger = document.getElementById('aiTrigger');
-    const aiChatPanel = document.getElementById('aiChatPanel');
-    const closeChatBtn = document.getElementById('closeChat');
-
-    if(aiTrigger) {
-        aiTrigger.addEventListener('click', () => {
-            aiChatPanel.classList.toggle('active');
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
         });
     }
-
-    if(closeChatBtn) {
-        closeChatBtn.addEventListener('click', () => {
-            aiChatPanel.classList.remove('active');
+    if (closeSidebarBtn && sidebar) {
+        closeSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.remove('active');
         });
     }
-
-
-    // --- 4. SIMPLE SEARCH FILTER LOGIC (MOCK) ---
-    const searchInput = document.getElementById('searchInput');
-    
-    if(searchInput) {
-        searchInput.addEventListener('input', function(e) {
-            const term = e.target.value.toLowerCase();
-            const topics = document.querySelectorAll('.accordion-item');
-
-            topics.forEach(topic => {
-                const title = topic.querySelector('h4').textContent.toLowerCase();
-                const desc = topic.querySelector('p').textContent.toLowerCase();
-                
-                if (title.includes(term) || desc.includes(term)) {
-                    topic.style.display = 'block';
-                } else {
-                    topic.style.display = 'none';
-                }
-            });
-        });
-    }
-    
-    // Smooth scrolling for quick jump links
-    document.querySelectorAll('.sidebar-nav a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            
-            // Close mobile sidebar if open
-            closeSidebar();
-
-            const targetId = this.getAttribute('href');
-            if(targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if(targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-
 });
