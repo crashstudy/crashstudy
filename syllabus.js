@@ -184,10 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // ═══════════════════════════════════════════════════════════════
     // 3. CRASH AI TUTOR (STABLE GEMINI PRO INTEGRATION)
     // ═══════════════════════════════════════════════════════════════
-    const GEMINI_API_KEY = 'AIzaSyA53PJqc9mfmUmneHjUV8zMcPDHDOqvrYE'; 
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
-    const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers.\n\nUser Question: ";
 
+    const GROQ_API_KEY = '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';
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const SYSTEM_PROMPT = "You are Crash AI Tutor, a helpful study assistant for Indian government competitive exams like SSC CGL, CAPF, AFCAT. Give concise and easy answers.";
+    
     const aiTrigger = document.getElementById('aiTrigger');
     const aiChatPanel = document.getElementById('aiChatPanel');
     const closeChatBtn = document.getElementById('closeChat');
@@ -252,49 +253,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Call Gemini API (Rock Solid Stable Version)
     async function askGemini(question) {
-        try {
-            showLoading();
-            const response = await fetch(GEMINI_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: SYSTEM_PROMPT + question }] }]
-                })
-            });
+    try {
+        showLoading();
+        const response = await fetch(GROQ_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${GROQ_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: 'llama-3.1-8b-instant',
+                messages: [
+                    { role: 'system', content: SYSTEM_PROMPT },
+                    { role: 'user', content: question }
+                ]
+            })
+        });
 
-            const data = await response.json();
-            removeLoading();
+        const data = await response.json();
+        removeLoading();
 
-            // 🚨 Deep Error Handling
-            if (data.error) {
-                console.error("API Error Details:", data.error);
-                appendMessage(`API Error: ${data.error.message}`, 'ai');
-                return;
-            }
-
-            if (data.candidates && data.candidates.length > 0) {
-                const candidate = data.candidates[0];
-                
-                // Blocked by Google Safety filters
-                if (candidate.finishReason === 'SAFETY') {
-                    appendMessage("I cannot answer that due to safety guidelines. Please ask a different study question.", 'ai');
-                    return;
-                }
-                
-                if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
-                    appendMessage(candidate.content.parts[0].text, 'ai');
-                } else {
-                    appendMessage("Received an empty response from AI.", 'ai');
-                }
-            } else {
-                appendMessage("Sorry, I couldn't process that properly. Please ask a study-related question.", 'ai');
-            }
-        } catch (error) {
-            console.error("Gemini API Network Error:", error);
-            removeLoading();
-            appendMessage("Oops! Network issue. Make sure your internet is working.", 'ai');
+        if (data.error) {
+            appendMessage(`Error: ${data.error.message}`, 'ai');
+            return;
         }
+
+        appendMessage(data.choices[0].message.content, 'ai');
+
+    } catch (error) {
+        removeLoading();
+        appendMessage("Network issue. Check internet!", 'ai');
     }
+}
 
     // Send Button Logic
     function handleSend() {
