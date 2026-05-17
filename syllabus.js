@@ -1,7 +1,7 @@
 // Firebase Imports
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import { doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { auth, db } from './firebase.js'; // Ensure path is correct
+import { auth, db } from './firebase.js'; 
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -24,28 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            // User Logged In Hai
             currentUser = user;
-            loginOverlay.style.display = 'none';
-            mainApp.style.display = 'flex';
+            if (loginOverlay) loginOverlay.style.display = 'none';
+            if (mainApp) mainApp.style.display = 'flex';
 
-            // Profile UI update
             const name = user.displayName || user.email.split('@')[0];
-            userNameDisplay.textContent = name;
-            userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${name}&background=00F0FF&color=000`;
+            if (userNameDisplay) userNameDisplay.textContent = name;
+            if (userAvatarDisplay) userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${name}&background=00F0FF&color=000&bold=true`;
 
-            // Load Progress & Streak from Firestore
             await loadUserData(user.uid);
 
         } else {
-            // User Logged Out Hai
             currentUser = null;
-            loginOverlay.style.display = 'flex';
-            mainApp.style.display = 'none';
+            if (loginOverlay) loginOverlay.style.display = 'flex';
+            if (mainApp) mainApp.style.display = 'none';
         }
     });
 
-    // ── Logout Logic ──
     sidebarLogoutBtn?.addEventListener('click', (e) => {
         e.preventDefault();
         signOut(auth).then(() => {
@@ -53,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Load User Data from Firestore ──
     async function loadUserData(uid) {
         const userRef = doc(db, 'users', uid);
         const docSnap = await getDoc(userRef);
@@ -73,28 +67,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = docSnap.data();
             userData.progress = data.progress || {};
             
-            // Streak Calculation Logic
             if (data.lastLogin === yesterdayDate) {
-                // Lagatar aaya hai, streak badhao
                 userData.streak = (data.streak || 0) + 1;
                 userData.lastLogin = todayDate;
             } else if (data.lastLogin !== todayDate) {
-                // Gap aa gaya, streak reset
                 userData.streak = 1;
                 userData.lastLogin = todayDate;
             } else {
-                // Aaj hi login kiya hua hai pehle, same rakho
                 userData.streak = data.streak || 1;
             }
         }
 
-        // Save updated streak to database
         await setDoc(userRef, userData, { merge: true });
 
-        // Update UI
-        streakDisplay.textContent = `🔥 ${userData.streak} Days`;
+        if (streakDisplay) streakDisplay.textContent = `🔥 ${userData.streak} Days`;
 
-        // Apply saved checkboxes
         checkboxes.forEach(box => {
             const topicId = box.getAttribute('data-id');
             if (userData.progress[topicId] === true) {
@@ -105,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProgressUI();
     }
 
-    // ── Save Checkbox Progress on Click ──
     checkboxes.forEach(box => {
         box.addEventListener('change', async (e) => {
             if (!currentUser) return;
@@ -115,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateProgressUI();
 
-            // Save to Firestore
             const userRef = doc(db, 'users', currentUser.uid);
             await setDoc(userRef, {
                 progress: {
@@ -125,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Calculate Percentage ──
     function updateProgressUI() {
         const total = checkboxes.length;
         if(total === 0) return;
@@ -137,15 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const percentage = Math.round((checkedCount / total) * 100);
 
-        // Update UI Ring and Text
-        progressRingText.textContent = `${percentage}%`;
-        progressRingCircle.style.setProperty('--percentage', `${percentage}%`);
+        if (progressRingText) progressRingText.textContent = `${percentage}%`;
+        if (progressRingCircle) progressRingCircle.style.setProperty('--percentage', `${percentage}%`);
         
-        // Change color based on progress
         if (percentage === 100) {
-            progressRingCircle.style.setProperty('--ring-color', '#27C93F'); // Green
+            progressRingCircle?.style.setProperty('--ring-color', '#27C93F'); // Green
         } else {
-            progressRingCircle.style.setProperty('--ring-color', '#00F0FF'); // Blue
+            progressRingCircle?.style.setProperty('--ring-color', '#00F0FF'); // Blue
         }
     }
 
@@ -180,8 +162,13 @@ document.addEventListener('DOMContentLoaded', () => {
             sidebar.classList.remove('active');
         });
     }
-});
-";
+
+    // ═══════════════════════════════════════════════════════════════
+    // 3. CRASH AI TUTOR (GEMINI INTEGRATION)
+    // ═══════════════════════════════════════════════════════════════
+    const GEMINI_API_KEY = 'AIzaSyD3Q4SPqncLu0fmYsud8vIVeptl_-17YI4'; 
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+    const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers. Current question: ";
 
     const aiTrigger = document.getElementById('aiTrigger');
     const aiChatPanel = document.getElementById('aiChatPanel');
@@ -272,118 +259,4 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInput?.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') handleSend();
     });
-    
-    
-    // ═══════════════════════════════════════════════════════════════
-    // 3. CRASH AI TUTOR (GEMINI INTEGRATION)
-    // ═══════════════════════════════════════════════════════════════
-    const GEMINI_API_KEY = 'AIzaSyD3Q4SPqncLu0fmYsud8vIVeptl_-17YI4'; 
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
-    const SYSTEM_PROMPT = "You are 'Crash AI Tutor', a helpful AI study assistant specifically for Indian government competitive exams (like SSC CGL, CAPF, AFCAT, etc.). Provide concise, accurate, and easy-to-understand study-related answers. Current question: ";
-    
-    const aiTrigger = document.getElementById('aiTrigger');
-    const aiChatPanel = document.getElementById('aiChatPanel');
-    const closeChatBtn = document.getElementById('closeChat');
-    const chatBody = document.querySelector('.chat-body');
-    const chatInput = document.querySelector('.chat-footer input');
-    const sendBtn = document.querySelector('.btn-send');
-    
-    // Toggle Chat Panel (Open/Close)
-    if(aiTrigger) {
-        aiTrigger.addEventListener('click', () => {
-            aiChatPanel.classList.toggle('active');
-            if(aiChatPanel.classList.contains('active')) chatInput?.focus();
-        });
-    }
-    
-    if(closeChatBtn) {
-        closeChatBtn.addEventListener('click', () => {
-            aiChatPanel.classList.remove('active');
-        });
-    }
-    
-    // Chat Message UI
-    function appendMessage(text, sender) {
-        if (!chatBody) return;
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message');
-        
-        if (sender === 'ai') {
-            messageDiv.classList.add('ai-msg');
-        } else {
-            // User Styling
-            messageDiv.style.background = 'var(--primary-blue)';
-            messageDiv.style.color = '#000';
-            messageDiv.style.marginLeft = 'auto';
-            messageDiv.style.borderBottomRightRadius = '0';
-            messageDiv.style.fontWeight = '600';
-        }
-    
-        messageDiv.innerHTML = text.replace(/\n/g, '<br>');
-        chatBody.appendChild(messageDiv);
-        chatBody.scrollTop = chatBody.scrollHeight; // Auto-scroll
-    }
-    
-    function showLoading() {
-        if(!chatBody) return;
-        const loadingDiv = document.createElement('div');
-        loadingDiv.id = 'ai-loading';
-        loadingDiv.classList.add('message', 'ai-msg');
-        loadingDiv.textContent = 'Thinking... 🤔';
-        chatBody.appendChild(loadingDiv);
-        chatBody.scrollTop = chatBody.scrollHeight;
-    }
-    
-    function removeLoading() {
-        const loadingDiv = document.getElementById('ai-loading');
-        if (loadingDiv) chatBody.removeChild(loadingDiv);
-    }
-    
-    // Call Gemini API
-    async function askGemini(question) {
-        try {
-            showLoading();
-            const response = await fetch(GEMINI_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: SYSTEM_PROMPT + question }] }]
-                })
-            });
-    
-            const data = await response.json();
-            removeLoading();
-    
-            if (data.candidates && data.candidates.length > 0) {
-                appendMessage(data.candidates[0].content.parts[0].text, 'ai');
-            } else {
-                appendMessage("Sorry, I couldn't understand that. Please ask a study-related question.", 'ai');
-            }
-        } catch (error) {
-            console.error("Gemini API Error:", error);
-            removeLoading();
-            appendMessage("Oops! Network issue. Make sure your internet is working.", 'ai');
-        }
-    }
-    
-    // Send Button Logic
-    function handleSend() {
-        if (!chatInput || !sendBtn) return;
-        const question = chatInput.value.trim();
-        if (question !== "") {
-            appendMessage(question, 'user');
-            chatInput.value = '';
-            askGemini(question);
-        }
-    }
-    
-    if(sendBtn) sendBtn.addEventListener('click', handleSend);
-    if(chatInput) {
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSend();
-        });
-    }
-    
-    
-  
 });
