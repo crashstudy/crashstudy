@@ -177,9 +177,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnEn) btnEn.addEventListener('click', () => submitTicket('nameEn', 'emailEn', 'msgEn', 'btnEn'));
     if (btnHi) btnHi.addEventListener('click', () => submitTicket('nameHi', 'emailHi', 'msgHi', 'btnHi'));
 });
-(error) {
-            console.error("Error updating reply:", error);
-            alert("Failed to send reply.");
-        }
-    };
-});
+            
