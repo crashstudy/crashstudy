@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DR9VL0YMC1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DR9VL0YMC1');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Mock Test Arena | CrashStudy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="mocktest.css">
+</head>
+<body>
+
+    <div id="loginOverlay" style="display: flex; position: fixed; inset: 0; background: var(--bg-dark-core); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;">
+        <div style="font-size: 4rem; margin-bottom: 10px;">🔒</div>
+        <h2 style="font-family: 'Poppins'; margin-bottom: 15px;">Login Required for Mock Test</h2>
+        <p style="color: var(--text-muted-gray); margin-bottom: 30px;">Authenticate to track your All India Rank and save your score.</p>
+        <button onclick="window.location.href='auth.html?redirect=mocktest.html'" class="btn-gradient-glow" style="cursor: pointer;">Sign In to Continue</button>
+    </div>
+
+    <div id="startScreen" class="start-screen-overlay">
+        <div class="start-card glass-panel">
+            <div class="start-badge">🏆 ALL INDIA LIVE MOCK</div>
+            <h2>SSC CGL Tier-1 Premium Live Mock Test</h2>
+            <p id="userGreetingText" style="color: var(--primary-neon-blue); font-weight: bold; margin-bottom: 15px;"></p>
+            <div class="test-meta-info">
+                <span>⏱️ 60 Minutes</span>
+                <span>📊 100 Questions</span>
+                <span>🎯 +2 / -0.5 Marking</span>
+            </div>
+            <div class="rules-container">
+                <h3>Arena Rules & Instructions:</h3>
+                <ul>
+                    <li>The test is strictly monitored. Switching tabs will trigger auto-submission.</li>
+                    <li>Keyboard shortcuts enabled: Keys <strong>1, 2, 3, 4</strong> to select choices. <strong>Enter</strong> for Save & Next.</li>
+                    <li><strong>Test Mode:</strong> Only ONE attempt allowed. Score is ranked globally.</li>
+                    <li><strong>Practice Mode:</strong> Unlimited attempts. Instant AI Explanations enabled.</li>
+                </ul>
+            </div>
+            <div class="mode-selector-wrapper">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="modeToggle">
+                    <span class="slider"></span>
+                </label>
+                <span class="mode-label">Enable Practice Mode (Instant AI Explanations)</span>
+            </div>
+            <button id="enterArenaBtn" class="btn-gradient-glow">Enter Fullscreen Arena</button>
+        </div>
+    </div>
+
+    <div class="arena-layout hidden" id="arenaMain">
+        
+        <header class="arena-header">
+            <div class="header-left">
+                <span class="platform-logo"><strong>Crash</strong>Study</span>
+                <span class="test-divider">|</span>
+                <h1 class="test-title-text">SSC CGL Grand Mock #24</h1>
+                <span id="practiceBadge" class="practice-mode-badge hidden">Practice Mode Active</span>
+            </div>
+            
+            <div class="header-right">
+                <div class="combo-streak-container">
+                    <span class="streak-fire">🔥</span>
+                    <div class="streak-data">
+                        <span class="streak-title">XP STREAK</span>
+                        <span id="streakCount" class="streak-val">0x Multiplier</span>
+                    </div>
+                </div>
+
+                <div class="per-question-timer-box" title="Time spent on this question">
+                    <span class="clock-icon">⚡</span>
+                    <span id="qTimer" class="timer-digits">00:00</span>
+                </div>
+
+                <div class="global-timer-box">
+                    <span class="clock-icon">⏱️</span>
+                    <span id="globalTimer" class="timer-digits">60:00</span>
+                </div>
+                
+                <button id="submitTestBtn" class="btn-submit-test">Submit Exam</button>
+            </div>
+        </header>
+
+        <div class="test-grid-container">
+            
+            <main class="question-pane">
+                <div class="pane-header-actions">
+                    <div class="section-tabs">
+                        <button class="sec-tab active" data-sec="quant">Quantitative Aptitude</button>
+                        <button class="sec-tab" data-sec="english">English Language</button>
+                        <button class="sec-tab" data-sec="gk">General Knowledge</button>
+                    </div>
+                </div>
+
+                <div class="question-card glass-panel">
+                    <div class="q-header">
+                        <span id="qNumberText" class="q-number-badge">Question #1</span>
+                        <span class="q-marks-weightage">Marks: +2 / -0.5</span>
+                    </div>
+                    <div class="q-body">
+                        <p id="questionContentText" class="question-main-text">Loading question data...</p>
+                    </div>
+                </div>
+
+                <div class="options-wrapper" id="optionsContainer">
+                </div>
+
+                <div id="aiExplanationDrawer" class="ai-explanation-card glass-panel hidden">
+                    <div class="ai-drawer-header">
+                        <h4>🤖 Crash AI Tutor Insight</h4>
+                    </div>
+                    <p id="aiExplanationText">Selecting an option will generate an instant step-by-step conceptual hack...</p>
+                </div>
+
+                <footer class="pane-action-footer">
+                    <button id="clearResponseBtn" class="btn-action-outline">Clear Response</button>
+                    <button id="markReviewBtn" class="btn-action-purple">Mark for Review & Next</button>
+                    <button id="saveNextBtn" class="btn-action-primary">Save & Next</button>
+                </footer>
+            </main>
+
+            <aside class="palette-pane" id="palettePane">
+                <div class="profile-summary-card">
+                    <div class="user-meta">
+                        <h4 id="sidebarUserName">Aspirant</h4>
+                        <p>Exam Ref: SSC-CGL-2026</p>
+                    </div>
+                </div>
+
+                <div class="legend-container">
+                    <div class="legend-item"><span class="lg-dot answered"></span> Answered</div>
+                    <div class="legend-item"><span class="lg-dot unanswered"></span> Unanswered</div>
+                    <div class="legend-item"><span class="lg-dot review"></span> Marked</div>
+                    <div class="legend-item"><span class="lg-dot unvisited"></span> Unvisited</div>
+                </div>
+
+                <div class="matrix-box-header">
+                    <h3>Question Palette Grid</h3>
+                </div>
+                
+                <div class="palette-grid-matrix" id="questionPaletteGrid">
+                </div>
+            </aside>
+        </div>
+
+        <div class="mobile-floating-dock">
+            <button id="mobilePaletteToggle" class="btn-dock-trigger">📋 Toggle Question Matrix</button>
+        </div>
+    </div>
+
+    <div id="submitModal" class="modal-overlay hidden">
+        <div class="modal-box glass-panel">
+            <h3>Confirm Exam Submission</h3>
+            <p>Are you sure you want to lock your choices? You cannot edit responses after submitting.</p>
+            
+            <div class="summary-stats-grid">
+                <div class="summary-item"><span id="summaryAnswered" class="stat-num color-ans">0</span><span>Answered</span></div>
+                <div class="summary-item"><span id="summaryUnanswered" class="stat-num color-unans">0</span><span>Unanswered</span></div>
+                <div class="summary-item"><span id="summaryMarked" class="stat-num color-rev">0</span><span>Marked for Review</span></div>
+            </div>
+
+            <div class="modal-actions-buttons">
+                <button id="cancelSubmitBtn" class="btn-action-outline">Back to Test</button>
+                <button id="confirmSubmitBtn" class="btn-gradient-glow">Submit & View Analysis</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportDashboard" class="report-fullscreen-container hidden">
+        <div class="report-wrapper max-width-container">
+            <header class="report-header">
+                <h2>📈 Performance Diagnostics Dashboard</h2>
+                <button onclick="window.location.href='index.html'" class="btn-action-primary">Return Home</button>
+            </header>
+
+            <div class="score-card-grid-summary">
+                <div class="score-box glass-panel">
+                    <h3>Final Score</h3>
+                    <h2 class="metric-val gradient-text" id="finalScoreVal">0.0 / 200</h2>
+                </div>
+                <div class="score-box glass-panel">
+                    <h3>Accuracy Rating</h3>
+                    <h2 class="metric-val text-cyan" id="accuracyVal">0%</h2>
+                </div>
+                <div class="score-box glass-panel">
+                    <h3>All India Rank</h3>
+                    <h2 class="metric-val text-orange" id="rankVal">Calculating...</h2>
+                </div>
+            </div>
+
+            <div class="analytics-layout-split" style="margin-top: 30px;">
+                <div class="diagnostic-chart-card glass-panel" style="width: 100%;">
+                    <h3>🏆 Global Leaderboard (Live Test Mode Only)</h3>
+                    <div class="leaderboard-table-container">
+                        <table class="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Aspirant Name</th>
+                                    <th>Score</th>
+                                    <th>Time Taken</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardBody">
+                                <tr><td colspan="4" style="text-align:center;">Loading ranking data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module" src="mocktest.js"></script>
+</body>
+</html>
