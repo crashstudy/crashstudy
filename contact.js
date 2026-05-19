@@ -1,5 +1,5 @@
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { collection, addDoc, onSnapshot, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { collection, addDoc, onSnapshot, doc, getDoc, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { auth, db } from './firebase.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,13 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (user) {
             currentUser = user;
             
-            // Auto-fill inputs if elements exist
             const nameEn = document.getElementById('nameEn');
             const emailEn = document.getElementById('emailEn');
             if(nameEn) nameEn.value = user.displayName || '';
             if(emailEn) emailEn.value = user.email || '';
 
-            // Check Admin Status safely
             try {
                 const userRef = doc(db, 'users', user.uid);
                 const userSnap = await getDoc(userRef);
@@ -41,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
             historySection.style.display = 'flex';
             loadAllMessages();
         } else {
-            // Not logged in
             currentUser = null;
             isAdmin = false;
             historyTitle.innerHTML = "Community Support Board";
@@ -64,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 tickets.push(data);
             });
 
-            // Sort newest first
             tickets.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
             if (tickets.length === 0) {
@@ -85,19 +81,41 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="ticket-msg">${ticket.text}</div>
                 `;
 
-                // Admin vs User View Logic
+                // ── Admin UI (Edit & Delete Included) ──
                 if (isAdmin) {
                     if (ticket.adminReply) {
-                        html += `<div class="admin-reply-box"><strong style="color: var(--pink);">Your Response:</strong><p class="admin-reply-text">${ticket.adminReply}</p></div>`;
+                        html += `
+                            <div class="admin-reply-box" id="view-mode-${ticket.id}">
+                                <strong style="color: var(--pink);">Your Response:</strong>
+                                <p class="admin-reply-text">${ticket.adminReply}</p>
+                                <div style="margin-top: 10px; display: flex; gap: 10px;">
+                                    <button onclick="window.toggleEdit('${ticket.id}')" style="padding: 5px 12px; font-size: 0.8rem; background: #FF8A00; color: white; border: none; border-radius: 5px; cursor: pointer;">✏️ Edit</button>
+                                    <button onclick="window.deleteTicket('${ticket.id}')" style="padding: 5px 12px; font-size: 0.8rem; background: #FF4444; color: white; border: none; border-radius: 5px; cursor: pointer;">🗑️ Delete</button>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-reply-area" id="edit-mode-${ticket.id}" style="display: none; margin-top: 10px;">
+                                <textarea id="reply-${ticket.id}" class="reply-input" rows="2" style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px;">${ticket.adminReply}</textarea>
+                                <div style="display: flex; gap: 10px;">
+                                    <button onclick="window.postReply('${ticket.id}')" class="submit-btn" style="padding: 5px 15px; font-size: 0.85rem;">Update</button>
+                                    <button onclick="window.toggleEdit('${ticket.id}')" style="padding: 5px 15px; font-size: 0.85rem; background: #555; color: white; border: none; border-radius: 20px; cursor: pointer;">Cancel</button>
+                                </div>
+                            </div>
+                        `;
                     } else {
                         html += `
-                            <div class="admin-reply-area">
+                            <div class="admin-reply-area" style="margin-top: 10px;">
                                 <textarea id="reply-${ticket.id}" class="reply-input" rows="2" style="width:100%; margin-bottom:10px; padding:10px; border-radius:8px;" placeholder="Write official reply..."></textarea>
-                                <button data-reply-id="${ticket.id}" class="submit-btn admin-btn" style="padding: 8px 15px; font-size: 0.85rem;">Post Reply</button>
+                                <div style="display: flex; gap: 10px;">
+                                    <button onclick="window.postReply('${ticket.id}')" class="submit-btn" style="padding: 5px 15px; font-size: 0.85rem;">Post Reply</button>
+                                    <button onclick="window.deleteTicket('${ticket.id}')" style="padding: 5px 12px; font-size: 0.85rem; background: #FF4444; color: white; border: none; border-radius: 20px; cursor: pointer;">🗑️ Delete Ticket</button>
+                                </div>
                             </div>
                         `;
                     }
-                } else if (ticket.adminReply) {
+                } 
+                // ── User UI ──
+                else if (ticket.adminReply) {
                     html += `<div class="admin-reply-box"><strong>CrashStudy Support:</strong><p class="admin-reply-text">${ticket.adminReply}</p></div>`;
                 } else {
                     html += `<div class="admin-reply-box" style="opacity: 0.6; font-size: 0.85rem;"><em>Awaiting Response...</em></div>`;
@@ -106,27 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 html += `</div>`;
                 messageHistory.innerHTML += html;
             });
-
-            // Attach Admin Reply Listeners AFTER HTML is added
-            if (isAdmin) {
-                document.querySelectorAll('.admin-btn').forEach(btn => {
-                    btn.addEventListener('click', async (e) => {
-                        const id = e.target.getAttribute('data-reply-id');
-                        const reply = document.getElementById(`reply-${id}`).value;
-                        if (!reply) return alert("Reply cannot be empty.");
-                        
-                        try {
-                            await updateDoc(doc(db, "messages", id), { 
-                                adminReply: reply,
-                                repliedAt: new Date().toISOString()
-                            });
-                        } catch (err) {
-                            console.error(err);
-                            alert("Failed to post reply.");
-                        }
-                    });
-                });
-            }
         }, (error) => {
             console.error("Firebase Read Error:", error);
             messageHistory.innerHTML = "<p style='color: #FF4444;'>Failed to load tickets. Please check if you are logged in.</p>";
@@ -170,11 +167,48 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.textContent = nameId === 'nameEn' ? "Submit Ticket" : "टिकट जमा करें";
     }
 
-    // Attach listeners safely
     const btnEn = document.getElementById('btnEn');
     const btnHi = document.getElementById('btnHi');
 
     if (btnEn) btnEn.addEventListener('click', () => submitTicket('nameEn', 'emailEn', 'msgEn', 'btnEn'));
     if (btnHi) btnHi.addEventListener('click', () => submitTicket('nameHi', 'emailHi', 'msgHi', 'btnHi'));
+
+    // ── 4. Global Admin Functions (Edit, Delete, Reply) ──
+    window.postReply = async (id) => {
+        const reply = document.getElementById(`reply-${id}`).value;
+        if (!reply) return alert("Reply cannot be empty.");
+        
+        try {
+            await updateDoc(doc(db, "messages", id), { 
+                adminReply: reply,
+                repliedAt: new Date().toISOString()
+            });
+        } catch (err) {
+            console.error(err);
+            alert("Failed to post reply.");
+        }
+    };
+
+    window.toggleEdit = (id) => {
+        const viewMode = document.getElementById(`view-mode-${id}`);
+        const editMode = document.getElementById(`edit-mode-${id}`);
+        if (viewMode.style.display === "none") {
+            viewMode.style.display = "block";
+            editMode.style.display = "none";
+        } else {
+            viewMode.style.display = "none";
+            editMode.style.display = "block";
+        }
+    };
+
+    window.deleteTicket = async (id) => {
+        if (confirm("Are you sure you want to permanently delete this ticket?")) {
+            try {
+                await deleteDoc(doc(db, "messages", id));
+            } catch (e) {
+                console.error("Error deleting:", e);
+                alert("Failed to delete ticket. Check permissions.");
+            }
+        }
+    };
 });
-            
