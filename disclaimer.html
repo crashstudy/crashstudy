@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Disclaimer | CrashStudy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #070913; --accent: #00F0FF; --text-muted: #A0A5B5; }
+        body { background: var(--bg); color: white; line-height: 1.6; padding: 40px 20px; font-family: 'Inter', sans-serif; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { font-family: 'Poppins'; font-size: 2.5rem; margin-bottom: 20px; background: linear-gradient(to right, var(--accent), #FF007A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h2 { margin-top: 30px; color: var(--accent); }
+        p { color: var(--text-muted); margin-bottom: 15px; }
+        .btn-lang { background: #00F0FF; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
+        .btn-back { display: inline-block; margin-top: 30px; padding: 10px 20px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; border-radius: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="btn-lang" id="langBtn" onclick="toggleLanguage()">देखें हिंदी में (Hindi)</button>
+
+        <div id="enContent">
+            <h1>Disclaimer</h1>
+            <p>Last updated: May 19, 2026</p>
+            
+            <h2>1. Information Accuracy</h2>
+            <p>The information provided on CrashStudy is for general educational purposes only. While we strive for accuracy, we do not guarantee the completeness or reliability of the mock tests and notes.</p>
+            
+            <h2>2. No Official Affiliation</h2>
+            <p>CrashStudy is an independent educational platform. We are not affiliated with, endorsed by, or sponsored by any government exam conducting bodies (like SSC, UPSC, Air Force, etc.).</p>
+            
+            <h2>3. External Links</h2>
+            <p>Our platform may contain links to external websites. We are not responsible for the content or privacy practices of those sites.</p>
+            
+            <h2>4. AI Tool Usage</h2>
+            <p>Our AI-powered study tools are designed to assist you, but they should not be considered a substitute for professional coaching or standard textbooks. Use them as a supplemental aid.</p>
+            
+            <h2>5. Professional Advice</h2>
+            <p>The content on this platform does not constitute professional career or legal advice. Always cross-verify critical information from official government notifications.</p>
+        </div>
+
+        <div id="hiContent" style="display:none;">
+            <h1>अस्वीकरण (Disclaimer)</h1>
+            <p>अंतिम अपडेट: 19 मई, 2026</p>
+            
+            <h2>1. जानकारी की सटीकता</h2>
+            <p>CrashStudy पर प्रदान की गई जानकारी केवल सामान्य शैक्षिक उद्देश्यों के लिए है। हालाँकि हम सटीकता के लिए प्रयास करते हैं, लेकिन हम मॉक टेस्ट और नोट्स की पूर्णता या विश्वसनीयता की गारंटी नहीं देते हैं।</p>
+            
+            <h2>2. कोई आधिकारिक संबद्धता नहीं</h2>
+            <p>CrashStudy एक स्वतंत्र शैक्षिक प्लेटफॉर्म है। हम किसी भी सरकारी परीक्षा संचालन निकाय (जैसे SSC, UPSC, Air Force, आदि) से संबद्ध, समर्थित या प्रायोजित नहीं हैं।</p>
+            
+            <h2>3. बाहरी लिंक</h2>
+            <p>हमारे प्लेटफॉर्म में बाहरी वेबसाइटों के लिंक हो सकते हैं। हम उन साइटों की सामग्री या गोपनीयता प्रथाओं के लिए जिम्मेदार नहीं हैं।</p>
+            
+            <h2>4. AI टूल का उपयोग</h2>
+            <p>हमारे एआई-संचालित अध्ययन टूल आपको सहायता करने के लिए डिज़ाइन किए गए हैं, लेकिन उन्हें पेशेवर कोचिंग या मानक पाठ्यपुस्तकों का विकल्प नहीं माना जाना चाहिए। उनका उपयोग एक पूरक सहायता के रूप में करें।</p>
+            
+            <h2>5. पेशेवर सलाह</h2>
+            <p>इस प्लेटफॉर्म पर मौजूद सामग्री पेशेवर करियर या कानूनी सलाह नहीं है। हमेशा आधिकारिक सरकारी अधिसूचनाओं से महत्वपूर्ण जानकारी की पुष्टि करें।</p>
+        </div>
+
+        <a href="index.html" class="btn-back">← Back to Home</a>
+    </div>
+
+    <script>
+        function toggleLanguage() {
+            const en = document.getElementById('enContent');
+            const hi = document.getElementById('hiContent');
+            const btn = document.getElementById('langBtn');
+
+            if (en.style.display === 'none') {
+                en.style.display = 'block';
+                hi.style.display = 'none';
+                btn.innerText = 'देखें हिंदी में (Hindi)';
+            } else {
+                en.style.display = 'none';
+                hi.style.display = 'block';
+                btn.innerText = 'Read in English';
+            }
+        }
+    </script>
+</body>
+</html>

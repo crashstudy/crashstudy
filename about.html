@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us | CrashStudy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #070913; --accent: #00F0FF; --text-muted: #A0A5B5; }
+        body { background: var(--bg); color: white; line-height: 1.6; padding: 40px 20px; font-family: 'Inter', sans-serif; }
+        .container { max-width: 800px; margin: 0 auto; text-align: center; }
+        h1 { font-family: 'Poppins'; font-size: 2.5rem; margin-bottom: 20px; background: linear-gradient(to right, var(--accent), #FF007A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h2 { margin-top: 30px; color: var(--accent); }
+        p { color: var(--text-muted); margin-bottom: 15px; }
+        .btn-lang { background: #00F0FF; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
+        .btn-back { display: inline-block; margin-top: 30px; padding: 10px 20px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; border-radius: 20px; }
+        .mission-card { background: rgba(20, 25, 40, 0.6); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="btn-lang" id="langBtn" onclick="toggleLanguage()">देखें हिंदी में (Hindi)</button>
+
+        <div id="enContent">
+            <h1>About CrashStudy</h1>
+            <p>Empowering aspirants to achieve their dream careers through technology.</p>
+            <div class="mission-card">
+                <h2>Our Mission</h2>
+                <p>To bridge the gap between aspirants and quality exam preparation by utilizing the latest AI tools and data-driven learning paths.</p>
+            </div>
+            <h2>Why CrashStudy?</h2>
+            <p>We provide high-yield notes, smart mock tests, and a dedicated AI tutor to ensure you stay ahead of the competition.</p>
+        </div>
+
+        <div id="hiContent" style="display:none;">
+            <h1>CrashStudy के बारे में</h1>
+            <p>तकनीक के माध्यम से उम्मीदवारों को उनके सपनों के करियर को प्राप्त करने के लिए सशक्त बनाना।</p>
+            <div class="mission-card">
+                <h2>हमारा मिशन</h2>
+                <p>नवीनतम AI टूल और डेटा-संचालित शिक्षण पथों का उपयोग करके उम्मीदवारों और गुणवत्तापूर्ण परीक्षा तैयारी के बीच की खाई को पाटना।</p>
+            </div>
+            <h2>CrashStudy ही क्यों?</h2>
+            <p>हम उच्च-उपज वाले नोट्स, स्मार्ट मॉक टेस्ट और एक समर्पित AI ट्यूटर प्रदान करते हैं ताकि यह सुनिश्चित हो सके कि आप प्रतिस्पर्धा से आगे रहें।</p>
+        </div>
+
+        <a href="index.html" class="btn-back">← Back to Home</a>
+    </div>
+
+    <script>
+        function toggleLanguage() {
+            const en = document.getElementById('enContent');
+            const hi = document.getElementById('hiContent');
+            const btn = document.getElementById('langBtn');
+
+            if (en.style.display === 'none') {
+                en.style.display = 'block';
+                hi.style.display = 'none';
+                btn.innerText = 'देखें हिंदी में (Hindi)';
+            } else {
+                en.style.display = 'none';
+                hi.style.display = 'block';
+                btn.innerText = 'Read in English';
+            }
+        }
+    </script>
+</body>
+</html>

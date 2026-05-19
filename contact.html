@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Us | CrashStudy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #070913; --accent: #00F0FF; --text-muted: #A0A5B5; }
+        body { background: var(--bg); color: white; padding: 40px 20px; font-family: 'Inter', sans-serif; }
+        .container { max-width: 600px; margin: 0 auto; text-align: center; }
+        h1 { font-family: 'Poppins'; font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(to right, var(--accent), #FF007A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { color: var(--text-muted); margin-bottom: 30px; }
+        
+        .contact-form { background: rgba(20, 25, 40, 0.6); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        input, textarea { width: 100%; background: #0d101d; border: 1px solid #2C3045; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        button { background: var(--accent); color: #000; padding: 15px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; width: 100%; }
+        
+        .btn-lang { background: rgba(255,255,255,0.1); color: white; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
+        .btn-back { display: inline-block; margin-top: 30px; color: var(--text-muted); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="btn-lang" id="langBtn" onclick="toggleLanguage()">देखें हिंदी में (Hindi)</button>
+
+        <div id="enContent">
+            <h1>Contact Us</h1>
+            <p>Sawaal ya feedback? Humse sampark karein.</p>
+            <div class="contact-form">
+                <input type="text" placeholder="Your Name">
+                <input type="email" placeholder="Your Email">
+                <textarea rows="5" placeholder="Your Message"></textarea>
+                <button onclick="alert('Message sent successfully!')">Send Message</button>
+            </div>
+        </div>
+
+        <div id="hiContent" style="display:none;">
+            <h1>संपर्क करें (Contact Us)</h1>
+            <p>Have questions or feedback? Reach out to us.</p>
+            <div class="contact-form">
+                <input type="text" placeholder="आपका नाम">
+                <input type="email" placeholder="आपका ईमेल">
+                <textarea rows="5" placeholder="आपका संदेश"></textarea>
+                <button onclick="alert('संदेश सफलतापूर्वक भेज दिया गया!')">संदेश भेजें</button>
+            </div>
+        </div>
+
+        <a href="index.html" class="btn-back">← Back to Home</a>
+    </div>
+
+    <script>
+        function toggleLanguage() {
+            const en = document.getElementById('enContent');
+            const hi = document.getElementById('hiContent');
+            const btn = document.getElementById('langBtn');
+
+            if (en.style.display === 'none') {
+                en.style.display = 'block';
+                hi.style.display = 'none';
+                btn.innerText = 'देखें हिंदी में (Hindi)';
+            } else {
+                en.style.display = 'none';
+                hi.style.display = 'block';
+                btn.innerText = 'Read in English';
+            }
+        }
+    </script>
+</body>
+</html>

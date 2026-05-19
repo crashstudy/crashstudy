@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terms of Service | CrashStudy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #070913; --accent: #00F0FF; --text-muted: #A0A5B5; }
+        body { background: var(--bg); color: white; line-height: 1.6; padding: 40px 20px; font-family: 'Inter', sans-serif; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { font-family: 'Poppins'; font-size: 2.5rem; margin-bottom: 20px; background: linear-gradient(to right, var(--accent), #FF007A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h2 { margin-top: 30px; color: var(--accent); }
+        p { color: var(--text-muted); margin-bottom: 15px; }
+        .btn-lang { background: #00F0FF; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
+        .btn-back { display: inline-block; margin-top: 30px; padding: 10px 20px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; border-radius: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="btn-lang" id="langBtn" onclick="toggleLanguage()">देखें हिंदी में (Hindi)</button>
+
+        <div id="enContent">
+            <h1>Terms of Service</h1>
+            <p>Last updated: May 19, 2026</p>
+            
+            <h2>1. Agreement to Terms</h2>
+            <p>By accessing CrashStudy, you agree to be bound by these Terms of Service. If you disagree with any part, please do not use our platform.</p>
+            
+            <h2>2. User Conduct</h2>
+            <p>You agree not to misuse our platform, scrape our data, or engage in any activity that disrupts our services or AI tools.</p>
+            
+            <h2>3. Intellectual Property</h2>
+            <p>All study material, mock test content, and AI models provided are the property of CrashStudy. You may not distribute them without permission.</p>
+            
+            <h2>4. Limitation of Liability</h2>
+            <p>CrashStudy is provided "as is". We are not responsible for any direct or indirect damages arising from the use of our website or study tools.</p>
+            
+            <h2>5. Changes to Terms</h2>
+            <p>We reserve the right to modify these terms at any time. Continued use of the platform after changes constitutes acceptance of the new terms.</p>
+        </div>
+
+        <div id="hiContent" style="display:none;">
+            <h1>सेवा की शर्तें (Terms of Service)</h1>
+            <p>अंतिम अपडेट: 19 मई, 2026</p>
+            
+            <h2>1. शर्तों की स्वीकृति</h2>
+            <p>CrashStudy का उपयोग करके, आप इन सेवा की शर्तों से बंधे होने के लिए सहमत हैं। यदि आप किसी भी हिस्से से असहमत हैं, तो कृपया हमारे प्लेटफॉर्म का उपयोग न करें।</p>
+            
+            <h2>2. उपयोगकर्ता आचरण</h2>
+            <p>आप हमारे प्लेटफॉर्म का दुरुपयोग न करने, डेटा को स्क्रैप न करने, या ऐसी किसी भी गतिविधि में शामिल न होने के लिए सहमत हैं जो हमारी सेवाओं या AI टूल को बाधित करती है।</p>
+            
+            <h2>3. बौद्धिक संपदा (Intellectual Property)</h2>
+            <p>प्रदान की गई सभी अध्ययन सामग्री, मॉक टेस्ट सामग्री और AI मॉडल CrashStudy की संपत्ति हैं। आप अनुमति के बिना उन्हें वितरित नहीं कर सकते।</p>
+            
+            <h2>4. दायित्व की सीमा</h2>
+            <p>CrashStudy "जैसा है" (as is) प्रदान किया जाता है। हम हमारी वेबसाइट या अध्ययन टूल के उपयोग से होने वाले किसी भी प्रत्यक्ष या अप्रत्यक्ष नुकसान के लिए जिम्मेदार नहीं हैं।</p>
+            
+            <h2>5. शर्तों में परिवर्तन</h2>
+            <p>हम किसी भी समय इन शर्तों को संशोधित करने का अधिकार सुरक्षित रखते हैं। परिवर्तन के बाद प्लेटफॉर्म का निरंतर उपयोग नई शर्तों की स्वीकृति माना जाएगा।</p>
+        </div>
+
+        <a href="index.html" class="btn-back">← Back to Home</a>
+    </div>
+
+    <script>
+        function toggleLanguage() {
+            const en = document.getElementById('enContent');
+            const hi = document.getElementById('hiContent');
+            const btn = document.getElementById('langBtn');
+
+            if (en.style.display === 'none') {
+                en.style.display = 'block';
+                hi.style.display = 'none';
+                btn.innerText = 'देखें हिंदी में (Hindi)';
+            } else {
+                en.style.display = 'none';
+                hi.style.display = 'block';
+                btn.innerText = 'Read in English';
+            }
+        }
+    </script>
+</body>
+</html>

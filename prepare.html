@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Exam | CrashStudy</title>
+    <style>
+        /* ── CSS CONSOLIDATED ── */
+        :root { --bg: #070913; --accent: #00F0FF; --pink: #FF007A; --glass: rgba(20, 25, 40, 0.7); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: white; display: flex; flex-direction: column; align-items: center; padding: 60px 20px; min-height: 100vh; }
+        
+        .header { text-align: center; margin-bottom: 60px; }
+        h1 { font-size: 3rem; margin-bottom: 15px; background: linear-gradient(to right, var(--accent), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; width: 100%; max-width: 1100px; }
+        
+        .card { 
+            background: var(--glass); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            padding: 40px; 
+            border-radius: 20px; 
+            text-align: center; 
+            transition: 0.4s;
+            backdrop-filter: blur(10px);
+        }
+        .card:hover { border-color: var(--accent); transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,240,255,0.1); }
+        
+        /* LOGO LOGIC */
+        .card-logo-container {
+            width: 80px; height: 80px; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden;
+        }
+        .card-logo-container img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
+        
+        .btn { margin-top: 25px; display: inline-block; padding: 14px 30px; border-radius: 30px; background: var(--accent); color: #000; text-decoration: none; font-weight: 800; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Select Your Target Exam</h1>
+        <p>Choose your battlefield to begin your customized AI-learning path.</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="card-logo-container">
+                <img src="ssc.png" alt="SSC Logo">
+            </div>
+            <h3>SSC CGL</h3>
+            <p>Master Quantitative Aptitude & English with AI.</p>
+            <a href="syllabus.html" class="btn">Start Preparing</a>
+        </div>
+
+        <div class="card">
+            <div class="card-logo-container">
+            <img src="afcat.png" alt="AFCAT Logo">
+            </div>
+            <h3>AFCAT</h3>
+            <p>Military Aptitude & Reasoning modules.</p>
+            <a href="syllabus.html" class="btn">Start Preparing</a>
+        </div>
+
+        <div class="card">
+            <div class="card-logo-container">
+                <img src="capf.png" alt="CAPF Logo">
+            </div>
+            <h3>CAPF (AC)</h3>
+            <p>Paper I & II strategies for officers.</p>
+            <a href="syllabus.html" class="btn">Start Preparing</a>
+        </div>
+    </div>
+
+    <script>
+        // JS: Future analytics tracking logic
+        console.log("Exam selection page loaded successfully.");
+    </script>
+</body>
+</html>" alt="CAPF Logo">
+            </div>
+            <h3>CAPF (AC)</h3>
+            <p>Paper I & II strategies for officers.</p>
+            <a href="syllabus.html" class="btn">Start Preparing</a>
+        </div>
+    </div>
+
+    <script>
+        // JS: Future analytics tracking logic
+        console.log("Exam selection page loaded successfully.");
+    </script>
+</body>
+</html>
