@@ -50,7 +50,11 @@
                 </label>
                 <span class="mode-label">Enable Practice Mode (Instant AI Explanations)</span>
             </div>
-            <button id="enterArenaBtn" class="btn-gradient-glow">Enter Fullscreen Arena</button>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <button id="enterArenaBtn" class="btn-gradient-glow">Enter Fullscreen Arena</button>
+                <button id="viewLeaderboardBtn" class="btn-action-outline hidden">📊 View Result & Leaderboard</button>
+            </div>
         </div>
     </div>
 
@@ -176,7 +180,7 @@
         <div class="report-wrapper max-width-container">
             <header class="report-header">
                 <h2>📈 Performance Diagnostics Dashboard</h2>
-                <button onclick="window.location.href='index.html'" class="btn-action-primary">Return Home</button>
+                <button onclick="window.location.reload()" class="btn-action-primary">Back to Arena</button>
             </header>
 
             <div class="score-card-grid-summary">

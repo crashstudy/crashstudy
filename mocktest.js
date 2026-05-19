@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const startScreen = document.getElementById("startScreen");
     const arenaMain = document.getElementById("arenaMain");
     const enterArenaBtn = document.getElementById("enterArenaBtn");
+    const viewLeaderboardBtn = document.getElementById("viewLeaderboardBtn");
     const modeToggle = document.getElementById("modeToggle");
     const practiceBadge = document.getElementById("practiceBadge");
     const questionContentText = document.getElementById("questionContentText");
@@ -100,31 +101,42 @@ document.addEventListener("DOMContentLoaded", () => {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUser = user;
-            loginOverlay.style.display = 'none';
+            if(loginOverlay) loginOverlay.style.display = 'none';
             const name = user.displayName || user.email.split('@')[0];
-            userGreetingText.innerText = `Welcome, ${name}!`;
-            sidebarUserName.innerText = name;
+            if(userGreetingText) userGreetingText.innerText = `Welcome, ${name}!`;
+            if(sidebarUserName) sidebarUserName.innerText = name;
 
             // Check if user already took the test
             const attemptRef = doc(db, 'leaderboard', TEST_ID, 'entries', user.uid);
             const snap = await getDoc(attemptRef);
             if (snap.exists()) {
                 hasAttemptedRealTest = true;
+                const prevData = snap.data();
+                
+                // Pre-fill dashboard with user's past data
+                const totalPossibleMarks = mockQuestions.length * 2;
+                document.getElementById("finalScoreVal").innerText = `${prevData.score.toFixed(2)} / ${totalPossibleMarks}`;
+                document.getElementById("accuracyVal").innerText = `${prevData.accuracy}%`;
+
+                // Un-hide the View Leaderboard button
+                if (viewLeaderboardBtn) {
+                    viewLeaderboardBtn.classList.remove("hidden");
+                }
             }
         } else {
             currentUser = null;
-            loginOverlay.style.display = 'flex';
+            if(loginOverlay) loginOverlay.style.display = 'flex';
         }
     });
 
 
     // --- 1. CORE ARENA INITIALIZATION & FULLSCREEN HANDLING ---
-    enterArenaBtn.addEventListener("click", () => {
+    enterArenaBtn?.addEventListener("click", () => {
         isPracticeMode = modeToggle.checked;
         
         // Blocking multiple attempts in Real Mode
         if (!isPracticeMode && hasAttemptedRealTest) {
-            alert("⚠️ You have already submitted the Live Test! You can only retake this test in 'Practice Mode'. Enable Practice Mode to continue.");
+            alert("⚠️ You have already submitted the Live Test!\n\nClick on 'View Result & Leaderboard' to see your ranking, OR enable 'Practice Mode' toggle to retake the test.");
             return;
         }
 
@@ -144,6 +156,13 @@ document.addEventListener("DOMContentLoaded", () => {
         initPaletteMatrix();
         loadQuestion(0);
         startTimers();
+    });
+
+    // View Leaderboard Button Logic
+    viewLeaderboardBtn?.addEventListener("click", () => {
+        startScreen.classList.add("hidden");
+        reportDashboard.classList.remove("hidden");
+        fetchAndRenderLeaderboard(false);
     });
 
     // --- 2. TIMER SYSTEM MECHANICS ---
@@ -279,7 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    saveNextBtn.addEventListener("click", () => {
+    saveNextBtn?.addEventListener("click", () => {
         if(userAnswers[currentQuestionIndex] !== null) {
             questionStates[currentQuestionIndex] = "answered";
         } else {
@@ -288,12 +307,12 @@ document.addEventListener("DOMContentLoaded", () => {
         advanceToNextQuestion();
     });
 
-    markReviewBtn.addEventListener("click", () => {
+    markReviewBtn?.addEventListener("click", () => {
         questionStates[currentQuestionIndex] = "review";
         advanceToNextQuestion();
     });
 
-    clearResponseBtn.addEventListener("click", () => {
+    clearResponseBtn?.addEventListener("click", () => {
         userAnswers[currentQuestionIndex] = null;
         questionStates[currentQuestionIndex] = "unanswered";
         const nodes = optionsContainer.querySelectorAll(".option-node");
@@ -315,17 +334,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    mobilePaletteToggle.addEventListener("click", () => {
+    mobilePaletteToggle?.addEventListener("click", () => {
         palettePane.classList.toggle("mobile-open");
     });
-    questionPaletteGrid.addEventListener("click", (e) => {
+    questionPaletteGrid?.addEventListener("click", (e) => {
         if(e.target.classList.contains("p-node")) {
             palettePane.classList.remove("mobile-open");
         }
     });
 
     // --- 8. SUBMISSION & DATABASE LOGIC ---
-    submitTestBtn.addEventListener("click", () => {
+    submitTestBtn?.addEventListener("click", () => {
         let ansCount = userAnswers.filter(a => a !== null).length;
         let revCount = questionStates.filter(s => s === "review").length;
         let unansCount = mockQuestions.length - ansCount;
@@ -337,9 +356,9 @@ document.addEventListener("DOMContentLoaded", () => {
         submitModal.classList.remove("hidden");
     });
 
-    cancelSubmitBtn.addEventListener("click", () => submitModal.classList.add("hidden"));
+    cancelSubmitBtn?.addEventListener("click", () => submitModal.classList.add("hidden"));
 
-    confirmSubmitBtn.addEventListener("click", () => {
+    confirmSubmitBtn?.addEventListener("click", () => {
         submitModal.classList.add("hidden");
         executeFinalEvaluation();
     });
@@ -421,21 +440,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             const lbRef = collection(db, 'leaderboard', TEST_ID, 'entries');
-            // Sorting Logic: Highest score first. If tie, lowest time first.
-            const q = query(lbRef, orderBy('score', 'desc'), orderBy('timeSpent', 'asc'), limit(50));
+            
+            // Client-Side Sort Tie Breaker
+            const q = query(lbRef, orderBy('score', 'desc'), limit(50));
             const snapshot = await getDocs(q);
             
+            let attempts = [];
+            snapshot.forEach(doc => {
+                attempts.push(doc.data());
+            });
+
+            // Handle tie-breakers locally (Lower time wins if score is same)
+            attempts.sort((a, b) => {
+                if (b.score === a.score) {
+                    return a.timeSpent - b.timeSpent;
+                }
+                return 0;
+            });
+
             let html = '';
             let rank = 1;
             let myRankNum = '-';
 
-            if(snapshot.empty) {
+            if(attempts.length === 0) {
                 tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>No attempts yet. Be the first!</td></tr>";
                 return;
             }
 
-            snapshot.forEach(doc => {
-                const data = doc.data();
+            attempts.forEach(data => {
                 const isMe = currentUser && data.uid === currentUser.uid;
                 if(isMe) myRankNum = rank;
                 
