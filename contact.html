@@ -3,53 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us | CrashStudy</title>
+    <title>Contact Support | CrashStudy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #070913; --surface: rgba(20, 25, 40, 0.6); --accent: #00F0FF; --pink: #FF007A; --text: #f8fafc; --text-muted: #94a3b8; }
-        body { background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 40px 20px; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; min-height: 100vh; align-items: center; justify-content: center; }
+        :root { 
+            --bg: #070913; --surface: rgba(20, 25, 40, 0.6); 
+            --accent: #00F0FF; --pink: #FF007A; 
+            --text: #f8fafc; --text-muted: #94a3b8; 
+            --border-glass: rgba(255, 255, 255, 0.08);
+        }
+        body { 
+            background: var(--bg); color: var(--text); line-height: 1.6; 
+            margin: 0; padding: 40px 20px; font-family: 'Inter', sans-serif; 
+            display: flex; flex-direction: column; min-height: 100vh; align-items: center; 
+        }
         .container { max-width: 600px; width: 100%; text-align: center; }
+        
         h1 { font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 10px; background: linear-gradient(135deg, var(--accent), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        p { color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; }
+        p { color: var(--text-muted); margin-bottom: 30px; }
         
-        .contact-form { background: var(--surface); padding: 40px 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(12px); text-align: left; }
-        input, textarea { width: 100%; background: rgba(13, 16, 29, 0.8); border: 1px solid rgba(255,255,255,0.1); color: var(--text); padding: 16px; border-radius: 12px; margin-bottom: 20px; box-sizing: border-box; font-family: inherit; font-size: 1rem; transition: all 0.3s ease; }
-        input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
-        button.submit-btn { background: linear-gradient(135deg, var(--accent), #00b3cc); color: #000; padding: 16px; border-radius: 30px; border: none; font-weight: 700; font-size: 1.1rem; cursor: pointer; width: 100%; transition: all 0.3s ease; font-family: 'Poppins', sans-serif; }
-        button.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 240, 255, 0.4); }
+        .contact-form, .history-section { 
+            background: var(--surface); padding: 30px; border-radius: 20px; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); backdrop-filter: blur(12px); 
+            border: 1px solid var(--border-glass); display: flex; flex-direction: column; gap: 15px; 
+            margin-bottom: 30px; text-align: left;
+        }
         
-        .btn-lang { background: rgba(0, 240, 255, 0.1); color: var(--accent); border: 1px solid var(--accent); padding: 10px 24px; border-radius: 30px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; margin-bottom: 30px; font-family: inherit; }
-        .btn-lang:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); }
-        .btn-back { display: inline-flex; margin-top: 30px; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
-        .btn-back:hover { color: var(--text); }
+        input, textarea { 
+            width: 100%; padding: 15px; border-radius: 10px; border: 1px solid var(--border-glass); 
+            background: rgba(0, 0, 0, 0.3); color: var(--text); font-size: 1rem; outline: none; transition: 0.3s; 
+        }
+        input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
         
-        .lang-content { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .submit-btn { 
+            background: linear-gradient(135deg, var(--accent), var(--pink)); color: #fff; 
+            border: none; padding: 15px; border-radius: 10px; font-size: 1.1rem; 
+            font-weight: 600; cursor: pointer; transition: 0.3s; 
+        }
+        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 0, 122, 0.3); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-lang { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; margin-bottom: 20px; transition: 0.3s; }
+        .btn-lang:hover { background: var(--accent); color: var(--bg); }
+        
+        .btn-back { display: inline-block; margin-top: 20px; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .btn-back:hover { color: var(--accent); }
+
+        /* History Cards */
+        .ticket-card { background: rgba(0,0,0,0.4); border-left: 4px solid var(--accent); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .ticket-card.admin-view { border-left-color: var(--pink); }
+        .ticket-date { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; }
+        .ticket-msg { margin-bottom: 10px; }
+        .admin-reply-box { background: rgba(0, 240, 255, 0.05); padding: 10px; border-radius: 8px; border: 1px solid var(--border-glass); margin-top: 10px; }
+        .admin-reply-text { color: var(--accent); font-size: 0.95rem; }
+        .reply-input { margin-top: 10px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
-    <main class="container">
-        <button class="btn-lang" id="langBtn" onclick="toggleLanguage()">🌐 देखें हिंदी में (Hindi)</button>
 
+    <button class="btn-lang" id="langBtn" onclick="toggleLanguage()">🌐 देखें हिंदी में (Hindi)</button>
+
+    <main class="container">
+        
         <section id="enContent" class="lang-content">
-            <h1>Contact Us</h1>
-            <p>Have questions or feedback? We'd love to hear from you.</p>
+            <h1>Contact Support</h1>
+            <p>Questions or feedback? Create a support ticket below.</p>
             <div class="contact-form">
-                <input type="text" placeholder="Your Name" aria-label="Your Name">
-                <input type="email" placeholder="Your Email Address" aria-label="Your Email Address">
-                <textarea rows="5" placeholder="How can we help you?" aria-label="Your Message"></textarea>
-                <button class="submit-btn" onclick="alert('Message sent successfully!')">Send Message</button>
+                <input type="text" id="nameEn" placeholder="Your Name" required>
+                <input type="email" id="emailEn" placeholder="Your Email Address" required>
+                <textarea id="msgEn" rows="5" placeholder="How can we help you?" required></textarea>
+                <button class="submit-btn" id="btnEn">Submit Ticket</button>
             </div>
         </section>
 
         <section id="hiContent" class="lang-content" style="display:none;">
             <h1>संपर्क करें</h1>
-            <p>सवाल या फ़ीडबैक? बेझिझक हमसे संपर्क करें।</p>
+            <p>सवाल या फ़ीडबैक? नीचे सपोर्ट टिकट बनाएं।</p>
             <div class="contact-form">
-                <input type="text" placeholder="आपका नाम" aria-label="आपका नाम">
-                <input type="email" placeholder="आपका ईमेल पता" aria-label="आपका ईमेल पता">
-                <textarea rows="5" placeholder="हम आपकी कैसे मदद कर सकते हैं?" aria-label="आपका संदेश"></textarea>
-                <button class="submit-btn" onclick="alert('संदेश सफलतापूर्वक भेज दिया गया!')">संदेश भेजें</button>
+                <input type="text" id="nameHi" placeholder="आपका नाम" required>
+                <input type="email" id="emailHi" placeholder="आपका ईमेल पता" required>
+                <textarea id="msgHi" rows="5" placeholder="हम आपकी कैसे मदद कर सकते हैं?" required></textarea>
+                <button class="submit-btn" id="btnHi">टिकट जमा करें</button>
+            </div>
+        </section>
+
+        <section class="history-section" id="historySection" style="display: none;">
+            <h2 id="historyTitle" style="font-family: 'Poppins'; font-size: 1.5rem; margin-bottom: 15px;">Your Support Tickets</h2>
+            <div id="messageHistory">
+                <p class="text-muted">Loading...</p>
             </div>
         </section>
 
@@ -61,17 +102,16 @@
             const en = document.getElementById('enContent');
             const hi = document.getElementById('hiContent');
             const btn = document.getElementById('langBtn');
-
             if (en.style.display === 'none') {
-                en.style.display = 'block';
-                hi.style.display = 'none';
+                en.style.display = 'block'; hi.style.display = 'none';
                 btn.innerHTML = '🌐 देखें हिंदी में (Hindi)';
             } else {
-                en.style.display = 'none';
-                hi.style.display = 'block';
+                en.style.display = 'none'; hi.style.display = 'block';
                 btn.innerHTML = '🌐 Read in English';
             }
         }
     </script>
+    
+    <script type="module" src="contact.js"></script>
 </body>
 </html>
