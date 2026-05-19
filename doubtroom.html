@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Doubt Chat Room | CrashStudy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #070913;
+            --surface: rgba(20, 25, 40, 0.6);
+            --accent: #00F0FF;
+            --pink: #FF007A;
+            --orange: #FF8A00;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-glass: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+
+        .chat-container { width: 100%; max-width: 850px; height: 85vh; background: var(--surface); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); margin-top: 20px; }
+        
+        /* Header */
+        .chat-header { padding: 20px; background: rgba(10, 15, 30, 0.8); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; }
+        .chat-header h1 { font-family: 'Poppins', sans-serif; font-size: 1.5rem; background: linear-gradient(135deg, var(--accent), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .room-status { font-size: 0.85rem; color: #27C93F; display: flex; align-items: center; gap: 6px; }
+        .room-status::before { content: ''; width: 8px; height: 8px; background: #27C93F; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #27C93F; }
+
+        /* Chat Body */
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        
+        /* Message Card Wrapper */
+        .msg-wrapper { display: flex; gap: 12px; align-items: flex-start; max-width: 85%; }
+        .msg-wrapper.my-msg { align-self: flex-end; flex-direction: row-reverse; }
+        
+        /* Avatar Generator */
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 0.9rem; text-transform: uppercase; box-shadow: 0 2px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
+        
+        /* Message Bubble */
+        .msg-bubble { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-glass); padding: 12px 16px; border-radius: 4px 16px 16px 16px; position: relative; }
+        .msg-wrapper.my-msg .msg-bubble { background: rgba(0, 240, 255, 0.06); border-color: rgba(0, 240, 255, 0.2); border-radius: 16px 4px 16px 16px; }
+        
+        .msg-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+        .msg-username { font-weight: 600; color: var(--accent); }
+        .msg-wrapper.my-msg .msg-username { color: var(--orange); }
+        
+        .admin-badge { background: var(--pink); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; letter-spacing: 0.5px; }
+        .msg-text { font-size: 0.95rem; line-height: 1.4; word-break: break-word; }
+        
+        /* Deleted styling */
+        .msg-deleted { color: var(--text-muted); font-style: italic; opacity: 0.6; }
+
+        /* Actions (Delete button) */
+        .msg-actions { margin-top: 5px; display: flex; justify-content: flex-end; opacity: 0; transition: opacity 0.2s ease; }
+        .msg-bubble:hover .msg-actions { opacity: 1; }
+        .del-btn { background: none; border: none; color: #FF4444; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; gap: 3px; }
+        .del-btn:hover { text-decoration: underline; }
+
+        /* Input Footer */
+        .chat-footer { padding: 15px 20px; background: rgba(10, 15, 30, 0.9); border-top: 1px solid var(--border-glass); display: flex; gap: 12px; align-items: center; }
+        .chat-input { flex: 1; background: #0d101d; border: 1px solid var(--border-glass); color: white; padding: 12px 16px; border-radius: 30px; font-size: 0.95rem; outline: none; transition: border 0.2s; }
+        .chat-input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+        
+        .send-btn { background: linear-gradient(45deg, var(--accent), var(--pink)); color: white; border: none; padding: 12px 24px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: transform 0.1s; display: flex; align-items: center; gap: 6px; }
+        .send-btn:active { transform: scale(0.96); }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-back { margin-top: 15px; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .btn-back:hover { color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <div>
+                <h1>Live Doubt Chat Room</h1>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Discuss, Learn and Solve Doubts with Peers</p>
+            </div>
+            <div class="room-status">Live Connected</div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <p style="text-align: center; color: var(--text-muted); margin: auto;">Connecting to room...</p>
+        </div>
+
+        <div class="chat-footer">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Ask a doubt or help someone..." maxlength="500">
+            <button id="sendBtn" class="send-btn">Send 🚀</button>
+        </div>
+    </div>
+
+    <a href="index.html" class="btn-back">← Back to Home</a>
+
+    <script type="module" src="doubt-room.js"></script>
+</body>
+</html>
