@@ -2,50 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sitemap | CrashStudy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #070913; --accent: #00F0FF; --text-muted: #A0A5B5; }
-        body { background: var(--bg); color: white; line-height: 1.6; padding: 40px 20px; font-family: 'Inter', sans-serif; }
-        .container { max-width: 800px; margin: 0 auto; }
-        h1 { font-family: 'Poppins'; font-size: 2.5rem; margin-bottom: 20px; background: linear-gradient(to right, var(--accent), #FF007A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        h2 { margin-top: 30px; color: var(--accent); font-size: 1.5rem; }
-        ul { list-style: none; padding: 0; }
-        li { margin: 15px 0; }
-        a { color: white; text-decoration: none; font-weight: 500; transition: 0.3s; }
-        a:hover { color: var(--accent); }
-        .btn-back { display: inline-block; margin-top: 30px; padding: 10px 20px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; border-radius: 20px; }
+        :root { --bg: #070913; --surface: rgba(20, 25, 40, 0.6); --accent: #00F0FF; --pink: #FF007A; --text: #f8fafc; --text-muted: #94a3b8; }
+        body { background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 40px 20px; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; width: 100%; }
+        header { text-align: center; margin-bottom: 50px; }
+        h1 { font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 10px; background: linear-gradient(135deg, var(--accent), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        header p { color: var(--text-muted); font-size: 1.1rem; }
+        
+        .sitemap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .sitemap-section { background: var(--surface); border: 1px solid rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; backdrop-filter: blur(12px); }
+        h2 { margin-top: 0; color: var(--accent); font-size: 1.25rem; font-family: 'Poppins', sans-serif; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 20px; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { margin: 12px 0; }
+        a { color: var(--text); text-decoration: none; font-weight: 500; transition: all 0.3s ease; display: inline-block; }
+        a:hover { color: var(--accent); transform: translateX(5px); }
+        
+        .btn-back { display: table; margin: 40px auto 0; padding: 12px 24px; background: rgba(255,255,255,0.05); color: var(--text); text-decoration: none; border-radius: 30px; transition: background 0.3s ease; font-weight: 500; text-align: center; }
+        .btn-back:hover { background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Site Map</h1>
-        <p>A quick overview of all the pages available on CrashStudy.</p>
+    <main class="container">
+        <header>
+            <h1>Site Map</h1>
+            <p>A quick overview of all the pages available on CrashStudy.</p>
+        </header>
 
-        <h2>Main Pages</h2>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="prepare.html">Start Preparing (Exam Selection)</a></li>
-            <li><a href="syllabus.html">Master Syllabus</a></li>
-            <li><a href="mocktest.html">Mock Test Arena</a></li>
-            <li><a href="profile.html">My Dashboard</a></li>
-        </ul>
+        <div class="sitemap-grid">
+            <section class="sitemap-section">
+                <h2>Main Pages</h2>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="prepare.html">Start Preparing (Exam Selection)</a></li>
+                    <li><a href="syllabus.html">Master Syllabus</a></li>
+                    <li><a href="mocktest.html">Mock Test Arena</a></li>
+                    <li><a href="profile.html">My Dashboard</a></li>
+                </ul>
+            </section>
 
-        <h2>About & Support</h2>
-        <ul>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-        </ul>
+            <section class="sitemap-section">
+                <h2>About & Support</h2>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </section>
 
-        <h2>Legal</h2>
-        <ul>
-            <li><a href="privacy.html">Privacy Policy</a></li>
-            <li><a href="terms.html">Terms of Service</a></li>
-            <li><a href="disclaimer.html">Disclaimer</a></li>
-            <li><a href="cookies.html">Cookie Policy</a></li>
-        </ul>
+            <section class="sitemap-section">
+                <h2>Legal</h2>
+                <ul>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="disclaimer.html">Disclaimer</a></li>
+                    <li><a href="cookies.html">Cookie Policy</a></li>
+                </ul>
+            </section>
+        </div>
 
         <a href="index.html" class="btn-back">← Back to Home</a>
-    </div>
+    </main>
 </body>
 </html>

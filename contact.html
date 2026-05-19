@@ -2,51 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | CrashStudy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #070913; --accent: #00F0FF; --text-muted: #A0A5B5; }
-        body { background: var(--bg); color: white; padding: 40px 20px; font-family: 'Inter', sans-serif; }
-        .container { max-width: 600px; margin: 0 auto; text-align: center; }
-        h1 { font-family: 'Poppins'; font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(to right, var(--accent), #FF007A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        p { color: var(--text-muted); margin-bottom: 30px; }
+        :root { --bg: #070913; --surface: rgba(20, 25, 40, 0.6); --accent: #00F0FF; --pink: #FF007A; --text: #f8fafc; --text-muted: #94a3b8; }
+        body { background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 40px 20px; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; min-height: 100vh; align-items: center; justify-content: center; }
+        .container { max-width: 600px; width: 100%; text-align: center; }
+        h1 { font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 10px; background: linear-gradient(135deg, var(--accent), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; }
         
-        .contact-form { background: rgba(20, 25, 40, 0.6); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        input, textarea { width: 100%; background: #0d101d; border: 1px solid #2C3045; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-        button { background: var(--accent); color: #000; padding: 15px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; width: 100%; }
+        .contact-form { background: var(--surface); padding: 40px 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(12px); text-align: left; }
+        input, textarea { width: 100%; background: rgba(13, 16, 29, 0.8); border: 1px solid rgba(255,255,255,0.1); color: var(--text); padding: 16px; border-radius: 12px; margin-bottom: 20px; box-sizing: border-box; font-family: inherit; font-size: 1rem; transition: all 0.3s ease; }
+        input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+        button.submit-btn { background: linear-gradient(135deg, var(--accent), #00b3cc); color: #000; padding: 16px; border-radius: 30px; border: none; font-weight: 700; font-size: 1.1rem; cursor: pointer; width: 100%; transition: all 0.3s ease; font-family: 'Poppins', sans-serif; }
+        button.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 240, 255, 0.4); }
         
-        .btn-lang { background: rgba(255,255,255,0.1); color: white; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
-        .btn-back { display: inline-block; margin-top: 30px; color: var(--text-muted); text-decoration: none; }
+        .btn-lang { background: rgba(0, 240, 255, 0.1); color: var(--accent); border: 1px solid var(--accent); padding: 10px 24px; border-radius: 30px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; margin-bottom: 30px; font-family: inherit; }
+        .btn-lang:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); }
+        .btn-back { display: inline-flex; margin-top: 30px; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .btn-back:hover { color: var(--text); }
+        
+        .lang-content { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <button class="btn-lang" id="langBtn" onclick="toggleLanguage()">देखें हिंदी में (Hindi)</button>
+    <main class="container">
+        <button class="btn-lang" id="langBtn" onclick="toggleLanguage()">🌐 देखें हिंदी में (Hindi)</button>
 
-        <div id="enContent">
+        <section id="enContent" class="lang-content">
             <h1>Contact Us</h1>
-            <p>Sawaal ya feedback? Humse sampark karein.</p>
+            <p>Have questions or feedback? We'd love to hear from you.</p>
             <div class="contact-form">
-                <input type="text" placeholder="Your Name">
-                <input type="email" placeholder="Your Email">
-                <textarea rows="5" placeholder="Your Message"></textarea>
-                <button onclick="alert('Message sent successfully!')">Send Message</button>
+                <input type="text" placeholder="Your Name" aria-label="Your Name">
+                <input type="email" placeholder="Your Email Address" aria-label="Your Email Address">
+                <textarea rows="5" placeholder="How can we help you?" aria-label="Your Message"></textarea>
+                <button class="submit-btn" onclick="alert('Message sent successfully!')">Send Message</button>
             </div>
-        </div>
+        </section>
 
-        <div id="hiContent" style="display:none;">
-            <h1>संपर्क करें (Contact Us)</h1>
-            <p>Have questions or feedback? Reach out to us.</p>
+        <section id="hiContent" class="lang-content" style="display:none;">
+            <h1>संपर्क करें</h1>
+            <p>सवाल या फ़ीडबैक? बेझिझक हमसे संपर्क करें।</p>
             <div class="contact-form">
-                <input type="text" placeholder="आपका नाम">
-                <input type="email" placeholder="आपका ईमेल">
-                <textarea rows="5" placeholder="आपका संदेश"></textarea>
-                <button onclick="alert('संदेश सफलतापूर्वक भेज दिया गया!')">संदेश भेजें</button>
+                <input type="text" placeholder="आपका नाम" aria-label="आपका नाम">
+                <input type="email" placeholder="आपका ईमेल पता" aria-label="आपका ईमेल पता">
+                <textarea rows="5" placeholder="हम आपकी कैसे मदद कर सकते हैं?" aria-label="आपका संदेश"></textarea>
+                <button class="submit-btn" onclick="alert('संदेश सफलतापूर्वक भेज दिया गया!')">संदेश भेजें</button>
             </div>
-        </div>
+        </section>
 
         <a href="index.html" class="btn-back">← Back to Home</a>
-    </div>
+    </main>
 
     <script>
         function toggleLanguage() {
@@ -57,11 +65,11 @@
             if (en.style.display === 'none') {
                 en.style.display = 'block';
                 hi.style.display = 'none';
-                btn.innerText = 'देखें हिंदी में (Hindi)';
+                btn.innerHTML = '🌐 देखें हिंदी में (Hindi)';
             } else {
                 en.style.display = 'none';
                 hi.style.display = 'block';
-                btn.innerText = 'Read in English';
+                btn.innerHTML = '🌐 Read in English';
             }
         }
     </script>

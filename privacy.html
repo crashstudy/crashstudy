@@ -2,81 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy | CrashStudy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #070913; --accent: #00F0FF; --text-muted: #A0A5B5; }
-        body { background: var(--bg); color: white; line-height: 1.6; padding: 40px 20px; font-family: 'Inter', sans-serif; }
+        :root { --bg: #03050a; --accent: #00F0FF; --pink: #FF007A; --glass: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.1); --text-muted: #A0A5B5; }
+        body { background: var(--bg); background-image: radial-gradient(circle at 50% 0%, #1e264a, transparent); color: white; font-family: 'Inter', sans-serif; line-height: 1.6; padding: 40px 20px; min-height: 100vh; }
         .container { max-width: 800px; margin: 0 auto; }
-        h1 { font-family: 'Poppins'; font-size: 2.5rem; margin-bottom: 20px; background: linear-gradient(to right, var(--accent), #FF007A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        h2 { margin-top: 30px; color: var(--accent); }
-        p { color: var(--text-muted); margin-bottom: 15px; }
-        .btn-lang { background: #00F0FF; padding: 10px 20px; border-radius: 20px; border: none; cursor: pointer; font-weight: bold; margin-bottom: 20px; }
-        .btn-back { display: inline-block; margin-top: 30px; padding: 10px 20px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; border-radius: 20px; }
+        h1 { font-family: 'Poppins'; font-size: clamp(2rem, 5vw, 3rem); text-align: center; margin-bottom: 30px; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-card { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 40px; backdrop-filter: blur(12px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        h2 { color: var(--accent); margin-top: 30px; font-size: 1.3rem; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+        p { color: var(--text-muted); margin-top: 10px; }
+        .btn-lang { background: rgba(0,240,255,0.1); color: var(--accent); border: 1px solid var(--accent); padding: 12px 24px; border-radius: 30px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; display: block; margin: 0 auto 30px; font-family: inherit; }
+        .btn-lang:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(0,240,255,0.4); transform: translateY(-2px); }
+        .btn-back { display: inline-block; margin-top: 30px; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .btn-back:hover { color: var(--accent); }
     </style>
 </head>
 <body>
     <div class="container">
-        <button class="btn-lang" id="langBtn" onclick="toggleLanguage()">देखें हिंदी में (Hindi)</button>
+        <button class="btn-lang" id="langBtn" onclick="toggleLanguage()">🌐 देखें हिंदी में (Hindi)</button>
 
-        <div id="enContent">
-            <h1>Privacy Policy</h1>
-            <p>Last updated: May 19, 2026</p>
-            
-            <h2>1. Introduction</h2>
-            <p>CrashStudy values your privacy. This policy explains how we collect and use your data.</p>
-            
-            <h2>2. Data Collection</h2>
-            <p>We collect essential data like name, email, and mock test scores to enhance your learning experience.</p>
-            
-            <h2>3. Information Sharing</h2>
-            <p>We do not sell your personal data. We only share information with trusted service providers to run our platform, like Firebase and Google Analytics.</p>
-            
-            <h2>4. Security</h2>
-            <p>We use industry-standard Firebase Authentication and Firestore to keep your data encrypted and secure.</p>
-            
-            <h2>5. Your Rights</h2>
-            <p>You have the right to access, update, or delete your personal account data at any time. Contact us if you need assistance with your data.</p>
+        <div class="glass-card">
+            <div id="enContent">
+                <h1>Privacy Policy</h1>
+                <p style="text-align: center;">Last updated: May 19, 2026</p>
+                <h2>1. Introduction</h2>
+                <p>CrashStudy values your privacy. This policy explains how we collect and use your data.</p>
+                <h2>2. Data Collection</h2>
+                <p>We collect essential data like name, email, and mock test scores to enhance your learning experience.</p>
+                <h2>3. Information Sharing</h2>
+                <p>We do not sell your personal data. We only share information with trusted service providers to run our platform, like Firebase and Google Analytics.</p>
+                <h2>4. Security</h2>
+                <p>We use industry-standard Firebase Authentication and Firestore to keep your data encrypted and secure.</p>
+                <h2>5. Your Rights</h2>
+                <p>You have the right to access, update, or delete your personal account data at any time. Contact us if you need assistance with your data.</p>
+            </div>
+
+            <div id="hiContent" style="display:none;">
+                <h1>गोपनीयता नीति</h1>
+                <p style="text-align: center;">अंतिम अपडेट: 19 मई, 2026</p>
+                <h2>1. परिचय</h2>
+                <p>CrashStudy आपकी गोपनीयता को महत्व देती है। यह नीति बताती है कि हम आपके डेटा को कैसे एकत्र और उपयोग करते हैं।</p>
+                <h2>2. डेटा संग्रह</h2>
+                <p>हम आपके सीखने के अनुभव को बेहतर बनाने के लिए नाम, ईमेल और मॉक टेस्ट स्कोर जैसा आवश्यक डेटा एकत्र करते हैं।</p>
+                <h2>3. जानकारी साझा करना</h2>
+                <p>हम आपका डेटा बेचते नहीं हैं। हम केवल भरोसेमंद सेवा प्रदाताओं के साथ जानकारी साझा करते हैं।</p>
+                <h2>4. सुरक्षा</h2>
+                <p>हम आपके डेटा को सुरक्षित रखने के लिए Firebase Authentication का उपयोग करते हैं।</p>
+                <h2>5. आपके अधिकार</h2>
+                <p>आपको किसी भी समय अपना व्यक्तिगत डेटा देखने, अपडेट करने या हटाने का अधिकार है।</p>
+            </div>
         </div>
-
-        <div id="hiContent" style="display:none;">
-            <h1>गोपनीयता नीति (Privacy Policy)</h1>
-            <p>अंतिम अपडेट: 19 मई, 2026</p>
-            
-            <h2>1. परिचय</h2>
-            <p>CrashStudy आपकी गोपनीयता को महत्व देती है। यह नीति बताती है कि हम आपके डेटा को कैसे एकत्र और उपयोग करते हैं।</p>
-            
-            <h2>2. डेटा संग्रह</h2>
-            <p>हम आपके सीखने के अनुभव को बेहतर बनाने के लिए नाम, ईमेल और मॉक टेस्ट स्कोर जैसा आवश्यक डेटा एकत्र करते हैं।</p>
-            
-            <h2>3. जानकारी साझा करना</h2>
-            <p>हम आपका डेटा बेचते नहीं हैं। हम केवल भरोसेमंद सेवा प्रदाताओं (जैसे Firebase और Google Analytics) के साथ जानकारी साझा करते हैं ताकि हमारा प्लेटफॉर्म सही से चले।</p>
-            
-            <h2>4. सुरक्षा</h2>
-            <p>हम आपके डेटा को एन्क्रिप्टेड और सुरक्षित रखने के लिए industry-standard Firebase Authentication और Firestore का उपयोग करते हैं।</p>
-            
-            <h2>5. आपके अधिकार</h2>
-            <p>आपको किसी भी समय अपना व्यक्तिगत डेटा देखने, अपडेट करने या हटाने का अधिकार है। अपने डेटा से संबंधित सहायता के लिए हमसे संपर्क करें।</p>
-        </div>
-
         <a href="index.html" class="btn-back">← Back to Home</a>
     </div>
 
     <script>
         function toggleLanguage() {
-            const en = document.getElementById('enContent');
-            const hi = document.getElementById('hiContent');
-            const btn = document.getElementById('langBtn');
-
-            if (en.style.display === 'none') {
-                en.style.display = 'block';
-                hi.style.display = 'none';
-                btn.innerText = 'देखें हिंदी में (Hindi)';
-            } else {
-                en.style.display = 'none';
-                hi.style.display = 'block';
-                btn.innerText = 'Read in English';
-            }
+            const en = document.getElementById('enContent'), hi = document.getElementById('hiContent'), btn = document.getElementById('langBtn');
+            if (en.style.display === 'none') { en.style.display = 'block'; hi.style.display = 'none'; btn.innerText = '🌐 देखें हिंदी में (Hindi)'; } 
+            else { en.style.display = 'none'; hi.style.display = 'block'; btn.innerText = '🌐 Read in English'; }
         }
     </script>
 </body>
