@@ -27,7 +27,7 @@
         .admin-layout { display: flex; min-height: 100vh; }
         
         /* Sidebar Navigation */
-        .sidebar { width: 260px; background: rgba(10, 15, 30, 0.9); border-right: 1px solid var(--border); padding: 30px 20px; display: flex; flex-direction: column; gap: 10px; }
+        .sidebar { width: 260px; background: rgba(10, 15, 30, 0.9); border-right: 1px solid var(--border); padding: 30px 20px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
         .sidebar h2 { font-family: 'Poppins'; font-size: 1.4rem; margin-bottom: 20px; background: linear-gradient(to right, var(--accent), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 12px 16px; border-radius: 10px; text-align: left; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .tab-btn.active, .tab-btn:hover { background: rgba(255,255,255,0.05); color: var(--accent); }
@@ -50,15 +50,15 @@
         .btn-submit { background: linear-gradient(45deg, var(--accent), var(--pink)); color: white; border: none; padding: 14px 28px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; font-size: 1rem; margin-top: 10px; }
         .btn-submit:hover { box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); transform: translateY(-2px); }
 
-        /* Data Viewer Tables */
-        .data-table-container { width: 100%; overflow-x: auto; margin-top: 15px; }
-        .data-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .data-table th { background: rgba(255,255,255,0.04); padding: 12px 15px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
-        .data-table td { padding: 14px 15px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.9rem; }
+        /* Data Viewer Tables (UPGRADED FOR FULL DETAILS) */
+        .data-table-container { width: 100%; overflow-x: auto; margin-top: 15px; border-radius: 8px; border: 1px solid var(--border); }
+        .data-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 1000px; }
+        .data-table th { background: rgba(10, 15, 30, 0.8); padding: 14px 18px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 700; }
+        .data-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.9rem; vertical-align: middle; }
         .data-table tr:hover td { background: rgba(0, 240, 255, 0.03); }
 
-        .badge-student { background: rgba(0,240,255,0.1); color: var(--accent); padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
-        .badge-admin { background: rgba(255,0,122,0.1); color: var(--pink); padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
+        .badge-student { background: rgba(0,240,255,0.1); color: var(--accent); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
+        .badge-admin { background: rgba(255,0,122,0.1); color: var(--pink); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -166,13 +166,18 @@
                             <thead>
                                 <tr>
                                     <th>UID</th>
-                                    <th>Username / Handle</th>
-                                    <th>Role Permissions</th>
-                                    <th>Current Daily Streak</th>
+                                    <th>Name / Email</th>
+                                    <th>Phone Number</th>
+                                    <th>Gender</th>
+                                    <th>Age</th>
+                                    <th>State / Village</th>
+                                    <th>Target Exam</th>
+                                    <th>Permissions</th>
+                                    <th>Streak</th>
                                 </tr>
                             </thead>
                             <tbody id="usersTableBody">
-                                <tr><td colspan="4" style="color:var(--text-muted); text-align:center;">Fetching users records...</td></tr>
+                                <tr><td colspan="9" style="color:var(--text-muted); text-align:center;">Fetching comprehensive user profiles...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -217,17 +222,14 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
-                    // Fetch user account settings document record
                     const userDocRef = doc(db, 'users', user.uid);
                     const userSnap = await getDoc(userDocRef);
 
                     if (userSnap.exists() && userSnap.data().role === 'admin') {
-                        // Authorized: Remove security shutter barrier overlay
                         securityOverlay.style.display = "none";
                         loadSystemData();
                     } else {
-                        // Trigger Access Denied UI state
-                        failVerification("🔒 Access Denied: Unauthorized Clearance", "Your profile account lacks 'admin' metadata validation parameters. This incident is recorded.");
+                        failVerification("🔒 Access Denied: Unauthorized Clearance", "Your profile account lacks 'admin' metadata validation parameters.");
                     }
                 } catch (err) {
                     failVerification("💥 Execution Matrix Fault", "Database confirmation failed: " + err.message);
@@ -272,11 +274,10 @@
             const aiInsight = document.getElementById("aiInsight").value.trim();
 
             try {
-                // Future-proof matrix collection logic routing configuration architecture
                 await addDoc(collection(db, "test_series", testId, "questions"), {
                     section: section,
                     question: questionText,
-                    imageUrl: imageUrl || null, // Saves image string path reference configuration securely if available!
+                    imageUrl: imageUrl || null,
                     options: options,
                     correctAnswer: correctAnswer,
                     aiInsight: aiInsight,
@@ -290,9 +291,9 @@
             }
         });
 
-        // ── STEP 4: FETCH AND RENDER ALL LIVE RECORDS ──
+        // ── STEP 4: FETCH AND RENDER ALL LIVE RECORDS (UPGRADED FOR ALL FIELDS) ──
         async function loadSystemData() {
-            // 1. Fetch Users Database Grid
+            // Fetch Users Detailed Database Grid
             try {
                 const usersSnap = await getDocs(collection(db, "users"));
                 const tbodyUsers = document.getElementById("usersTableBody");
@@ -301,17 +302,33 @@
                 usersSnap.forEach(docSnap => {
                     const d = docSnap.data();
                     const rBadge = d.role === 'admin' ? `<span class="badge-admin">ADMIN</span>` : `<span class="badge-student">STUDENT</span>`;
+                    
+                    // Fallback handles if fields are blank or not collected yet during registration
+                    const phoneNumber = d.phoneNumber || d.phone || 'Not Provided';
+                    const userGender = d.gender || 'N/A';
+                    const userAge = d.age || 'N/A';
+                    const userLocation = d.location || d.state || d.village || 'N/A';
+                    const targetExam = d.targetExam || d.exam || 'Not Set';
+
                     html += `<tr>
-                        <td style="font-family:monospace; font-size:0.75rem; color:var(--text-muted);">${docSnap.id}</td>
+                        <td style="font-family:monospace; font-size:0.75rem; color:var(--text-muted);">${docSnap.id.substring(0,6)}...</td>
                         <td style="font-weight:600; color:var(--accent);">${d.displayName || d.email || 'Aspirant'}</td>
+                        <td style="font-weight: 500;">${phoneNumber}</td>
+                        <td style="text-transform: capitalize;">${userGender}</td>
+                        <td>${userAge}</td>
+                        <td>${userLocation}</td>
+                        <td style="color:var(--orange); font-weight:600; text-transform: uppercase;">${targetExam}</td>
                         <td>${rBadge}</td>
-                        <td>🔥 ${d.streak || 0} Days</td>
+                        <td style="font-weight: 600;">🔥 ${d.streak || 0} Days</td>
                     </tr>`;
                 });
-                tbodyUsers.innerHTML = html || "<tr><td colspan='4'>No records tracked.</td></tr>";
-            } catch(e) { console.error(e); }
+                tbodyUsers.innerHTML = html || "<tr><td colspan='9'>No records tracked.</td></tr>";
+            } catch(e) { 
+                console.error(e); 
+                document.getElementById("usersTableBody").innerHTML = "<tr><td colspan='9' style='color:#FF007A; text-align:center;'>Failed to read collection fields. Check console.</td></tr>";
+            }
 
-            // 2. Fetch Live Doubt Chat Feed
+            // Fetch Live Doubt Chat Feed
             try {
                 const chatQuery = query(collection(db, "room_messages"), orderBy("createdAt", "desc"), limit(20));
                 const chatSnap = await getDocs(chatQuery);
