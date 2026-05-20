@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrashStudy | Premium Exam Preparation & AI Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DR9VL0YMC1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DR9VL0YMC1');
+    </script>
+</head>
+<body>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <h2>CrashStudy</h2>
+    </div>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="gradient-text">Crash</span>Study
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="prepare.html">Exams</a></li>
+                <li><a href="syllabus.html">Syllabus</a></li>
+                <li><a href="mocktest.html">Mock Tests</a></li>
+                <li><a href="doubtroom.html">Doubt Room</a></li>
+                <li><a href="#roadmap">Roadmap</a></li>
+            </ul>
+
+            <div class="right-nav">
+                <div class="nav-cta" id="authSection">
+                    <a href="auth.html?redirect=index.html" class="btn-primary" id="loginCtaBtn" style="text-decoration:none; display:inline-block;">Join Free</a>
+                    
+                    <div id="userProfile" style="display: none; align-items: center; gap: 12px;">
+                        <a href="profile.html" style="text-decoration: none;" title="Go to Dashboard">
+                            <span id="userGreeting" style="font-weight: 600; color: #00F0FF; font-size: 0.95rem; white-space: nowrap; transition: 0.3s;"></span>
+                        </a>
+                        <button id="logoutBtn" class="btn-secondary" style="padding: 6px 15px; font-size: 0.8rem; border-color: #FF007A; color: #FF007A; border-radius: 20px;">Logout</button>
+                    </div>
+                </div>
+                
+                <div class="mobile-menu-btn">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero" id="home">
+        <div class="hero-content reveal">
+            <div class="badge">🚀 The Future of Competitive Exams</div>
+            <h1 class="hero-title">Dominate Your Exams with <span class="gradient-text">CrashStudy</span></h1>
+            <p class="hero-subtitle">Premium notes, AI-driven study tools, and live doubt rooms for SSC CGL, CAPF, AFCAT, and more. Your ultimate arsenal for government exams.</p>
+            
+            <div class="hero-buttons">
+                <button class="btn-primary glow-btn" onclick="window.location.href='prepare.html'">Start Preparing</button>
+                <button class="btn-secondary" onclick="window.location.href='mocktest.html'">Take Mock Test</button>
+            </div>
+        </div>
+        
+        <div class="hero-visual tilt-card" onclick="window.location.href='profile.html'" style="cursor: pointer;" title="View Full Dashboard">
+            <div class="glass-panel floating">
+                <div class="panel-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                </div>
+                <div class="panel-body">
+                    <div id="guestStats">
+                        <h3 style="color: var(--text-muted);">Welcome, Aspirant</h3>
+                        <p style="margin-top: 10px;">Log in to track your Daily Streak and Mock Test scores live on this dashboard.</p>
+                    </div>
+                    
+                    <div id="userStats" style="display: none;">
+                        <h3>Daily Streak: 🔥 <span id="streakCount">0</span> Days</h3>
+                        <div class="progress-bar"><div class="fill" id="streakProgress" style="width: 0%;"></div></div>
+                        <p id="lastExamText">Take a mock test to see your score here!</p>
+                        <p style="color:var(--primary-orange); font-size: 0.85rem; margin-top:5px;" id="aiSuggestion">AI Suggestion: Consistency is key.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="stats-section reveal">
+        <div class="stat-box">
+            <h2 class="counter" data-target="500000">0</h2><span>+</span>
+            <p>Active Aspirants</p>
+        </div>
+        <div class="stat-box">
+            <h2 class="counter" data-target="15000">0</h2><span>+</span>
+            <p>Selections</p>
+        </div>
+        <div class="stat-box">
+            <h2 class="counter" data-target="120">0</h2><span>+</span>
+            <p>Mock Tests</p>
+        </div>
+        <div class="stat-box">
+            <h2 class="counter" data-target="24">0</h2><span>/7</span>
+            <p>AI Support</p>
+        </div>
+    </section>
+
+    <section class="exams-section" id="exams">
+        <div class="section-header reveal">
+            <h2>Target <span class="gradient-text">Exams</span></h2>
+            <p>Select your battlefield. We provide specialized arsenals for every major exam.</p>
+        </div>
+        <div class="card-grid">
+            <div class="card tilt-card reveal" onclick="window.location.href='syllabus.html'">
+                <h3>SSC CGL</h3>
+                <p>Complete notes, previous year papers, and advanced math tricks for Combined Graduate Level.</p>
+                <a href="syllabus.html" class="card-link">Explore →</a>
+            </div>
+            <div class="card tilt-card reveal" onclick="window.location.href='syllabus.html'">
+                <h3>CAPF (AC)</h3>
+                <p>Paper I & II strategies, current affairs, and descriptive writing guides.</p>
+                <a href="syllabus.html" class="card-link">Explore →</a>
+            </div>
+            <div class="card tilt-card reveal" onclick="window.location.href='syllabus.html'">
+                <h3>AFCAT</h3>
+                <p>Military aptitude, reasoning, and GK modules tailored for Air Force aspirants.</p>
+                <a href="syllabus.html" class="card-link">Explore →</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="tools-section" id="tools">
+        <div class="section-header reveal">
+            <h2>Next-Gen <span class="gradient-text">Tools</span></h2>
+            <p>Smart utilities to accelerate your workflow and track your progress.</p>
+        </div>
+        <div class="tools-layout">
+            <div class="tool-card tilt-card reveal" style="cursor: pointer;" onclick="window.location.href='doubtroom.html'">
+                <h3>💬 Live Doubt Room <span style="font-size:0.6rem; background:#FF007A; padding:2px 6px; border-radius:10px;">HOT</span></h3>
+                <p>Connect with peers and admins in real-time to solve complex doubts instantly.</p>
+            </div>
+            <div class="tool-card tilt-card reveal" style="cursor: pointer;" onclick="window.location.href='profile.html'">
+                <h3>📊 Master Dashboard</h3>
+                <p>Visually track your mock test scores, completion percentage, and AI analysis.</p>
+            </div>
+            <div class="tool-card tilt-card reveal">
+                <h3>🤖 AI Study Assistant</h3>
+                <p>Ask doubts, get instant explanations for tough math problems, and generate custom schedules.</p>
+            </div>
+            <div class="tool-card tilt-card reveal">
+                <h3>⚡ Auto Notes Maker</h3>
+                <p>Paste text or YouTube transcripts and let AI summarize it into high-yield bullet points.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="roadmap-section" id="roadmap">
+        <div class="section-header reveal">
+            <h2>Topper's <span class="gradient-text">Roadmap</span></h2>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Month 1-2: Foundation</h3>
+                    <p>Clear all basic concepts in Maths and English. Start reading daily Current Affairs.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Month 3-4: Advanced Practice</h3>
+                    <p>Complete GS tracking. Start section-wise mock tests.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Month 5-6: Mock Test Mastery</h3>
+                    <p>Attempt full-length mocks daily. Analyze weak areas using the AI Assistant.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="community-section" id="community">
+        <div class="glass-banner reveal">
+            <h2>Join the <span class="gradient-text">Elite Community</span></h2>
+            <p>Get instant updates, free PDFs, and live class notifications.</p>
+            <div class="social-buttons">
+                <a href="#" class="btn-social telegram">Join Telegram</a>
+                <a href="#" class="btn-social youtube">Subscribe YouTube</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h2><span class="gradient-text">Crash</span>Study</h2>
+                <p>The premium ecosystem for serious aspirants. Upgrade your preparation today.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="prepare.html">Exams</a></li>
+                    <li><a href="syllabus.html">Syllabus</a></li>
+                    <li><a href="mocktest.html">Mock Tests</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3>Legal & Policies</h3>
+                <ul>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                    <li><a href="disclaimer.html">Disclaimer</a></li>
+                    <li><a href="cookies.html">Cookie Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="sitemap.html">Sitemap</a></li>
+                    <li><a href="doubtroom.html">Live Doubt Room</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 CrashStudy. All Rights Reserved. Built for Excellence.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+
+    <script type="module">
+        import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { doc, getDoc, collection, query, where, getDocs, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { auth, db } from './firebase.js'; 
+
+        const loginCtaBtn = document.getElementById('loginCtaBtn');
+        const userProfile = document.getElementById('userProfile');
+        const userGreeting = document.getElementById('userGreeting');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        const guestStats = document.getElementById('guestStats');
+        const userStats = document.getElementById('userStats');
+        const streakCount = document.getElementById('streakCount');
+        const streakProgress = document.getElementById('streakProgress');
+        const lastExamText = document.getElementById('lastExamText');
+        const aiSuggestion = document.getElementById('aiSuggestion');
+
+        // Check Login State
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // UI updates for Logged-In
+                loginCtaBtn.style.display = 'none';
+                userProfile.style.display = 'flex';
+                guestStats.style.display = 'none';
+                userStats.style.display = 'block';
+                
+                const name = user.displayName || user.email.split('@')[0];
+                userGreeting.textContent = `Hi, ${name} 👋`;
+
+                // Fetch Real Data from Firestore
+                try {
+                    // 1. Fetch User Profile Data (Streak logic)
+                    const userDoc = await getDoc(doc(db, 'users', user.uid));
+                    let streak = 1; // Default to 1 if no data yet
+                    if (userDoc.exists() && userDoc.data().streak) {
+                        streak = userDoc.data().streak;
+                    }
+                    streakCount.innerText = streak;
+                    streakProgress.style.width = Math.min(streak * 5, 100) + '%'; // 20 days = 100% fill
+
+                    // 2. Fetch Last Exam Data from leaderboard
+                    const q = query(collection(db, 'leaderboard', 'mock_cgl_24', 'entries'), where("uid", "==", user.uid));
+                    const scoreDocs = await getDocs(q);
+                    
+                    if (!scoreDocs.empty) {
+                        // Assuming the user has taken the exam, extract score
+                        const latestScore = scoreDocs.docs[0].data().score;
+                        lastExamText.innerHTML = `Recent Mock (CGL): <strong>Score ${latestScore}</strong>`;
+                        
+                        if(latestScore > 5) {
+                            aiSuggestion.innerText = "AI: Great progress! Focus on Advanced Maths now.";
+                        } else {
+                            aiSuggestion.innerText = "AI: Let's focus on basic concepts and accuracy.";
+                        }
+                    } else {
+                        lastExamText.innerHTML = `No exams taken yet.`;
+                        aiSuggestion.innerText = "AI: Take your first mock test today!";
+                    }
+                } catch (err) {
+                    console.error("Error fetching dashboard stats:", err);
+                }
+
+            } else {
+                // User NOT logged in
+                loginCtaBtn.style.display = 'inline-block';
+                userProfile.style.display = 'none';
+                guestStats.style.display = 'block';
+                userStats.style.display = 'none';
+            }
+        });
+
+        // Logout Logic
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.reload();
+            });
+        });
+    </script>
+</body>
+</html>
