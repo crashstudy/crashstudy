@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Command Center | CrashStudy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #070913;
+            --surface: rgba(20, 25, 40, 0.6);
+            --accent: #00F0FF;
+            --pink: #FF007A;
+            --orange: #FF8A00;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+        /* Security Overlay */
+        #securityOverlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        
+        /* Main Layout */
+        .admin-layout { display: flex; min-height: 100vh; }
+        
+        /* Sidebar Navigation */
+        .sidebar { width: 260px; background: rgba(10, 15, 30, 0.9); border-right: 1px solid var(--border); padding: 30px 20px; display: flex; flex-direction: column; gap: 10px; }
+        .sidebar h2 { font-family: 'Poppins'; font-size: 1.4rem; margin-bottom: 20px; background: linear-gradient(to right, var(--accent), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 12px 16px; border-radius: 10px; text-align: left; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active, .tab-btn:hover { background: rgba(255,255,255,0.05); color: var(--accent); }
+
+        /* Content Area */
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        
+        h1 { font-family: 'Poppins'; font-size: 2rem; margin-bottom: 30px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 30px; backdrop-filter: blur(10px); margin-bottom: 30px; }
+        
+        /* Form Styling */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; background: #0d101d; border: 1px solid var(--border); color: white; padding: 12px 16px; border-radius: 10px; font-size: 0.95rem; outline: none; transition: 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .btn-submit { background: linear-gradient(45deg, var(--accent), var(--pink)); color: white; border: none; padding: 14px 28px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; font-size: 1rem; margin-top: 10px; }
+        .btn-submit:hover { box-shadow: 0 0 20px rgba(0, 240, 255, 0.4); transform: translateY(-2px); }
+
+        /* Data Viewer Tables */
+        .data-table-container { width: 100%; overflow-x: auto; margin-top: 15px; }
+        .data-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .data-table th { background: rgba(255,255,255,0.04); padding: 12px 15px; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        .data-table td { padding: 14px 15px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.9rem; }
+        .data-table tr:hover td { background: rgba(0, 240, 255, 0.03); }
+
+        .badge-student { background: rgba(0,240,255,0.1); color: var(--accent); padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
+        .badge-admin { background: rgba(255,0,122,0.1); color: var(--pink); padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="securityOverlay">
+        <div style="font-size: 3.5rem; margin-bottom: 15px;">🛡️</div>
+        <h2 style="font-family: 'Poppins'; margin-bottom: 10px;" id="securityTitle">Verifying Admin Credentials...</h2>
+        <p style="color: var(--text-muted);" id="securityDesc">Checking your clear access codes. Please stand by.</p>
+        <button id="backHomeBtn" onclick="window.location.href='index.html'" class="btn-submit" style="max-width: 200px; margin-top: 20px; display: none;">Back to Home</button>
+    </div>
+
+    <div class="admin-layout">
+        
+        <aside class="sidebar">
+            <h2>CS Control</h2>
+            <button class="tab-btn active" onclick="switchTab('overview')">📊 Overview Stats</button>
+            <button class="tab-btn" onclick="switchTab('uploadTest')">📝 Upload Mock Test</button>
+            <button class="tab-btn" onclick="switchTab('usersData')">👥 Users Database</button>
+            <button class="tab-btn" onclick="switchTab('chatLogs')">💬 Live Chat Rooms</button>
+            <div style="margin-top: auto;">
+                <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">← Exit Command</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <section id="overview" class="content-section active">
+                <h1>Platform Overview</h1>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3 style="color: var(--accent);">Active Systems</h3>
+                        <p style="font-size: 2.5rem; font-weight: 800; margin-top: 10px; font-family: 'Poppins';">Online</p>
+                    </div>
+                    <div class="card">
+                        <h3 style="color: var(--pink);">Database Verification</h3>
+                        <p style="font-size: 2.5rem; font-weight: 800; margin-top: 10px; font-family: 'Poppins';">Sync Active</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="uploadTest" class="content-section">
+                <h1>Upload Mock Test Question</h1>
+                <div class="card">
+                    <form id="questionForm">
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Target Test Reference ID</label>
+                                <input type="text" id="testId" placeholder="e.g., mock_cgl_24" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Subject Section</label>
+                                <select id="section">
+                                    <option value="quant">Quantitative Aptitude</option>
+                                    <option value="english">English Language</option>
+                                    <option value="gk">General Knowledge</option>
+                                    <option value="reasoning">Reasoning Ability</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Question Context Text</label>
+                            <textarea id="questionText" rows="3" placeholder="Type the core problem configuration details here..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Question Image URL (Optional - For Charts / Figures)</label>
+                            <input type="url" id="imageUrl" placeholder="https://firebasestorage.googleapis.com/.../diagram.jpg">
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group"><label>Option A</label><input type="text" id="optA" required></div>
+                            <div class="form-group"><label>Option B</label><input type="text" id="optB" required></div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group"><label>Option C</label><input type="text" id="optC" required></div>
+                            <div class="form-group"><label>Option D</label><input type="text" id="optD" required></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Correct Answer Node</label>
+                            <select id="correctAnswer">
+                                <option value="0">Option A</option>
+                                <option value="1">Option B</option>
+                                <option value="2">Option C</option>
+                                <option value="3">Option D</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>🤖 Crash AI Tutor Tutor Insight (Step-by-Step Logic Hack)</label>
+                            <textarea id="aiInsight" rows="3" placeholder="Enter shortcut matrix configuration formulation code details..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-submit">Push Question to Database 🚀</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="usersData" class="content-section">
+                <h1>Registered Aspirants Database</h1>
+                <div class="card">
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>UID</th>
+                                    <th>Username / Handle</th>
+                                    <th>Role Permissions</th>
+                                    <th>Current Daily Streak</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr><td colspan="4" style="color:var(--text-muted); text-align:center;">Fetching users records...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="chatLogs" class="content-section">
+                <h1>Live Doubt Room Monitoring</h1>
+                <div class="card">
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>User Handle</th>
+                                    <th>Transmitted Message Text</th>
+                                    <th>Status Flags</th>
+                                </tr>
+                            </thead>
+                            <tbody id="chatTableBody">
+                                <tr><td colspan="4" style="color:var(--text-muted); text-align:center;">Streaming dynamic messages room feed...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { collection, doc, getDoc, getDocs, addDoc, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { auth, db } from './firebase.js';
+
+        const securityOverlay = document.getElementById("securityOverlay");
+        const securityTitle = document.getElementById("securityTitle");
+        const securityDesc = document.getElementById("securityDesc");
+        const backHomeBtn = document.getElementById("backHomeBtn");
+
+        // ── STEP 1: AUTH GATEKEEPER ──
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    // Fetch user account settings document record
+                    const userDocRef = doc(db, 'users', user.uid);
+                    const userSnap = await getDoc(userDocRef);
+
+                    if (userSnap.exists() && userSnap.data().role === 'admin') {
+                        // Authorized: Remove security shutter barrier overlay
+                        securityOverlay.style.display = "none";
+                        loadSystemData();
+                    } else {
+                        // Trigger Access Denied UI state
+                        failVerification("🔒 Access Denied: Unauthorized Clearance", "Your profile account lacks 'admin' metadata validation parameters. This incident is recorded.");
+                    }
+                } catch (err) {
+                    failVerification("💥 Execution Matrix Fault", "Database confirmation failed: " + err.message);
+                }
+            } else {
+                failVerification("🔑 System Locked", "Please perform standard session initialization on main platform prior to entering command node.");
+            }
+        });
+
+        function failVerification(title, desc) {
+            securityTitle.innerText = title;
+            securityTitle.style.color = "#FF007A";
+            securityDesc.innerText = desc;
+            backHomeBtn.style.display = "inline-block";
+        }
+
+        // ── STEP 2: TAB SWITCHING LOGIC ──
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // ── STEP 3: MOCK TEST UPLOAD HANDLER ──
+        const questionForm = document.getElementById("questionForm");
+        questionForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const testId = document.getElementById("testId").value.trim();
+            const section = document.getElementById("section").value;
+            const questionText = document.getElementById("questionText").value.trim();
+            const imageUrl = document.getElementById("imageUrl").value.trim();
+            const options = [
+                document.getElementById("optA").value.trim(),
+                document.getElementById("optB").value.trim(),
+                document.getElementById("optC").value.trim(),
+                document.getElementById("optD").value.trim()
+            ];
+            const correctAnswer = parseInt(document.getElementById("correctAnswer").value);
+            const aiInsight = document.getElementById("aiInsight").value.trim();
+
+            try {
+                // Future-proof matrix collection logic routing configuration architecture
+                await addDoc(collection(db, "test_series", testId, "questions"), {
+                    section: section,
+                    question: questionText,
+                    imageUrl: imageUrl || null, // Saves image string path reference configuration securely if available!
+                    options: options,
+                    correctAnswer: correctAnswer,
+                    aiInsight: aiInsight,
+                    createdAt: new Date().toISOString()
+                });
+
+                alert("🎉 Question compiled and injected into FireStore cluster successfully!");
+                questionForm.reset();
+            } catch (err) {
+                alert("Matrix Insertion Fault: " + err.message);
+            }
+        });
+
+        // ── STEP 4: FETCH AND RENDER ALL LIVE RECORDS ──
+        async function loadSystemData() {
+            // 1. Fetch Users Database Grid
+            try {
+                const usersSnap = await getDocs(collection(db, "users"));
+                const tbodyUsers = document.getElementById("usersTableBody");
+                let html = "";
+                
+                usersSnap.forEach(docSnap => {
+                    const d = docSnap.data();
+                    const rBadge = d.role === 'admin' ? `<span class="badge-admin">ADMIN</span>` : `<span class="badge-student">STUDENT</span>`;
+                    html += `<tr>
+                        <td style="font-family:monospace; font-size:0.75rem; color:var(--text-muted);">${docSnap.id}</td>
+                        <td style="font-weight:600; color:var(--accent);">${d.displayName || d.email || 'Aspirant'}</td>
+                        <td>${rBadge}</td>
+                        <td>🔥 ${d.streak || 0} Days</td>
+                    </tr>`;
+                });
+                tbodyUsers.innerHTML = html || "<tr><td colspan='4'>No records tracked.</td></tr>";
+            } catch(e) { console.error(e); }
+
+            // 2. Fetch Live Doubt Chat Feed
+            try {
+                const chatQuery = query(collection(db, "room_messages"), orderBy("createdAt", "desc"), limit(20));
+                const chatSnap = await getDocs(chatQuery);
+                const tbodyChat = document.getElementById("chatTableBody");
+                let htmlChat = "";
+
+                chatSnap.forEach(docSnap => {
+                    const d = docSnap.data();
+                    const t = d.createdAt ? new Date(d.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '-';
+                    const status = d.isDeleted ? '<span style="color:#FF007A;">Withdrawn</span>' : '<span style="color:#27C93F;">Active</span>';
+                    htmlChat += `<tr>
+                        <td>${t}</td>
+                        <td style="color:var(--orange); font-weight:500;">${d.userName || 'User'}</td>
+                        <td style="max-width:300px; word-break:break-all;">${d.text || '🚫 Message Blanked Out'}</td>
+                        <td>${status}</td>
+                    </tr>`;
+                });
+                tbodyChat.innerHTML = htmlChat || "<tr><td colspan='4'>Live communication streams clear.</td></tr>";
+            } catch(e) { console.error(e); }
+        }
+    </script>
+</body>
+</html>
