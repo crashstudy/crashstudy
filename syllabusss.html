@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#070913">
+    <meta name="description" content="Elite Master Syllabus Hub for SSC, Defense, Banking, Railways, Police & UPSC.">
+    <title>Master Syllabus Hub | CrashStudy</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================================
+           1. CORE ARCHITECTURE & DESIGN TOKENS
+           ========================================================= */
+        :root[data-theme="dark"] {
+            --bg-deep: #030408;
+            --bg-base: #070913;
+            --bg-panel: rgba(15, 20, 35, 0.65);
+            --bg-input: rgba(255, 255, 255, 0.03);
+            
+            --primary-cyan: #00F0FF;
+            --primary-magenta: #FF007A;
+            --primary-amber: #FF8A00;
+            --primary-emerald: #00E676;
+            --primary-purple: #9D4EDD;
+            
+            --text-high: #FFFFFF;
+            --text-med: #A0A5B5;
+            --text-low: #6B7280;
+            
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            --z-header: 1100;
+            --z-ai: 3000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background-color: var(--bg-base); color: var(--text-high); overflow-x: hidden; 
+            background-image: radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.03), transparent 25%), radial-gradient(circle at 85% 30%, rgba(255, 0, 122, 0.03), transparent 25%);
+            background-attachment: fixed; overscroll-behavior-y: none;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-cyan); }
+
+        h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; }
+        .glass-panel { background: var(--bg-panel); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border-glass); border-radius: 20px; box-shadow: var(--shadow-glass); transition: border-color 0.3s; }
+        .glass-panel:hover { border-color: rgba(255,255,255,0.15); }
+        .hidden { display: none !important; }
+
+        /* =========================================================
+           2. APP LAYOUT
+           ========================================================= */
+        .app-container { display: flex; min-height: 100vh; flex-direction: column; }
+        .top-header { position: sticky; top: 0; z-index: var(--z-header); height: 70px; background: rgba(7, 9, 19, 0.85); backdrop-filter: blur(24px); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; padding: 0 4%; }
+        .brand { font-size: 1.5rem; font-weight: 800; font-family: 'Poppins'; text-decoration: none; color: var(--text-high); display: flex; align-items: center; gap: 10px; }
+        .brand-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple)); border-radius: 8px; display: grid; place-items: center; color: #000; font-size: 1.2rem; }
+        
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .user-profile-mini { display: flex; align-items: center; gap: 10px; background: var(--bg-input); padding: 5px 15px 5px 5px; border-radius: 30px; border: 1px solid var(--border-glass); }
+        .user-profile-mini img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--primary-cyan); }
+        .user-profile-mini span { font-size: 0.85rem; font-weight: 600; color: var(--text-high); }
+        .streak-pill { display: flex; align-items: center; gap: 6px; background: rgba(255, 138, 0, 0.1); border: 1px solid rgba(255, 138, 0, 0.3); padding: 6px 12px; border-radius: 20px; font-weight: 700; color: var(--primary-amber); font-size: 0.85rem; }
+        .sync-status { width: 10px; height: 10px; border-radius: 50%; background: var(--primary-emerald); box-shadow: 0 0 10px var(--primary-emerald); }
+        .sync-status.offline { background: var(--primary-magenta); box-shadow: 0 0 10px var(--primary-magenta); }
+        
+        .workspace { flex: 1; padding: 20px 4% 100px; max-width: 1600px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 30px; }
+        .spa-view { display: none; animation: fadeIn 0.4s ease-out; }
+        .spa-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .primary-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: rgba(7, 9, 19, 0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border-glass); display: flex; justify-content: space-around; align-items: center; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-low); text-decoration: none; font-size: 0.7rem; font-weight: 600; padding: 8px 12px; border-radius: 12px; transition: 0.3s; }
+        .nav-item.active { color: var(--primary-cyan); background: rgba(0, 240, 255, 0.05); }
+        .nav-icon { font-size: 1.4rem; transition: transform 0.3s; }
+        .nav-item.active .nav-icon { transform: translateY(-3px) scale(1.1); }
+
+        /* =========================================================
+           3. SYLLABUS ENGINE CSS
+           ========================================================= */
+        .search-engine-bar { display: flex; flex-direction: column; gap: 15px; position: sticky; top: 70px; z-index: var(--z-header); background: var(--bg-base); padding: 15px 0; border-bottom: 1px solid var(--border-glass); margin-top: -20px; }
+        .search-input-wrapper { position: relative; width: 100%; }
+        .search-input-wrapper input { width: 100%; background: var(--bg-input); border: 1px solid var(--border-glass); color: var(--text-high); padding: 16px 20px 16px 50px; border-radius: 16px; font-size: 1rem; outline: none; transition: 0.3s; }
+        .search-input-wrapper input:focus { border-color: var(--primary-cyan); box-shadow: 0 0 20px rgba(0,240,255,0.1); background: rgba(255,255,255,0.05); }
+        .search-icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: var(--text-med); }
+        
+        .exam-filter-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .exam-filter-scroll::-webkit-scrollbar { display: none; }
+        .exam-pill { background: transparent; border: 1px solid var(--text-low); color: var(--text-med); padding: 8px 20px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+        .exam-pill.active { background: var(--text-high); color: #000; border-color: var(--text-high); }
+
+        .sub-exam-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+        .chip { background: var(--bg-panel); border: 1px solid var(--border-glass); padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: 0.2s; color: var(--text-med); font-weight: 500;}
+        .chip.active { background: rgba(255, 0, 122, 0.15); border-color: var(--primary-magenta); color: var(--primary-magenta); font-weight: 700; }
+
+        .official-ribbon { display: flex; gap: 10px; background: rgba(0, 230, 118, 0.05); border: 1px solid rgba(0, 230, 118, 0.2); padding: 12px 20px; border-radius: 12px; align-items: center; overflow-x: auto; white-space: nowrap; margin-bottom: 20px; }
+        .official-link { font-size: 0.8rem; color: var(--text-high); text-decoration: none; background: var(--bg-deep); padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-glass); transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+
+        .syllabus-grid { display: flex; flex-direction: column; gap: 20px; }
+        .subject-card { background: transparent; border-radius: 16px; overflow: hidden; }
+        .subject-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 0 15px; border-bottom: 1px solid var(--border-glass); margin-bottom: 15px; }
+        .subject-title-wrapper { display: flex; align-items: center; gap: 12px; }
+        .subject-icon { font-size: 1.8rem; }
+        .subject-name { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; }
+        .subject-progress-pill { background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--border-glass); }
+
+        .chapter-accordion { background: var(--bg-panel); border: 1px solid var(--border-glass); border-radius: 16px; margin-bottom: 12px; transition: 0.3s; }
+        .chapter-accordion.open { border-color: rgba(255,255,255,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .chap-head { padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+        .chap-info h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+        .chap-meta { display: flex; gap: 10px; align-items: center; font-size: 0.75rem; color: var(--text-low); }
+        .weight-badge { padding: 2px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; }
+        
+        .chap-controls { display: flex; align-items: center; gap: 15px; }
+        .chap-prog-text { font-size: 0.85rem; font-weight: 600; color: var(--text-med); font-family: 'JetBrains Mono', monospace; }
+        .chevron { transition: transform 0.3s; color: var(--text-med); }
+        .chapter-accordion.open .chevron { transform: rotate(180deg); color: var(--text-high); }
+
+        .chap-body { display: none; padding: 0 24px 20px; border-top: 1px solid rgba(255,255,255,0.03); background: rgba(0,0,0,0.2); }
+        .chapter-accordion.open .chap-body { display: block; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .microtopic-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--border-glass); gap: 15px; flex-wrap: wrap; transition: 0.2s; }
+        .microtopic-item:last-child { border-bottom: none; }
+        
+        .checkbox-wrapper { display: flex; align-items: center; position: relative; padding-left: 36px; cursor: pointer; font-size: 0.95rem; font-weight: 500; user-select: none; flex: 1; }
+        .checkbox-wrapper input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; }
+        .cb-mark { position: absolute; top: 50%; left: 0; transform: translateY(-50%); height: 22px; width: 22px; background: rgba(0,0,0,0.4); border: 2px solid var(--text-low); border-radius: 6px; transition: all 0.2s; }
+        .checkbox-wrapper input:checked ~ .cb-mark { background: var(--primary-cyan); border-color: var(--primary-cyan); box-shadow: 0 0 15px rgba(0,240,255,0.4); }
+        .cb-mark:after { content: ""; position: absolute; display: none; left: 6px; top: 2px; width: 5px; height: 10px; border: solid #000; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .checkbox-wrapper input:checked ~ .cb-mark:after { display: block; }
+        .checkbox-wrapper input:checked ~ .topic-text { color: var(--text-low); text-decoration: line-through; }
+        
+        .topic-actions { display: flex; gap: 8px; }
+        .btn-icon-action { background: var(--bg-input); border: 1px solid var(--border-glass); width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; color: var(--text-med); cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+        .btn-icon-action:hover { background: rgba(255,255,255,0.1); color: var(--text-high); }
+        .btn-icon-action.rev { color: var(--primary-amber); border-color: rgba(255,138,0,0.3); }
+
+        /* =========================================================
+           4. ANALYTICS & UI
+           ========================================================= */
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px; }
+        .master-progress-card { display: flex; align-items: center; justify-content: space-between; padding: 30px; }
+        .circular-chart { display: block; margin: 0 auto; max-width: 80%; max-height: 120px; }
+        .circle-bg { fill: none; stroke: var(--bg-input); stroke-width: 3.8; }
+        .circle { fill: none; stroke-width: 3.8; stroke-linecap: round; transition: stroke-dasharray 1s ease-out; }
+        .percentage { fill: var(--text-high); font-family: 'Poppins'; font-size: 0.8rem; text-anchor: middle; font-weight: 800; }
+        
+        .xp-card { background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(0, 240, 255, 0.05)); border-color: rgba(157, 78, 221, 0.3); padding: 25px; }
+        .xp-val { font-size: 2rem; font-weight: 900; font-family: 'JetBrains Mono'; color: var(--primary-purple); }
+        .lvl-badge { background: var(--primary-purple); color: #fff; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; }
+        .xp-bar-bg { width: 100%; height: 8px; background: rgba(0,0,0,0.3); border-radius: 4px; overflow: hidden; margin-top: 10px; }
+        .xp-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple)); width: 0%; transition: width 1s ease; }
+
+        /* Real AI Modal */
+        .ai-fab { position: fixed; bottom: 90px; right: 20px; z-index: var(--z-ai); width: 60px; height: 60px; border-radius: 30px; background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple)); border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.5); cursor: pointer; display: grid; place-items: center; font-size: 1.8rem; transition: 0.3s; }
+        .ai-fab:hover { transform: scale(1.1) rotate(15deg); }
+
+        .ai-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 4000; display: none; place-items: center; padding: 20px; }
+        .ai-modal { width: 100%; max-width: 500px; background: var(--bg-deep); border: 1px solid var(--border-glass); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
+        .ai-header { padding: 20px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center; }
+        .ai-body { padding: 20px; height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .ai-msg, .user-msg { padding: 12px 16px; border-radius: 16px; font-size: 0.95rem; max-width: 85%; line-height: 1.5; }
+        .ai-msg { background: rgba(255,255,255,0.05); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--border-glass); color: var(--text-high);}
+        .user-msg { background: var(--primary-cyan); color: #000; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500; }
+        .ai-input-area { padding: 15px; background: rgba(0,0,0,0.5); border-top: 1px solid var(--border-glass); display: flex; gap: 10px; }
+        .ai-input-area input { flex: 1; background: var(--bg-input); border: 1px solid var(--border-glass); padding: 14px 20px; border-radius: 30px; color: white; outline: none; }
+        .ai-btn-send { background: var(--primary-purple); color: white; border: none; width: 48px; height: 48px; border-radius: 24px; cursor: pointer; display: grid; place-items: center; font-size: 1.2rem; }
+
+        @media (min-width: 1024px) {
+            .app-container { flex-direction: row; }
+            .primary-nav { position: sticky; top: 0; left: 0; width: 280px; height: 100vh; flex-direction: column; justify-content: flex-start; align-items: stretch; padding: 40px 20px; border-top: none; border-right: 1px solid var(--border-glass); gap: 10px; }
+            .nav-item { flex-direction: row; font-size: 1rem; padding: 14px 20px; justify-content: flex-start; gap: 15px; }
+            .workspace { padding: 40px 5%; max-width: 1200px; }
+            .top-header { border-radius: 20px; margin: 20px 5% 0; border: 1px solid var(--border-glass); top: 20px; }
+            .search-engine-bar { top: 110px; background: transparent; backdrop-filter: blur(20px); border-radius: 20px; padding: 20px; border: 1px solid var(--border-glass); }
+            .ai-fab { bottom: 40px; right: 40px; width: 70px; height: 70px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loginOverlay" style="display: flex; position: fixed; inset: 0; background: var(--bg-base); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;">
+        <div style="font-size: 4rem; margin-bottom: 10px;">🔒</div>
+        <h2 style="margin-bottom: 15px;">Authenticate to Sync Data</h2>
+        <p style="color: var(--text-med); margin-bottom: 30px;">Track gamified XP, streaks, and syllabus progress directly on the cloud.</p>
+        <button onclick="window.location.href='auth.html?redirect=syllabus.html'" style="background: linear-gradient(45deg, var(--primary-cyan), var(--primary-magenta)); border: none; padding: 14px 35px; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; font-size: 1.1rem;">Secure Login</button>
+    </div>
+
+    <div class="app-container" id="mainApp" style="display: none;">
+
+        <nav class="primary-nav">
+            <div class="brand" style="margin-bottom: 40px; justify-content: center; display: none;">
+                <div class="brand-icon">⚡</div>
+                <span style="font-size: 1.5rem; font-weight: 800; color: white;">CrashStudy</span>
+            </div>
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span><span>Home</span>
+            </a>
+            <a href="#" class="nav-item active" data-target="view-syllabus">
+                <span class="nav-icon">📚</span><span>Syllabus</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-analytics">
+                <span class="nav-icon">📊</span><span>Analytics</span>
+            </a>
+            <a href="#" class="nav-item" data-target="view-revision">
+                <span class="nav-icon">🎯</span><span>Revision</span>
+            </a>
+        </nav>
+
+        <div style="flex:1; display: flex; flex-direction: column;">
+            <header class="top-header">
+                <a href="index.html" class="brand">
+                    <div class="brand-icon">⚡</div><span>Master Hub</span>
+                </a>
+                <div class="header-actions">
+                    <div class="streak-pill" title="Daily Study Streak"><span>🔥</span><span id="headerStreak">0</span></div>
+                    <div class="user-profile-mini">
+                        <img id="userAvatarDisplay" src="" alt="Profile">
+                        <span id="userNameDisplay">Aspirant</span>
+                    </div>
+                    <div class="sync-status" id="syncDot" title="Cloud Sync Active"></div>
+                </div>
+            </header>
+
+            <main class="workspace">
+                <div id="view-syllabus" class="spa-view active">
+                    <div class="search-engine-bar">
+                        <div class="search-input-wrapper">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="masterSearch" placeholder="Search any exam, subject, chapter, or microtopic...">
+                        </div>
+                        <div class="exam-filter-scroll" id="catFilterScroll"></div>
+                        <div class="sub-exam-chips" id="examChipsContainer"></div>
+                    </div>
+
+                    <div class="official-ribbon" id="officialRibbon" style="display: none;">
+                        <span class="ribbon-label">Official Sources:</span>
+                        <a href="#" class="official-link" id="linkWeb" target="_blank">🌐 Official Web</a>
+                        <a href="#" class="official-link" id="linkNotif" target="_blank">📄 Notification</a>
+                        <a href="#" class="official-link" id="linkSyllabus" target="_blank">📥 Syllabus PDF</a>
+                    </div>
+
+                    <div class="glass-panel" style="padding: 24px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                        <div>
+                            <h2 style="font-size: 1.4rem; margin-bottom: 4px;" id="selectedExamTitle">Select an Exam</h2>
+                            <p style="color: var(--text-med); font-size: 0.9rem;" id="selectedExamMeta">Track your granular microtopic progress.</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-family: 'JetBrains Mono'; font-size: 1.8rem; font-weight: 800; color: var(--primary-cyan);" id="examOverallPct">0%</div>
+                            <div style="font-size: 0.75rem; color: var(--text-low); text-transform: uppercase; font-weight: 700;">Completed</div>
+                        </div>
+                    </div>
+
+                    <div class="syllabus-grid" id="syllabusGrid"></div>
+                </div>
+
+                <div id="view-analytics" class="spa-view">
+                    <div class="analytics-grid">
+                        <div class="glass-panel master-progress-card">
+                            <div class="mp-info">
+                                <h3>Total Mastery</h3>
+                                <p>Across all exams</p>
+                            </div>
+                            <div class="circular-chart-wrapper" style="width: 120px; height: 120px;">
+                                <svg viewBox="0 0 36 36" class="circular-chart">
+                                  <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                  <path class="circle" id="globalProgressSVG" stroke="var(--primary-cyan)" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                  <text x="18" y="20.35" class="percentage" id="globalProgressTxt">0%</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel xp-card">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                                <div><h4 style="color: var(--text-med); font-size: 0.9rem;">Total Experience</h4><div class="xp-val" id="dashXP">0 XP</div></div>
+                                <div class="lvl-badge" id="dashLvl">LVL 1</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-low);">
+                                <span>Progress</span><span>Next Level: <span id="dashNextXP">1000</span> XP</span>
+                            </div>
+                            <div class="xp-bar-bg"><div class="xp-bar-fill" id="dashXPBar"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-revision" class="spa-view">
+                    <div class="glass-panel" style="padding: 30px;">
+                        <h2 style="margin-bottom: 10px;">🎯 Weak Topics & Revision Queue</h2>
+                        <p style="color: var(--text-med); margin-bottom: 30px; font-size: 0.95rem;">Topics marked with 'Star' will appear here.</p>
+                        <div id="revisionList"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <button class="ai-fab" id="openAIBtn" title="Crash AI Tutor">✨</button>
+    <div class="ai-modal-overlay" id="aiModalOverlay">
+        <div class="ai-modal">
+            <div class="ai-header">
+                <h3><span style="font-size: 1.4rem;">✨</span> Crash AI Core</h3>
+                <button id="closeAIBtn" style="width: 32px; height: 32px; font-size: 1rem; background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 50%; cursor: pointer;">✕</button>
+            </div>
+            <div class="ai-body" id="aiChatBody">
+                <div class="ai-msg">Connection established via Groq. I am the Crash AI Tutor. How can I decode the syllabus for you today?</div>
+            </div>
+            <div class="ai-input-area">
+                <input type="text" id="aiChatInput" placeholder="Ask a doubt or request a shortcut trick...">
+                <button class="ai-btn-send" id="aiSendBtn">▲</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { auth, db } from './firebase.js';
+
+        // ===================================================================
+        // 1. MASTER SYLLABUS DATABASE (MASSIVE EXPANSION)
+        // ===================================================================
+        const DB = {
+            categories: [
+                { id: 'ssc', name: 'SSC Exams' },
+                { id: 'def', name: 'Defense & Police' },
+                { id: 'rrb', name: 'Railways' },
+                { id: 'bnk', name: 'Banking & Ins.' },
+                { id: 'pol', name: 'State Police' },
+                { id: 'tch', name: 'Teaching' },
+                { id: 'oth', name: 'UPSC & Others' }
+            ],
+            
+            exams: {
+                // SSC
+                "ssc_cgl_t1": { cat: 'ssc', name: 'SSC CGL Tier 1', link: 'https://ssc.nic.in', pdf: 'https://ssc.nic.in' },
+                "ssc_cgl_t2": { cat: 'ssc', name: 'SSC CGL Tier 2', link: 'https://ssc.nic.in', pdf: 'https://ssc.nic.in' },
+                "ssc_chsl": { cat: 'ssc', name: 'SSC CHSL', link: 'https://ssc.nic.in', pdf: 'https://ssc.nic.in' },
+                "ssc_mts": { cat: 'ssc', name: 'SSC MTS', link: 'https://ssc.nic.in', pdf: 'https://ssc.nic.in' },
+                "ssc_gd": { cat: 'ssc', name: 'SSC GD Constable', link: 'https://ssc.nic.in', pdf: 'https://ssc.nic.in' },
+                "ssc_cpo": { cat: 'ssc', name: 'SSC CPO', link: 'https://ssc.nic.in', pdf: 'https://ssc.nic.in' },
+                "ssc_steno": { cat: 'ssc', name: 'SSC Stenographer', link: 'https://ssc.nic.in', pdf: 'https://ssc.nic.in' },
+                "ssc_selection": { cat: 'ssc', name: 'SSC Selection Post', link: 'https://ssc.nic.in', pdf: 'https://ssc.nic.in' },
+                // Defense
+                "afcat": { cat: 'def', name: 'AFCAT', link: 'https://afcat.cdac.in', pdf: 'https://afcat.cdac.in' },
+                "cds": { cat: 'def', name: 'CDS', link: 'https://upsc.gov.in', pdf: 'https://upsc.gov.in' },
+                "nda": { cat: 'def', name: 'NDA', link: 'https://upsc.gov.in', pdf: 'https://upsc.gov.in' },
+                "capf_ac": { cat: 'def', name: 'CAPF AC', link: 'https://upsc.gov.in', pdf: 'https://upsc.gov.in' },
+                "air_x": { cat: 'def', name: 'Airforce X Group', link: 'https://agnipathvayu.cdac.in', pdf: 'https://agnipathvayu.cdac.in' },
+                "air_y": { cat: 'def', name: 'Airforce Y Group', link: 'https://agnipathvayu.cdac.in', pdf: 'https://agnipathvayu.cdac.in' },
+                "navy_ssr": { cat: 'def', name: 'Navy SSR', link: 'https://joinindiannavy.gov.in', pdf: 'https://joinindiannavy.gov.in' },
+                "navy_aa": { cat: 'def', name: 'Navy AA', link: 'https://joinindiannavy.gov.in', pdf: 'https://joinindiannavy.gov.in' },
+                "agniveer": { cat: 'def', name: 'Army Agniveer', link: 'https://joinindianarmy.nic.in', pdf: 'https://joinindianarmy.nic.in' },
+                "coast_guard": { cat: 'def', name: 'Coast Guard', link: 'https://joinindiancoastguard.cdac.in', pdf: 'https://joinindiancoastguard.cdac.in' },
+                // Railway
+                "rrb_ntpc": { cat: 'rrb', name: 'RRB NTPC', link: 'https://indianrailways.gov.in', pdf: 'https://indianrailways.gov.in' },
+                "rrb_group_d": { cat: 'rrb', name: 'RRB Group D', link: 'https://indianrailways.gov.in', pdf: 'https://indianrailways.gov.in' },
+                "rrb_je": { cat: 'rrb', name: 'RRB JE', link: 'https://indianrailways.gov.in', pdf: 'https://indianrailways.gov.in' },
+                "rpf_si": { cat: 'rrb', name: 'RPF SI', link: 'https://indianrailways.gov.in', pdf: 'https://indianrailways.gov.in' },
+                "rpf_const": { cat: 'rrb', name: 'RPF Constable', link: 'https://indianrailways.gov.in', pdf: 'https://indianrailways.gov.in' },
+                // Banking
+                "sbi_po": { cat: 'bnk', name: 'SBI PO', link: 'https://sbi.co.in', pdf: 'https://sbi.co.in' },
+                "sbi_clerk": { cat: 'bnk', name: 'SBI Clerk', link: 'https://sbi.co.in', pdf: 'https://sbi.co.in' },
+                "ibps_po": { cat: 'bnk', name: 'IBPS PO', link: 'https://ibps.in', pdf: 'https://ibps.in' },
+                "ibps_clerk": { cat: 'bnk', name: 'IBPS Clerk', link: 'https://ibps.in', pdf: 'https://ibps.in' },
+                "rbi_asst": { cat: 'bnk', name: 'RBI Assistant', link: 'https://rbi.org.in', pdf: 'https://rbi.org.in' },
+                "nabard": { cat: 'bnk', name: 'NABARD', link: 'https://nabard.org', pdf: 'https://nabard.org' },
+                "lic_aao": { cat: 'bnk', name: 'LIC AAO', link: 'https://licindia.in', pdf: 'https://licindia.in' },
+                // Police
+                "delhi_pol": { cat: 'pol', name: 'Delhi Police', link: 'https://delhipolice.gov.in', pdf: 'https://delhipolice.gov.in' },
+                "bihar_pol": { cat: 'pol', name: 'Bihar Police', link: 'https://csbc.bih.nic.in', pdf: 'https://csbc.bih.nic.in' },
+                "up_pol": { cat: 'pol', name: 'UP Police', link: 'https://uppbpb.gov.in', pdf: 'https://uppbpb.gov.in' },
+                "state_si": { cat: 'pol', name: 'State Police SI', link: '#', pdf: '#' },
+                "state_const": { cat: 'pol', name: 'State Constable', link: '#', pdf: '#' },
+                // Teaching
+                "ctet": { cat: 'tch', name: 'CTET', link: 'https://ctet.nic.in', pdf: 'https://ctet.nic.in' },
+                "state_tet": { cat: 'tch', name: 'State TET', link: '#', pdf: '#' },
+                // Other
+                "cuet_gt": { cat: 'oth', name: 'CUET General Test', link: 'https://cuet.samarth.ac.in', pdf: 'https://cuet.samarth.ac.in' },
+                "upsc_found": { cat: 'oth', name: 'UPSC Foundation GS', link: 'https://upsc.gov.in', pdf: 'https://upsc.gov.in' },
+                "csat": { cat: 'oth', name: 'CSAT Foundation', link: 'https://upsc.gov.in', pdf: 'https://upsc.gov.in' }
+            },
+
+            // MASTER SUBJECT POOL
+            subjects: [
+                {
+                    id: 'quant', name: 'Mathematics & Quantitative Aptitude', icon: '🧮', color: 'var(--primary-cyan)',
+                    chapters: [
+                        {
+                            name: 'Number System & Arithmetic Basics', weight: 'High',
+                            exams: ['ssc_cgl_t1', 'ssc_cgl_t2', 'ssc_chsl', 'ssc_mts', 'ssc_gd', 'ssc_cpo', 'ssc_selection', 'afcat', 'cds', 'capf_ac', 'air_y', 'navy_ssr', 'agniveer', 'coast_guard', 'rrb_ntpc', 'rrb_group_d', 'rrb_je', 'rpf_si', 'rpf_const', 'sbi_po', 'sbi_clerk', 'ibps_po', 'ibps_clerk', 'rbi_asst', 'delhi_pol', 'bihar_pol', 'up_pol', 'state_si', 'state_const', 'ctet', 'state_tet', 'cuet_gt', 'csat'],
+                            microtopics: ['BODMAS & Simplification', 'Fractions & Decimals', 'Divisibility Rules', 'LCM & HCF', 'Surds & Indices', 'Unit Digit Concept', 'Remainder Theorem']
+                        },
+                        {
+                            name: 'Percentage, Profit & Loss', weight: 'Very High',
+                            exams: ['ssc_cgl_t1', 'ssc_cgl_t2', 'ssc_chsl', 'ssc_mts', 'ssc_gd', 'ssc_cpo', 'ssc_selection', 'afcat', 'cds', 'capf_ac', 'air_y', 'navy_ssr', 'agniveer', 'coast_guard', 'rrb_ntpc', 'rrb_group_d', 'rrb_je', 'rpf_si', 'rpf_const', 'sbi_po', 'sbi_clerk', 'ibps_po', 'ibps_clerk', 'rbi_asst', 'delhi_pol', 'bihar_pol', 'up_pol', 'state_si', 'state_const', 'ctet', 'cuet_gt', 'csat'],
+                            microtopics: ['Fraction to Percentage Table', 'Successive Percentage', 'Election & Population', 'Profit/Loss Basic Formula', 'Dishonest Dealer', 'Successive Discount & Marked Price']
+                        },
+                        {
+                            name: 'Ratio, Mixture & Average', weight: 'High',
+                            exams: ['ssc_cgl_t1', 'ssc_chsl', 'ssc_mts', 'ssc_gd', 'afcat', 'cds', 'capf_ac', 'rrb_ntpc', 'rrb_group_d', 'sbi_po', 'ibps_po', 'delhi_pol', 'up_pol', 'cuet_gt', 'csat'],
+                            microtopics: ['Compounded Ratio & Proportions', 'Income & Expenditure Problems', 'Partnership Concepts', 'Mixture & Alligation Rule', 'Average & Age Problems']
+                        },
+                        {
+                            name: 'Time, Speed & Distance', weight: 'Very High',
+                            exams: ['ssc_cgl_t1', 'ssc_chsl', 'ssc_mts', 'ssc_gd', 'afcat', 'cds', 'capf_ac', 'air_y', 'rrb_ntpc', 'rrb_group_d', 'rpf_si', 'sbi_po', 'ibps_po', 'delhi_pol', 'up_pol', 'cuet_gt', 'csat'],
+                            microtopics: ['TSD Basic Formula', 'Relative Speed', 'Problems on Trains', 'Boats & Streams', 'Circular Track Races']
+                        },
+                        {
+                            name: 'Advanced Maths (Algebra, Geometry, Trigo)', weight: 'Very High',
+                            exams: ['ssc_cgl_t1', 'ssc_cgl_t2', 'ssc_chsl', 'ssc_cpo', 'cds', 'nda', 'air_x', 'navy_aa', 'rrb_ntpc', 'rrb_je'],
+                            microtopics: ['Algebraic Identities', 'Value Putting Tricks', 'Lines & Angles', 'Triangles (Congruence, Centers)', 'Circles (Chords, Tangents)', 'Mensuration 2D & 3D', 'Trigonometric Ratios & Table', 'Heights & Distances', 'Coordinate Geometry']
+                        },
+                        {
+                            name: 'Statistics, Probability & DI', weight: 'High',
+                            exams: ['ssc_cgl_t1', 'ssc_cgl_t2', 'nda', 'air_x', 'sbi_po', 'sbi_clerk', 'ibps_po', 'ibps_clerk', 'rbi_asst', 'nabard', 'lic_aao', 'rrb_ntpc', 'csat'],
+                            microtopics: ['Mean, Median, Mode', 'Standard Deviation', 'Probability Basics', 'Bar Graphs', 'Pie Charts', 'Tabular DI', 'Missing DI']
+                        }
+                    ]
+                },
+                {
+                    id: 'english', name: 'English Comprehension & Grammar', icon: '📝', color: 'var(--primary-amber)',
+                    chapters: [
+                        {
+                            name: 'Grammar Mechanics', weight: 'Very High',
+                            exams: ['ssc_cgl_t1', 'ssc_cgl_t2', 'ssc_chsl', 'ssc_mts', 'ssc_cpo', 'ssc_steno', 'afcat', 'cds', 'nda', 'capf_ac', 'air_x', 'air_y', 'navy_ssr', 'navy_aa', 'sbi_po', 'sbi_clerk', 'ibps_po', 'ibps_clerk', 'rbi_asst', 'lic_aao', 'ctet', 'state_tet', 'cuet_gt'],
+                            microtopics: ['Subject-Verb Agreement', 'Tenses & Conditionals', 'Nouns & Pronouns', 'Adjectives & Adverbs', 'Prepositions (Fixed)', 'Articles', 'Error Detection Strategies']
+                        },
+                        {
+                            name: 'Vocabulary & Word Usage', weight: 'Very High',
+                            exams: ['ssc_cgl_t1', 'ssc_chsl', 'ssc_mts', 'ssc_cpo', 'ssc_steno', 'afcat', 'cds', 'nda', 'air_x', 'air_y', 'sbi_po', 'ibps_po', 'cuet_gt'],
+                            microtopics: ['Synonyms & Antonyms', 'One Word Substitution', 'Idioms & Phrases', 'Spelling Corrections', 'Fill in the Blanks']
+                        },
+                        {
+                            name: 'Comprehension & Structuring', weight: 'High',
+                            exams: ['ssc_cgl_t1', 'ssc_cgl_t2', 'ssc_chsl', 'ssc_cpo', 'afcat', 'cds', 'nda', 'capf_ac', 'sbi_po', 'ibps_po', 'csat'],
+                            microtopics: ['Reading Comprehension Analysis', 'Cloze Test', 'Para Jumbles (PQRS)', 'Active & Passive Voice', 'Direct & Indirect Speech']
+                        }
+                    ]
+                },
+                {
+                    id: 'reasoning', name: 'Reasoning & Intelligence', icon: '🧩', color: 'var(--primary-emerald)',
+                    chapters: [
+                        {
+                            name: 'Verbal Reasoning', weight: 'Very High',
+                            exams: ['ssc_cgl_t1', 'ssc_chsl', 'ssc_mts', 'ssc_gd', 'ssc_cpo', 'ssc_selection', 'afcat', 'capf_ac', 'air_y', 'coast_guard', 'rrb_ntpc', 'rrb_group_d', 'rpf_si', 'rpf_const', 'delhi_pol', 'bihar_pol', 'up_pol', 'state_si', 'state_const', 'cuet_gt', 'csat'],
+                            microtopics: ['Analogy & Classification', 'Coding-Decoding', 'Blood Relations', 'Direction & Distance', 'Syllogism (Venn Method)', 'Number & Alphabet Series', 'Mathematical Operations']
+                        },
+                        {
+                            name: 'Non-Verbal Reasoning', weight: 'High',
+                            exams: ['ssc_cgl_t1', 'ssc_chsl', 'ssc_mts', 'ssc_gd', 'afcat', 'air_y', 'rrb_ntpc', 'rrb_group_d', 'delhi_pol', 'up_pol'],
+                            microtopics: ['Figure Series', 'Mirror & Water Images', 'Paper Folding & Cutting', 'Embedded Figures', 'Cubes and Dice']
+                        },
+                        {
+                            name: 'Analytical & Puzzles', weight: 'Very High',
+                            exams: ['sbi_po', 'sbi_clerk', 'ibps_po', 'ibps_clerk', 'rbi_asst', 'nabard', 'lic_aao', 'capf_ac', 'csat'],
+                            microtopics: ['Linear Seating Arrangement', 'Circular Seating Arrangement', 'Floor & Box Puzzles', 'Inequalities', 'Machine Input-Output', 'Data Sufficiency']
+                        }
+                    ]
+                },
+                {
+                    id: 'gs', name: 'General Studies & Awareness', icon: '🌍', color: '#F59E0B',
+                    chapters: [
+                        {
+                            name: 'History, Art & Culture', weight: 'Medium',
+                            exams: ['ssc_cgl_t1', 'ssc_chsl', 'ssc_mts', 'ssc_gd', 'afcat', 'cds', 'nda', 'capf_ac', 'rrb_ntpc', 'rrb_group_d', 'delhi_pol', 'bihar_pol', 'up_pol', 'upsc_found'],
+                            microtopics: ['Indus Valley & Vedic Age', 'Maurya & Gupta Empires', 'Delhi Sultanate & Mughals', 'Indian National Movement (1857-1947)', 'Classical Dances & Festivals']
+                        },
+                        {
+                            name: 'Geography & Polity', weight: 'High',
+                            exams: ['ssc_cgl_t1', 'ssc_chsl', 'ssc_gd', 'afcat', 'cds', 'nda', 'capf_ac', 'rrb_ntpc', 'rrb_group_d', 'delhi_pol', 'up_pol', 'upsc_found'],
+                            microtopics: ['Solar System & Universe', 'Indian Physiography & Rivers', 'Making of Constitution', 'Fundamental Rights & DPSP', 'President, Parliament & Judiciary']
+                        },
+                        {
+                            name: 'General Science & Tech', weight: 'Very High',
+                            exams: ['ssc_cgl_t1', 'ssc_chsl', 'ssc_gd', 'nda', 'cds', 'capf_ac', 'air_x', 'air_y', 'navy_ssr', 'agniveer', 'rrb_ntpc', 'rrb_group_d', 'rrb_je', 'delhi_pol', 'bihar_pol', 'upsc_found'],
+                            microtopics: ['Physics: Mechanics, Light, Electricity', 'Chemistry: Atoms, Acids, Metals', 'Biology: Cell, Human Body, Diseases', 'Defense Tech & Space (ISRO/DRDO)']
+                        },
+                        {
+                            name: 'Current Affairs & Economy', weight: 'Very High',
+                            exams: ['ssc_cgl_t1', 'ssc_cgl_t2', 'ssc_chsl', 'afcat', 'cds', 'nda', 'capf_ac', 'sbi_po', 'sbi_clerk', 'ibps_po', 'ibps_clerk', 'rbi_asst', 'nabard', 'lic_aao', 'rrb_ntpc', 'delhi_pol', 'up_pol', 'upsc_found'],
+                            microtopics: ['Last 6 Months Current Affairs', 'Banking & Financial Awareness', 'Awards, Sports & Books', 'National Income & Inflation', 'RBI Functions & Monetary Policy']
+                        }
+                    ]
+                },
+                {
+                    id: 'pedagogy', name: 'Teaching Aptitude & Pedagogy', icon: '📖', color: 'var(--primary-purple)',
+                    chapters: [
+                        {
+                            name: 'Child Development & Learning', weight: 'Very High',
+                            exams: ['ctet', 'state_tet'],
+                            microtopics: ['Concept of Development', 'Piaget, Kohlberg & Vygotsky', 'Progressive Education', 'Inclusive Education', 'Cognition & Emotions', 'Learning Theories']
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // ===================================================================
+        // 2. APP STATE & FIREBASE SYNC
+        // ===================================================================
+        const State = {
+            progress: {}, revision: {}, xp: 0, level: 1, streak: 0,
+            currentCat: 'ssc', currentExam: 'ssc_cgl_t1', searchQuery: ''
+        };
+
+        const DOM = {
+            loginOverlay: document.getElementById('loginOverlay'), mainApp: document.getElementById('mainApp'),
+            avatar: document.getElementById('userAvatarDisplay'), uName: document.getElementById('userNameDisplay'),
+            streak: document.getElementById('headerStreak'), sync: document.getElementById('syncDot'),
+            catScroll: document.getElementById('catFilterScroll'), examChips: document.getElementById('examChipsContainer'),
+            syllabusGrid: document.getElementById('syllabusGrid'), searchInput: document.getElementById('masterSearch'),
+            selExamTitle: document.getElementById('selectedExamTitle'), examOverallPct: document.getElementById('examOverallPct'),
+            offRibbon: document.getElementById('officialRibbon'), globalProgressTxt: document.getElementById('globalProgressTxt'),
+            globalProgressSVG: document.getElementById('globalProgressSVG'), dashXP: document.getElementById('dashXP'),
+            dashLvl: document.getElementById('dashLvl'), dashXPBar: document.getElementById('dashXPBar'),
+            revisionList: document.getElementById('revisionList'), spaNavItems: document.querySelectorAll('.nav-item[data-target]'),
+            spaViews: document.querySelectorAll('.spa-view')
+        };
+
+        // Firebase Auth Guard
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                DOM.loginOverlay.style.display = 'none';
+                DOM.mainApp.style.display = 'flex';
+                
+                const name = user.displayName || user.email.split('@')[0];
+                DOM.uName.innerText = name;
+                DOM.avatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${name}&background=00F0FF&color=000`;
+
+                await loadFirebaseData(user.uid);
+                initApp();
+            } else {
+                DOM.loginOverlay.style.display = 'flex';
+                DOM.mainApp.style.display = 'none';
+            }
+        });
+
+        async function loadFirebaseData(uid) {
+            try {
+                const docRef = doc(db, 'users', uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    State.progress = data.syllabusProgress || {};
+                    State.revision = data.revision || {};
+                    State.xp = data.xp || 0;
+                    State.level = data.level || 1;
+                    
+                    const today = new Date().toISOString().split('T')[0];
+                    let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+                    const yStr = yesterday.toISOString().split('T')[0];
+                    
+                    State.streak = data.streak || 1;
+                    if(data.lastLogin === yStr) State.streak++;
+                    else if (data.lastLogin !== today) State.streak = 1;
+
+                    DOM.streak.innerText = State.streak;
+                    await setDoc(docRef, { lastLogin: today, streak: State.streak }, { merge: true });
+                }
+                DOM.sync.classList.remove('offline');
+            } catch(e) { console.error("Firebase read error", e); }
+        }
+
+        async function syncToCloud() {
+            if(!auth.currentUser) return;
+            DOM.sync.style.background = 'var(--primary-amber)';
+            try {
+                await setDoc(doc(db, 'users', auth.currentUser.uid), {
+                    syllabusProgress: State.progress, revision: State.revision, xp: State.xp, level: State.level
+                }, { merge: true });
+                DOM.sync.style.background = 'var(--primary-emerald)';
+            } catch(e) { DOM.sync.classList.add('offline'); }
+        }
+
+        // ===================================================================
+        // 3. UI RENDERING & ROUTING
+        // ===================================================================
+        function initApp() {
+            renderCategoryFilters();
+            renderExamChips();
+            bindEvents();
+            recalcGlobalAnalytics();
+        }
+
+        function bindEvents() {
+            DOM.spaNavItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if(item.id === 'pwaInstallBtn') return; 
+                    DOM.spaNavItems.forEach(n => n.classList.remove('active'));
+                    item.classList.add('active');
+                    const target = item.getAttribute('data-target');
+                    DOM.spaViews.forEach(v => {
+                        v.classList.remove('active');
+                        if(v.id === target) v.classList.add('active');
+                    });
+                    if(target === 'view-revision') renderRevisionQueue();
+                    if(target === 'view-analytics') renderAnalyticsView();
+                    window.scrollTo(0,0);
+                });
+            });
+
+            let debounceTimer;
+            DOM.searchInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    State.searchQuery = e.target.value.toLowerCase().trim();
+                    renderSyllabusEngine();
+                }, 300);
+            });
+        }
+
+        function renderCategoryFilters() {
+            DOM.catScroll.innerHTML = DB.categories.map((cat, idx) => `
+                <button class="exam-pill ${cat.id === State.currentCat ? 'active' : ''}" data-cat="${cat.id}">${cat.name}</button>
+            `).join('');
+
+            DOM.catScroll.querySelectorAll('.exam-pill').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    DOM.catScroll.querySelectorAll('.exam-pill').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    State.currentCat = btn.getAttribute('data-cat');
+                    State.searchQuery = ""; DOM.searchInput.value = "";
+                    renderExamChips();
+                });
+            });
+        }
+
+        function renderExamChips() {
+            const relevantExams = Object.entries(DB.exams).filter(([id, data]) => data.cat === State.currentCat);
+            if(relevantExams.length === 0) return;
+
+            State.currentExam = relevantExams[0][0]; 
+            DOM.examChips.innerHTML = relevantExams.map(([id, data]) => `
+                <div class="chip ${id === State.currentExam ? 'active' : ''}" data-exam="${id}">${data.name}</div>
+            `).join('');
+
+            DOM.examChips.querySelectorAll('.chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    DOM.examChips.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    State.currentExam = chip.getAttribute('data-exam');
+                    renderSyllabusEngine();
+                });
+            });
+            renderSyllabusEngine();
+        }
+
+        function renderSyllabusEngine() {
+            const fragment = document.createDocumentFragment();
+            const examData = DB.exams[State.currentExam];
+            
+            DOM.selExamTitle.innerText = examData.name;
+            DOM.offRibbon.style.display = 'flex';
+            document.getElementById('linkWeb').href = examData.link;
+            document.getElementById('linkNotif').href = examData.link; // Mock link
+            document.getElementById('linkSyllabus').href = examData.pdf;
+
+            let examTotal = 0; let examDone = 0; let hasContent = false;
+
+            DB.subjects.forEach(subject => {
+                let relevantChapters = subject.chapters.filter(chap => chap.exams.includes(State.currentExam));
+                if(State.searchQuery !== "") {
+                    relevantChapters = relevantChapters.filter(chap => 
+                        chap.name.toLowerCase().includes(State.searchQuery) || chap.microtopics.some(mt => mt.toLowerCase().includes(State.searchQuery))
+                    );
+                }
+                if(relevantChapters.length === 0) return;
+                hasContent = true;
+
+                const subjDiv = document.createElement('div');
+                subjDiv.className = 'subject-card glass-panel';
+                let chaptersHtml = '';
+
+                relevantChapters.forEach(chap => {
+                    let chapTotal = chap.microtopics.length; let chapDone = 0; let microHtml = '';
+                    chap.microtopics.forEach((mt, idx) => {
+                        const tId = `${State.currentExam}_${subject.id}_${chap.name.substring(0,3)}_${idx}`;
+                        let textDisplay = mt;
+                        if(State.searchQuery && mt.toLowerCase().includes(State.searchQuery)) {
+                            const regex = new RegExp(`(${State.searchQuery})`, "gi");
+                            textDisplay = mt.replace(regex, "<mark style='background:rgba(0,240,255,0.3); color:white;'>$1</mark>");
+                        }
+
+                        const isChecked = State.progress[tId] ? 'checked' : '';
+                        if(isChecked) { chapDone++; examDone++; } examTotal++;
+                        const isRev = State.revision[tId] ? 'rev' : '';
+
+                        microHtml += `
+                            <div class="microtopic-item">
+                                <label class="checkbox-wrapper">
+                                    <input type="checkbox" class="sync-checkbox" data-tid="${tId}" ${isChecked}>
+                                    <span class="cb-mark"></span>
+                                    <span class="topic-text">${textDisplay}</span>
+                                </label>
+                                <div class="topic-actions">
+                                    <button class="btn-icon-action revision-toggle ${isRev}" data-tid="${tId}" data-title="${mt}">${isRev ? '⭐' : '☆'}</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    chaptersHtml += `
+                        <div class="chapter-accordion ${State.searchQuery ? 'open' : ''}">
+                            <div class="chap-head" onclick="this.parentElement.classList.toggle('open')">
+                                <div class="chap-info">
+                                    <h4>${chap.name}</h4>
+                                    <div class="chap-meta"><span class="weight-badge weight-${chap.weight}">${chap.weight} Yield</span><span>${chapTotal} Topics</span></div>
+                                </div>
+                                <div class="chap-controls">
+                                    <span class="chap-prog-text">${chapDone}/${chapTotal}</span><span class="chevron">▼</span>
+                                </div>
+                            </div>
+                            <div class="chap-body">${microHtml}</div>
+                        </div>
+                    `;
+                });
+
+                subjDiv.innerHTML = `
+                    <div style="padding: 24px;">
+                        <div class="subject-header">
+                            <div class="subject-title-wrapper"><span class="subject-icon" style="color: ${subject.color}; text-shadow: 0 0 10px ${subject.color};">${subject.icon}</span><span class="subject-name">${subject.name}</span></div>
+                        </div>
+                        ${chaptersHtml}
+                    </div>
+                `;
+                fragment.appendChild(subjDiv);
+            });
+
+            DOM.syllabusGrid.innerHTML = hasContent ? '' : `<div class="glass-panel" style="padding:40px; text-align:center;">No topics found for ${State.searchQuery}.</div>`;
+            if(hasContent) DOM.syllabusGrid.appendChild(fragment);
+
+            let examPct = examTotal === 0 ? 0 : Math.round((examDone / examTotal) * 100);
+            DOM.examOverallPct.innerText = `${examPct}%`;
+
+            // Bind Checkbox & Star logic dynamically
+            document.querySelectorAll('.sync-checkbox').forEach(chk => {
+                chk.addEventListener('change', (e) => {
+                    const tid = e.target.getAttribute('data-tid');
+                    State.progress[tid] = e.target.checked;
+                    
+                    const span = e.target.closest('.chapter-accordion').querySelector('.chap-prog-text');
+                    let curr = parseInt(span.innerText.split('/')[0]); let tot = parseInt(span.innerText.split('/')[1]);
+                    span.innerText = `${e.target.checked ? curr+1 : curr-1}/${tot}`;
+                    
+                    recalcGlobalAnalytics();
+                    syncToCloud();
+                });
+            });
+
+            document.querySelectorAll('.revision-toggle').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const tid = btn.getAttribute('data-tid');
+                    if(State.revision[tid]) { delete State.revision[tid]; btn.classList.remove('rev'); btn.innerText = '☆'; }
+                    else { State.revision[tid] = btn.getAttribute('data-title'); btn.classList.add('rev'); btn.innerText = '⭐'; }
+                    syncToCloud();
+                });
+            });
+        }
+
+        // ===================================================================
+        // 4. ANALYTICS & GAMIFICATION
+        // ===================================================================
+        function recalcGlobalAnalytics() {
+            let totalDone = Object.keys(State.progress).filter(k => State.progress[k]).length;
+            let globalPct = Math.min(Math.round((totalDone / 1000) * 100), 100); // Approximation across all DB
+            
+            DOM.globalProgressTxt.innerText = `${globalPct}%`;
+            DOM.globalProgressSVG.style.strokeDasharray = `${globalPct}, 100`;
+
+            State.xp = totalDone * 50; 
+            State.level = Math.floor(Math.sqrt(State.xp / 100)) + 1; 
+            let nextXp = Math.pow(State.level, 2) * 100;
+            let currentLevelBaseXp = Math.pow(State.level - 1, 2) * 100;
+            let lvlProgress = ((State.xp - currentLevelBaseXp) / (nextXp - currentLevelBaseXp)) * 100;
+
+            DOM.dashXP.innerText = `${State.xp} XP`;
+            DOM.dashLvl.innerText = `LVL ${State.level}`;
+            DOM.dashXPBar.style.width = `${lvlProgress}%`;
+            document.getElementById('dashNextXP').innerText = nextXp;
+        }
+
+        function renderAnalyticsView() {}
+
+        function renderRevisionQueue() {
+            const keys = Object.keys(State.revision);
+            if(keys.length === 0) { DOM.revisionList.innerHTML = `<div class="glass-panel" style="padding:40px; text-align:center;">Queue is empty. Mark topics with ⭐</div>`; return; }
+            DOM.revisionList.innerHTML = keys.map(k => `
+                <div class="glass-panel" style="padding: 15px 20px; display:flex; justify-content:space-between; margin-bottom:10px; border-left: 3px solid var(--primary-amber);">
+                    <div><div style="font-size:0.75rem; color:var(--primary-amber); font-weight:700;">Revision Queue</div><div style="font-weight:600;">${State.revision[k]}</div></div>
+                    <button class="btn-neon" style="border-color:var(--primary-amber); color:var(--primary-amber);" onclick="window.openAITutor('${State.revision[k]}')">AI Help</button>
+                </div>
+            `).join('');
+        }
+
+        // ===================================================================
+        // 5. REAL GROQ AI INTEGRATION
+        // ===================================================================
+        const GROQ_API_KEY = '############'; // <--- ENTER YOUR REAL GROQ API KEY HERE
+        const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+        const SYSTEM_PROMPT = "You are Crash AI Tutor, a highly advanced study assistant for competitive exams. Give extremely concise, easy-to-understand answers, formulas, or shortcut hacks.";
+
+        const aiFab = document.getElementById('openAIBtn');
+        const aiModal = document.getElementById('aiModalOverlay');
+        const aiInput = document.getElementById('aiChatInput');
+        const aiSend = document.getElementById('aiSendBtn');
+        const aiBody = document.getElementById('aiChatBody');
+
+        aiFab.addEventListener('click', () => { aiModal.style.display = 'grid'; aiInput.focus(); });
+        document.getElementById('closeAIBtn').addEventListener('click', () => aiModal.style.display = 'none');
+
+        window.openAITutor = function(topic) {
+            aiModal.style.display = 'grid';
+            aiInput.value = `Explain the trick/concept for: ${topic}`;
+            aiSend.click();
+        }
+
+        function appendChat(text, type) {
+            aiBody.insertAdjacentHTML('beforeend', `<div class="${type}">${text.replace(/\n/g, '<br>')}</div>`);
+            aiBody.scrollTop = aiBody.scrollHeight;
+        }
+
+        async function triggerRealAI() {
+            const text = aiInput.value.trim();
+            if(!text) return;
+            appendChat(text, "user-msg");
+            aiInput.value = '';
+            
+            if(GROQ_API_KEY === '############') {
+                appendChat("⚠️ GROQ_API_KEY is not set. Please update the API key in the source code.", "ai-msg");
+                return;
+            }
+
+            appendChat("Thinking... 🤔", "ai-msg");
+            
+            try {
+                const response = await fetch(GROQ_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                    body: JSON.stringify({
+                        model: 'llama-3.1-8b-instant',
+                        messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: text }]
+                    })
+                });
+                const data = await response.json();
+                aiBody.lastChild.remove(); // remove thinking
+                
+                if(data.error) appendChat("API Error: " + data.error.message, "ai-msg");
+                else appendChat(data.choices[0].message.content, "ai-msg");
+            } catch(e) {
+                aiBody.lastChild.remove();
+                appendChat("Network issue or Invalid Key.", "ai-msg");
+            }
+        }
+
+        aiSend.addEventListener('click', triggerRealAI);
+        aiInput.addEventListener('keypress', (e) => { if(e.key==='Enter') triggerRealAI(); });
+
+    </script>
+</body>
+</html>
